@@ -1,0 +1,257 @@
+<body translate="no" class="tt">
+    <!-- Note: This example only works with Windows Insider Preview Builds 16237+. -->
+
+    <header>
+        <label class="header_name">Mode Reglemnt</label>
+    </header>
+    <aside>
+
+
+
+        <div class="Groupe-Bouton">
+            
+
+        </div>
+
+
+
+    </aside>
+
+
+
+    <section id="main-container">
+
+        <div class="material-table">
+
+
+            <div class="card">
+                <!-- <p-table id="myTable" [value]="ActifFilaille" selectionMode="single" dataKey="codeSaisie" [value]="dde_achat" [tableStyle]="{'min-width': '50rem'}" [(selection)]="selectedProduct" dataKey="code" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                  (click)="selectedRow2()"> -->
+                <p-toast></p-toast>
+                <p-table #dt1 [value]="dataModeReglementDde" [globalFilterFields]="['adressFilialle.designation', 'filialle.designation']" selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedddeAchat" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                    dataKey="code" [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+                  
+                    <ng-template pTemplate="caption" class="col-md-12">
+
+                        <mat-radio-group aria-label="Select an option" class="radio-actif-inactif">
+
+                            <!-- <mat-radio-button value="actif" [checked]="check_actif === true" (click)="GetModeReglementActif()" (click)="clear(dt1)">متدوال</mat-radio-button>
+                          <mat-radio-button value="InActif" [checked]="check_inactif === true" (click)="GetModeReglementInactif()" (click)="clear(dt1)">غير متداول</mat-radio-button> -->
+                        </mat-radio-group>
+ 
+                          <div class="recherche col-md-6">
+                            <mat-label class="label-recherche"> Designation : </mat-label>
+                            <!-- <button pButton label="Clear" class="p-button-outlined" (click)="clear(dt1)"></button> -->
+                            <span class="p-input-icon-left ml-auto">
+                              <!-- <i class="pi pi-search"></i> -->
+                              <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
+                                  type="text" (keyup.enter)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                                  placeholder="Search keyword" />
+                          </span>
+                            <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add" (click)="dt1.filterGlobal($any($event.target).value, 'contains')">
+                              <div class="bouton_style-2">Recherche</div>
+                              <mat-icon class="search-icon">search</mat-icon>
+                          </button>
+                            <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add" (click)="GetCompany()" (click)="clear(dt1)">
+                              <div class="bouton_style-2">Actualiser</div>
+                              <mat-icon class="search-icon">refresh</mat-icon>
+                          </button>
+                        </div>
+
+                        
+                        <div class="ActionBtn col-md-6"> 
+                          <button data-backdrop="false" type="button" class="Bouton-add-new btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('add')">
+                            <div class="bouton_style-2">Ajouter</div>
+                            <mat-icon class="add-icon">add</mat-icon>
+                        </button>
+                        <button data-backdrop="false" type="button" class="Bouton-add-new btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('add')">
+                          <div class="bouton_style-2">Modifier</div>
+                          <mat-icon class="modif-icon">create</mat-icon>
+                      </button>
+                      <button data-backdrop="false" type="button" class="Bouton-add-new btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('add')">
+                        <div class="bouton_style-2">Supprimer</div>
+                        <mat-icon class="delete-icon">delete</mat-icon>
+                    </button>
+                    <button data-backdrop="false" type="button" class="Bouton-add-new btn  btn-default " data-original-title="Add" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('add')">
+                      <div class="bouton_style-2">Imprimer</div>
+                      <mat-icon class="print-icon"> local_printshop</mat-icon>
+                  </button>
+                        
+                     
+
+                        
+
+                      </div>
+
+
+
+                      
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Code</th>
+                            <th>code Saisie</th>
+                            <th>Designation Arabic</th>
+                            <th>Designation Latin</th>
+
+                            <th class="act-col">Actif</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-fl>
+                        <tr [pSelectableRow]="fl">
+                            <td>{{fl.code}}</td>
+                            <td>{{fl.codeSaisie}}</td>
+                            <td>{{fl.designationAr}}</td>
+                            <td>{{fl.designationLt}}</td>
+                            <td class="act-col">
+
+                                <p-checkbox [readonly]="true" [(ngModel)]="fl.actif" [binary]="true" inputId="binary">{{fl.actif}}</p-checkbox>
+                            </td>
+
+
+
+                        </tr>
+                    </ng-template>
+                    
+                </p-table>
+                
+
+            </div>
+        </div>
+    </section>
+    <!-- <aside>aside</aside> -->
+    <footer>footer
+
+        <!-- <div *ngIf="selectedProfile">{{selectedProfile.code}} - {{selectedProfile.designation}}</div> -->
+
+    </footer>
+</body>
+
+
+
+
+
+
+<!-- modal primeNG ADD -->
+<p-dialog id="Modal" header="Header" [scrollLeft]="true" [(visible)]="visibleModal" data-backdrop="false" [modal]="true" styleClass="ModalAdd" [draggable]="false" [resizable]="false">
+    <div>
+        <!-- <ng-template pTemplate="header"> -->
+        <div class="modal-header">
+            <h3 class="footer-dev">
+                <div class="action">
+                    <h2 class="text-default"> {{formHeader}}</h2>
+                  
+                    <button class="btn btn-default cancel-delete" :closable="false" data-dismiss="modal"> <i
+                          class="fa-lg fa-fw fa fa-window-close-o icon-fermer "  ></i>Fermer
+                  </button>
+                  <button class="btn btn-default save-delete" data-dismiss="modal" (click)="PostDdeAchat()"> <i class="fa-lg fa-fw fa fa-check icon-save"></i>
+                    Save 
+                  </button>
+                    <p-toast key="toast1"></p-toast>
+                    <!-- <button type="button" pButton pRipple (click)="show()" label="Show Success" name="notif"></button> -->
+
+                </div>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <!-- <form> -->
+            <fieldset>
+                <div class="flex-row-space">
+                    <section class="flex-row-space flex-3" disabled="">
+                        <div class="control-input  flex-8" *ngFor="let company of company">
+                            <input id="Company" maxlength="10" name="Company" hidden type="text" class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="company.valeur">
+                            <span> </span>
+                        </div>
+                        <label class="control-label flex-4">Code</label>
+                        <div class="control-input  flex-8">
+                            <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text" class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
+                            <span> </span>
+                        </div>
+
+                    </section>
+
+                    <section class="flex-row-space flex-2">
+                        <p-checkbox [binary]="true" class="check-actif" name="actif" value="val3" label="Actif" [(ngModel)]="actif"></p-checkbox>
+
+                    </section>
+                </div>
+                <div class="flex-row-space">
+                    <section class="flex-row-space flex-12">
+                        <label class="control-label flex-2">Desgiantion Arabic </label>
+                        <div class="control-input flex-10">
+                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar" class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designation" required>
+                        </div>
+                    </section>
+                    <section class="flex-row-space flex-12">
+                      <label class="control-label flex-2">Desgiantion Latine </label>
+                      <div class="control-input flex-10">
+                          <input type="text" id="designation_ar" maxlength="200" name="designation_ar" class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designation" required>
+                      </div>
+                  </section>
+
+                </div>
+                <div class="flex-row-space">
+                    <section class="flex-row-space flex-5">
+                        <label class="control-label flex-4">الفرع</label>
+                        <div class="dop control-input flex-10">
+                            <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown" optionLabel="label" optionValue="value" [options]="listModeReglementRslt" [(ngModel)]="codeModeReglementDde" [filter]="true" [showClear]="true" [style]="{'width':'100%'}" filterBy="label,value" #DropDownAdressFilaille
+                                [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" #ModeReglementDde="ngModel">
+                            </p-dropdown>
+                            <!-- <h2>Selected ModeReglement ID: {{codeModeReglementDde}}</h2> -->
+
+                        </div>
+
+                    </section>
+                </div>
+                <!-- <button pButton type="button" icon="pi pi-plus" class="ui-button-info" [label]="'Add'" pAddRow [table]="dtInstAdd" [newRow]="newRow()"></button> -->
+
+                <br/>
+                <section class="flex-row-space flex-5">
+                    <label class="control-label flex-4">الأصناف</label>
+                    <div class="dop control-input flex-10">
+                        <p-dropdown [resetFilterOnHide]=true [options]="listarticlerslt" [(ngModel)]="selectedarticle" (onChange)="OnBlur()" placeholder="Choisir un instrument" [showClear]="true" [filter]="true" filterBy="label,value.name,value.code" [style]="{'width':'100%'}"
+                            (onClick)="clickDropDownUp(dropDownList)" #dropDownList [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true"></p-dropdown>
+                        <br/>
+                        <br/>
+                    </div>
+
+                </section>
+                
+
+
+            </fieldset>
+
+
+            <!-- </form> -->
+        </div>
+
+    </div>
+</p-dialog>
+
+<!-- modal primeNG  Delete-->
+<p-dialog class="modal-delete" id="ModalDelete" data-backdrop="false" header="Header" [(visible)]="visDelete" styleClass="ModalDelete" [modal]="true" [draggable]="false" [resizable]="false">
+    <div class="modal-header">
+        <h3 class="footer-dev">
+            <div class="action">
+                <h2 class="text-center text-default"> {{formHeader}}</h2>
+            </div>
+        </h3>
+    </div>
+    <div class="modal-body">
+        <form action="" #addForms="ngForm">
+            <fieldset class="deleteForms">
+                <h4 class="text-delete">هل انت متأكد من الحدف
+
+                    <p-button icon="pi pi-save" data-dismiss="modal" label="حذف" styleClass="save-delete p-button-success" (click)="DeleteddeAchat(code)"></p-button>
+                    <p-button icon="pi pi-sign-out" label="خروج" styleClass="btn-cancel-delete p-button-danger" data-dismiss="modal"> </p-button>
+
+
+                </h4>
+            </fieldset>
+            <br>
+        </form>
+    </div>
+</p-dialog>
+<!-- fin modal primeng  -->

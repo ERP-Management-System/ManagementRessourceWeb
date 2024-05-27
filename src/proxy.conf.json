@@ -1,0 +1,16 @@
+{
+  "/parametrage_achat": {
+      "target": "http://localhost:8080/api",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true,
+      "timeout": 360000
+  },
+  "/parametrage": {
+      "target": "http://localhost:9000/api",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true,
+      "timeout": 360000
+  }
+}

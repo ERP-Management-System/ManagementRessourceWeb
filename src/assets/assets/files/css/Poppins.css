@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 100;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Thin.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Thin.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Thin.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Thin.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Thin.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 200;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraLight.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraLight.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraLight.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraLight.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraLight.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 300;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Light.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Light.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Light.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Light.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Light.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 400;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Regular.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Regular.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Regular.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Regular.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Regular.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Medium.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Medium.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Medium.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Medium.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Medium.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-SemiBold.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-SemiBold.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-SemiBold.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-SemiBold.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-SemiBold.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 700;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Bold.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Bold.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Bold.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Bold.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Bold.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 800;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraBold.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraBold.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraBold.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraBold.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-ExtraBold.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 900;
+    font-style: normal;
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Black.eot');
+    src: url('src/assets/assets/files/fonts/Poppins-main/Poppins-Black.eot?#iefix') format('embedded-opentype'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Black.woff2') format('woff2'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Black.woff') format('woff'), url('src/assets/assets/files/fonts/Poppins-main/Poppins-Black.ttf') format("truetype");
+    font-display: swap;
+}
