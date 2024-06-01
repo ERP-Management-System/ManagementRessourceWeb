@@ -1,129 +1,158 @@
- 
+
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { catchError, throwError, timeout, of } from 'rxjs';
-import { Table } from 'primeng/table';  
+import { Table } from 'primeng/table';
+
 import * as alertifyjs from 'alertifyjs'
-import { Article, DDE_ACHAT, ParamsModel } from '../domaine/ParametrageCentral';
+import { Banque, TypeCaisse } from '../domaine/ParametrageCentral';
 import { ParametrageCentralService } from '../ParametrageCentralService/parametrage-central.service';
 
 
 @Component({
   selector: 'app-mode-reglement',
   templateUrl: './mode-reglement.component.html',
- 
-  styleUrl: './mode-reglement.component.css' ,providers:[ConfirmationService,MessageService]
-})  
+
+  styleUrl: './mode-reglement.component.css', providers: [ConfirmationService, MessageService]
+})
 export class ModeReglementComponent implements OnInit {
-  productDialog: boolean = false;
- 
-  products = new Array<Article>();
-  product!: Article;
 
-  selectedProducts!: Article[] | null;
+  bioSection = new FormGroup({
+    firstName: new FormControl<string>('', [
+      Validators.minLength(3),
+      Validators.required
+    ]),
+    lastName: new FormControl<string>('')
+  });
+  openModal!: boolean;
 
-  submitted: boolean = false;
-
-  statuses!: any[];
 
   constructor(private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+   
+  
   }
 
+  myDefaultValue='Soff';
+
+  // sourceProducts!: Article[];
+
+  // cities!: Article[];
+  // qte!: number;
+  // xx!: any[];
+  // targetProducts!: Article[];
+  // selectedValue!: string;
+  // article2!: Article[];
+
+  // viewValue!: string;
+  // rows: any = [
+  // ]
+
+  // index!: number;
+  // countries!: any[];
+  // formGroup: FormGroup | undefined;
+
+  // // products!: Article[];
 
 
-  sourceProducts!: Article[];
-
-  cities!: Article[];
-  qte!: number;
-  xx!: any[];
-  targetProducts!: Article[];
-  selectedValue!: string;
-  article2!: Article[];
-
-  viewValue!: string;
-  rows: any = [
-  ]
-
-  index!: number;
-  countries!: any[];
-  formGroup: FormGroup | undefined;
-
-  // products!: Article[];
-
-
-  selectedCity: any;
-  clonedProducts: { [s: string]: Article } = {};
-  colsAdd!: any[];
+  // selectedCity: any;
+  // clonedProducts: { [s: string]: Article } = {};
+  // colsAdd!: any[];
 
   ngOnInit(): void {
-    
+
+    this.checkRequiredFields(this.designationAr);
     this.GelAllModeReglementActif();
-    // this.Voids();
+    this.Voids();
     // this.getAllArticleModal();
 
-    
+
   }
 
 
-  desig: string = 'AR'
-  FormControl = new Array<FormControl>();
-  GetFormName(): void {
-    this.param_achat_service.GetFormControlName(this.desig).pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-        } else {
-          alertifyjs.set('notifier', 'position', 'top-left');
-          alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
-        }
-        return throwError(errorMessage);
-      })
+  // desig: string = 'AR'
+  // FormControl = new Array<FormControl>();
+  // GetFormName(): void {
+  //   this.param_achat_service.GetFormControlName(this.desig).pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) {
+  //       } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
+  //       }
+  //       return throwError(errorMessage);
+  //     })
 
-    )
-      .subscribe((data: any) => {
-        this.FormControl = data
-        this.searchTerm = '';
-        this.check_actif = true
-        this.check_inactif = false
-      });
-  }
+  //   )
+  //     .subscribe((data: any) => {
+  //       this.FormControl = data
+  //       this.searchTerm = '';
+  //       this.check_actif = true
+  //       this.check_inactif = false
+  //     });
+  // }
 
   clear(table: Table) {
     table.clear();
+    this.searchTerm = '';
   }
 
-  clearForm(): void {
+  clearForm() {
     this.code == undefined;
-    this.designation = '';
+    this.designationAr = '';
+    this.designationLt = '';
     this.actif = false;
+    this.visible = false;
     this.codeSaisie = '';
+    this.selectedBanque = '';
+    this.selectedTypeCaisse = ''
+    this.listTypeCaisseRslt = [];
+    this.ListBQRslt = [];
+
 
   }
   check_actif = false;
   check_inactif = false;
 
-  formHeader = "إضافة مخزن ";
+  formHeader = ".....";
   // data: any = null;
   searchTerm = '';
   visibleModal: boolean = false;
   visDelete: boolean = false;
   code!: number | null;
-  codeSaisie!: string;
-  designation!: string;
-  actif!: boolean;
-  designation2!: string;
+  codeSaisie: any;
 
-  selectedddeAchat!: DDE_ACHAT;
-  selectedddeAchat2!: DDE_ACHAT;
+  // @Input('myInput')
+  // get myInput(): any {
+  //   return this.codeSaisie;
+  // }
+  // set myInput(value: any) {
+  //   this.codeSaisie = value || "NULL";
+  // }
+
+
+  designationAr: string = 'NULL';
+  designationLt: string = "NULL";
+  codeTypeCaisse: number = 0;
+  codeBanque: string = "NULL";
+  actif!: boolean;
+  visible!: boolean;
+
+  selectedModeReglement!: ModeReglement;
+  // selectedddeAchat2!: DDE_ACHAT;
   selectedCar!: string;
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
     this.codeSaisie = event.data.codeSaisie;
-    this.designation = event.data.designation;
+    this.designationAr = event.data.designationAr;
+    this.designationLt = event.data.designationLt;
+    this.selectedTypeCaisse = event.data.codeTypeCaisse;
+    this.selectedBanque = event.data.codeBanque;
+
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {
@@ -131,98 +160,112 @@ export class ModeReglementComponent implements OnInit {
     this.code = event.data = null;
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  article!: Article[];
-  GetArticleActif(): void {
-    this.param_achat_service.GetArticleActif().pipe(
-      //   catchError((error: HttpErrorResponse) => {
-      //     let errorMessage = '';
-      //     if (error.error instanceof ErrorEvent) {
-      //     } else {
-      //       alertifyjs.set('notifier', 'position', 'top-left');
-      //       alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
+  //   ngOnInit() {
 
-      //     }
-      //     return throwError(errorMessage);
-      //   })
+  //  }
 
-    )
-      .subscribe((data: any) => {
-        this.sourceProducts = data;
-        this.cdr.markForCheck();
-      });
-    this.targetProducts = [];
-
+  ngOnChanges(changes: any) {
+    this.checkRequiredFields(this.designationAr);
   }
 
-
-
-  company = new Array<ParamsModel>();
-DesignationCompany =  'Company' ;
-  GetCompany(): void {
-    this.param_achat_service.GetParams(this.DesignationCompany).pipe(
-      catchError(
-        (error: HttpErrorResponse) => {
-          timeout(35000)
-          let errorMessage = '';
-
-          if (error.error instanceof ErrorEvent) {
-          } else {
-            alertifyjs.set('notifier', 'position', 'top-left');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
-          }
-          return throwError(errorMessage);
-        })
-    )
-      .subscribe((data: any) => {
-        this.company = data;
-      })
-  }
-
-  formatDate = new Array<any>();
-  formatDates :any ;
-
-  FormatDate = "FormatDate" ;
-    GetFormatDate(): void {
-      this.param_achat_service.GetParams(this.FormatDate).pipe(
-        catchError(
-          (error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) {
-            } else {
-              alertifyjs.set('notifier', 'position', 'top-left');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
-            }
-            return throwError(errorMessage);
-          })
-      )
-        .subscribe((data: any) => {
-          this.formatDate = data.valeur;
-          // let cliniq=(JSON.parse(sessionStorage.getItem('nomClinique')))[0].societe;
-          // this.formatDates = this.formatDate.valeur
-        })
+  checkRequiredFields(input: string | null) {
+    if (input === null) {
+      throw new Error("Attribute 'a' is required");
     }
-  
-    RegionHonoraire = new Array<ParamsModel>();
-    RegionHonoraireParams = "RegionHoraire" ;
-      GetRegionHoraire(): void {
-        this.param_achat_service.GetParams(this.RegionHonoraireParams).pipe(
-          catchError(
-            (error: HttpErrorResponse) => {
-              let errorMessage = '';
-              if (error.error instanceof ErrorEvent) {
-              } else {
-                alertifyjs.set('notifier', 'position', 'top-left');
-                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
-              }
-              return throwError(errorMessage);
-            })
-        )
-          .subscribe((data: any) => {
-            this.RegionHonoraire = data;
-          })
-      }
-    
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // article!: Article[];
+  // GetArticleActif(): void {
+  //   this.param_achat_service.GetArticleActif().pipe(
+  //     //   catchError((error: HttpErrorResponse) => {
+  //     //     let errorMessage = '';
+  //     //     if (error.error instanceof ErrorEvent) {
+  //     //     } else {
+  //     //       alertifyjs.set('notifier', 'position', 'top-right');
+  //     //       alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
+
+  //     //     }
+  //     //     return throwError(errorMessage);
+  //     //   })
+
+  //   )
+  //     .subscribe((data: any) => {
+  //       this.sourceProducts = data;
+  //       this.cdr.markForCheck();
+  //     });
+  //   this.targetProducts = [];
+
+  // }
+
+
+
+  //   company = new Array<ParamsModel>();
+  // DesignationCompany =  'Company' ;
+  //   GetCompany(): void {
+  //     this.param_achat_service.GetParams(this.DesignationCompany).pipe(
+  //       catchError(
+  //         (error: HttpErrorResponse) => {
+  //           timeout(35000)
+  //           let errorMessage = '';
+
+  //           if (error.error instanceof ErrorEvent) {
+  //           } else {
+  //             alertifyjs.set('notifier', 'position', 'top-right');
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //           }
+  //           return throwError(errorMessage);
+  //         })
+  //     )
+  //       .subscribe((data: any) => {
+  //         this.company = data;
+  //       })
+  //   }
+
+  //   formatDate = new Array<any>();
+  //   formatDates :any ;
+
+  // FormatDate = "FormatDate" ;
+  //   GetFormatDate(): void {
+  //     this.param_achat_service.GetParams(this.FormatDate).pipe(
+  //       catchError(
+  //         (error: HttpErrorResponse) => {
+  //           let errorMessage = '';
+  //           if (error.error instanceof ErrorEvent) {
+  //           } else {
+  //             alertifyjs.set('notifier', 'position', 'top-right');
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //           }
+  //           return throwError(errorMessage);
+  //         })
+  //     )
+  //       .subscribe((data: any) => {
+  //         this.formatDate = data.valeur;
+  //         // let cliniq=(JSON.parse(sessionStorage.getItem('nomClinique')))[0].societe;
+  //         // this.formatDates = this.formatDate.valeur
+  //       })
+  //   }
+
+  // RegionHonoraire = new Array<ParamsModel>();
+  // RegionHonoraireParams = "RegionHoraire" ;
+  //   GetRegionHoraire(): void {
+  //     this.param_achat_service.GetParams(this.RegionHonoraireParams).pipe(
+  //       catchError(
+  //         (error: HttpErrorResponse) => {
+  //           let errorMessage = '';
+  //           if (error.error instanceof ErrorEvent) {
+  //           } else {
+  //             alertifyjs.set('notifier', 'position', 'top-right');
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //           }
+  //           return throwError(errorMessage);
+  //         })
+  //     )
+  //       .subscribe((data: any) => {
+  //         this.RegionHonoraire = data;
+  //       })
+  //   }
+
 
 
 
@@ -232,7 +275,7 @@ DesignationCompany =  'Company' ;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
         } else {
-          alertifyjs.set('notifier', 'position', 'top-left');
+          alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
         }
         return throwError(errorMessage);
@@ -240,7 +283,7 @@ DesignationCompany =  'Company' ;
 
     ).subscribe(
       (res) => {
-        alertifyjs.set('notifier', 'position', 'top-left');
+        alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.success("Success Deleted");
         this.ngOnInit();
         this.check_actif = true;
@@ -252,19 +295,20 @@ DesignationCompany =  'Company' ;
   clearSelected(): void {
     this.code == undefined;
     this.codeSaisie = '';
-    this.designation = '';
+    this.designationAr = '';
+    this.designationLt = '';
     this.actif = false;
     // this.codeFilialle = [];
   }
-// videtable ():void{
-//    document.getElementById('main-container').reset();
+  // videtable ():void{
+  //    document.getElementById('main-container').reset();
 
-// }
+  // }
   public onOpenModal(mode: string) {
     // this.showForm = true;
     // 
 
-    
+
     this.visibleModal = false;
     this.visDelete = false;
     const container = document.getElementById('main-container');
@@ -283,8 +327,8 @@ DesignationCompany =  'Company' ;
       this.visibleModal = true;
       this.code == undefined;
       // this.codeFilialle = [];
-      // this.getAllArticleModal();
-
+      this.GelAllBanque();
+      this.GelTypeCaisse();
 
     }
     if (mode === 'edit') {
@@ -295,20 +339,20 @@ DesignationCompany =  'Company' ;
 
         //  
         this.onRowUnselect(event);
-        alertifyjs.set('notifier', 'position', 'top-left');
+        alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.error("Choise A row Please");
         this.visDelete == false && this.visibleModal == false
       } else {
 
         button.setAttribute('data-target', '#Modal');
-        this.formHeader = "تعديل طلب تحويل "
+        this.formHeader = "Edit Mode Reglement"
         // this.GetDesignationFL();
         // this.GetDesignationFLSelected(this.codeFilialle);
         // this.GetDesignationAdress();
         this.visibleModal = true;
         this.onRowSelect;
-        // this.getAllArticleModal();
-        // this.getAllFilialleModalModifier();
+        this.GelAllBanque();
+        this.GelTypeCaisse();
 
       }
 
@@ -332,14 +376,14 @@ DesignationCompany =  'Company' ;
 
         // 
         this.onRowUnselect;
-        alertifyjs.set('notifier', 'position', 'top-left');
+        alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.error("Choise A row Please");
         this.visDelete == false && this.visibleModal == false
       } else {
 
         {
           button.setAttribute('data-target', '#ModalDelete');
-          this.formHeader = "حذف طلب تحويل "
+          this.formHeader = "Delete Mode Reglement"
           this.visDelete = true;
 
         }
@@ -349,9 +393,9 @@ DesignationCompany =  'Company' ;
 
   }
 
-  coutdemande= "3200";
+  coutdemande = "3200";
   codeDemandeur !: number;
-  userCreate= "soufien";
+  userCreate = "soufien";
   // datecreate !: Date;
   currentDate = new Date();
   // today = new Date();
@@ -362,132 +406,151 @@ DesignationCompany =  'Company' ;
   //   this.changedDate = ChangedFormat;
   //   console.log(this.changedDate);
   // }
-  ajusterHourAndMinutes(){
-    let hour=new Date().getHours();
+  ajusterHourAndMinutes() {
+    let hour = new Date().getHours();
     let hours;
-    if(hour<10){
-     hours='0'+hour;
-    }else {
-      hours=hour;
+    if (hour < 10) {
+      hours = '0' + hour;
+    } else {
+      hours = hour;
     }
-    let min=new Date().getMinutes();
+    let min = new Date().getMinutes();
     let mins;
-    if(min<10){
-     mins='0'+min;
-    }else{
-      mins=min;
+    if (min < 10) {
+      mins = '0' + min;
+    } else {
+      mins = min;
     }
-    return hours+':'+mins
+    return hours + ':' + mins
   }
   datform = new Date();
-  PostDdeAchat() {
+  PostModeReglement() {
     // let form= this.formatDate.valeur;
     // this.datecreate = new Date();
     // let x=('0' + new Date().getDate()).slice(-2) + '/' + ('0' + (new Date().getMonth() + 1)).slice(-2) + '/' + new Date().getFullYear()+'T'+this.ajusterHourAndMinutes();
     // let x=new Date().getFullYear()+'/' +('0' + (new Date().getMonth() + 1)).slice(-2) + '/' + ('0' + new Date().getDate()).slice(-2)  + 'T'+ ('0' + new Date().getHours()).slice(-2) +':'+ ('0' + new Date().getMinutes()).slice(-2) +':'+('0' + new Date().getSeconds()).slice(-2) +':'+ ('0' + new Date().getMilliseconds()).slice(-2)+':'+ ('0' + new Date().getTimezoneOffset()).slice(-2) ;
-// let y = formatDate(new Date(),format('YYYY-MM-DD h:mm:ss'))
-// let y = 
-    let body = {
-      coutdemande: this.coutdemande,
-      codeDemandeur: this.codeModeReglementDde,  
-      etatdemande: "PRL",
-      nom_Demandeur: "soufien",
-      userCreate: this.userCreate,
-      
-      dateCreate: new Date().toISOString(), //
-      code: this.code,
-      
+    // let y = formatDate(new Date(),format('YYYY-MM-DD h:mm:ss'))
+    // let y = 
 
-    }
-    if (this.code != null) {
-      body['code'] = this.code;
-
-      // this.param_achat_service.GetModeReglementActifAndVisible().pipe(
-      //   catchError((error: HttpErrorResponse) => {
-      //     let errorMessage = '';
-      //     if (error.error instanceof ErrorEvent) {
-      //     } else {
-      //       alertifyjs.set('notifier', 'position', 'top-left');
-      //       alertifyjs.error(` ${error.error.message}`);
-      //     }
-      //     return throwError(errorMessage);
-      //   })
-
-      // ).subscribe(
-
-      //   (res) => {
-      //     alertifyjs.set('notifier', 'position', 'top-left');
-      //     alertifyjs.success("update Success Saved");
-      //     close();
-      //     this.clearForm();
-      //     this.ngOnInit();
-      //     this.check_actif = true;
-      //     this.check_inactif = false;
-      //   }
-      // );
+    // if (this.designationAr ==null) throw   new   
 
 
-    }
-    else {
-      this.param_achat_service.PostDdeTransfert(body).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) { } else {
-            alertifyjs.set('notifier', 'position', 'top-left');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-            // this.showToast1();
+    // ;
+
+    if (!this.designationAr || !this.designationLt) {
+      alertifyjs.set('notifier', 'position', 'top-right');
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
+
+    } else {
+
+
+      let body = {
+        codeSaisie: this.codeSaisie,
+        designationAr: this.designationAr,
+        designationLt: this.designationLt,
+        codeTypeCaisse: this.selectedTypeCaisse,
+        codeBanque: this.selectedBanque,
+        userCreate: this.userCreate,
+
+        dateCreate: new Date().toISOString(), //
+        code: this.code,
+        actif: this.actif,
+        visible: this.visible,
+
+      }
+      if (this.code != null) {
+        body['code'] = this.code;
+
+        this.param_achat_service.UpdateModeReglement(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) {
+            } else {
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+            }
+            return throwError(errorMessage);
+          })
+
+        ).subscribe(
+
+          (res: any) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+            this.visibleModal = false;
+            this.clearForm();
+            this.ngOnInit();
+            this.check_actif = true;
+            this.check_inactif = false;
           }
-          return throwError(errorMessage);
-        })
-      ).subscribe(
-        (res) => {
-          // alertifyjs.set('notifier', 'position', 'top-left');
-          // alertifyjs.success("Success Saved");
-          // this.showToast1(error);
-          // this.CloseForm();
-          this.clearForm();
-          this.ngOnInit();
-          this.code;
-          this.check_actif = true;
-          this.check_inactif = false;
+        );
 
-        }
-      )
+
+      }
+      else {
+        this.param_achat_service.PostModeReglement(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+            }
+            return throwError(errorMessage);
+          })
+        ).subscribe(
+          (res) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            // alertifyjs.success("Success Saved");
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
+            this.visibleModal = false;
+            this.clearForm();
+            this.ngOnInit();
+            this.code;
+            this.check_actif = true;
+            this.check_inactif = false;
+
+          }
+        )
+      }
     }
-  }
-  codeAdressFilialle: {}[] = [];
 
-  our = new Array<any>();
-  pushvalue = new Array<any>();
-  GetArticleActifs(): void {
-    this.param_achat_service.GetArticleActif().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-        } else {
-          alertifyjs.set('notifier', 'position', 'top-left');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-        }
-        return throwError(errorMessage);
-      })
-    )
-      .subscribe((data: any) => {
-        this.products = data;
-        this.our = [];
-        for (let i = 0; i < data["length"]; i++) {
-        }
-        this.pushvalue = this.our;
-      });
+
   }
+  // codeAdressFilialle: {}[] = [];
+
+  // our = new Array<any>();
+  // pushvalue = new Array<any>();
+  // GetArticleActifs(): void {
+  //   this.param_achat_service.GetArticleActif().pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) {
+  //       } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  //       }
+  //       return throwError(errorMessage);
+  //     })
+  //   )
+  //     .subscribe((data: any) => {
+  //       this.products = data;
+  //       this.our = [];
+  //       for (let i = 0; i < data["length"]; i++) {
+  //       }
+  //       this.pushvalue = this.our;
+  //     });
+  // }
   // clears(table: Table) {
   //   table.lazy = false;
   //   table.clear();
   //   table.lazy = true;
   //   table.clear();
-    
+
   // }
-  
-  Voids():void{
+
+  Voids(): void {
     this.cars = [
 
     ].sort((car1, car2) => {
@@ -495,20 +558,20 @@ DesignationCompany =  'Company' ;
     });
 
   }
-  onRowEditInit(car: Articles) {
+  onRowEditInit(car: ModeReglement) {
     this.clonedCars[car.code_saisie] = { ...car };
   }
 
 
-public remove( index: number): void {
-  this.listDesig.splice(index, 1);
-  console.log(index);
- }
-  onRowEditSave(car: Articles) {
+  public remove(index: number): void {
+    this.listDesig.splice(index, 1);
+    console.log(index);
+  }
+  onRowEditSave(car: ModeReglement) {
     delete this.clonedCars[car.code_saisie];
   }
 
-  onRowEditCancel(car: Articles, index: number) {
+  onRowEditCancel(car: ModeReglement, index: number) {
     this.cars[index] = this.clonedCars[car.code_saisie];
     delete this.clonedCars[car.code_saisie];
   }
@@ -516,52 +579,63 @@ public remove( index: number): void {
 
 
 
-  dataArticle = new Array<Article>();
-  listarticlepushed = new Array<any>();
-  listarticlerslt = new Array<any>();
-  getAllArticleModal() {
-    this.param_achat_service.GetArticleActif().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-left');
-          alertifyjs.error(` ${error.error.message}`);
-        }
-        return throwError(errorMessage);
-      })
+  // dataBanque = new Array<Banque>();
+  // listBanquepushed = new Array<any>();
+  // listBanqueRslt = new Array<any>();
+  // getAllBanqueModal() {
+  //   this.param_achat_service.GetAllBanque().pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) { } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-    ).subscribe((data: any) => {
-      this.dataArticle = data;
-      this.listarticlepushed = [];
-      for (let i = 0; i < this.dataArticle.length; i++) {
-        this.listarticlepushed.push({ label: this.dataArticle[i].designation, value:  this.dataArticle[i].code  })
-      }
-      this.listarticlerslt = this.listarticlepushed;
-    })
-    // })
-  }
-  selectedarticle:any;
+  //       }
+  //       return throwError(errorMessage);
+  //     })
+
+  //   ).subscribe((data: any) => {
+  //     this.dataBanque = data;
+  //     this.listBanquepushed = [];
+  //     for (let i = 0; i < this.dataBanque.length; i++) {
+  //       this.listBanquepushed.push({ label: this.dataBanque[i].designationAr, value: this.dataBanque[i].code })
+  //     }
+  //     this.listBanqueRslt = this.listBanquepushed;
+  //   })
+  //   // })
+  // }
+
+
+
+
+
+
+
+
+
+  selectedBanque: any;
+  selectedTypeCaisse: any;
   compteur: number = 0;
   listDesig = new Array<any>();
   OnBlur() {
     var exist = false;
     for (var y = 0; y < this.cars.length; y++) {
-      if (this.selectedarticle.code != this.cars[y].code) {
+      if (this.selectedBanque.code != this.cars[y].code) {
         exist = false;
       } else {
         exist = true;
         break;
       }
     }
-    if ((this.selectedarticle != undefined) && (this.selectedarticle != "") && (!exist)) {
-      this.param_achat_service.GetArticleBycode(this.selectedarticle).subscribe((data:any) => {
-      this.cars[this.compteur] = data;
-      this.compteur = this.compteur + 1;
-      this.listDesig.push(data);
+    if ((this.selectedBanque != undefined) && (this.selectedBanque != "") && (!exist)) {
+      this.param_achat_service.GetArticleBycode(this.selectedBanque).subscribe((data: any) => {
+        this.cars[this.compteur] = data;
+        this.compteur = this.compteur + 1;
+        this.listDesig.push(data);
       })
     }
   }
-  clickDropDownUp(dropDownModUp:any) {
+  clickDropDownUp(dropDownModUp: any) {
     if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
       dropDownModUp.focus();
       if (!dropDownModUp.overlayVisible) {
@@ -573,21 +647,22 @@ public remove( index: number): void {
       }
     }
   }
-  cars!: Array<Articles>;
+  cars!: Array<ModeReglement>;
   brands!: SelectItem[];
-  clonedCars: { [s: string]: Articles } = {};
+  clonedCars: { [s: string]: ModeReglement } = {};
   NewDate = new Date();
-  codeModeReglementDde : {}[] = [];
-  dataModeReglementDde = new Array<Article>();
+  codeModeReglementDde: {}[] = [];
+  dataModeReglementDde = new Array<ModeReglement>();
   listModeReglementPushed = new Array<any>();
   listModeReglementRslt = new Array<any>();
   GelAllModeReglementActif() {
-    this.param_achat_service.GetModeReglementActif().pipe(
+    this.param_achat_service.GetAllModeReglement().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-left');
-          alertifyjs.error(` ${error.error.message}`);
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
         }
         return throwError(errorMessage);
       })
@@ -596,21 +671,71 @@ public remove( index: number): void {
       this.dataModeReglementDde = data;
       this.listModeReglementPushed = [];
       for (let i = 0; i < this.dataModeReglementDde.length; i++) {
-        this.listModeReglementPushed.push({ label: this.dataModeReglementDde[i].designation, value:  this.dataModeReglementDde[i].code  })
+        this.listModeReglementPushed.push({ label: this.dataModeReglementDde[i].designationAr, value: this.dataModeReglementDde[i].code })
       }
       this.listModeReglementRslt = this.listModeReglementPushed;
     })
     // })
   }
-}
-export interface Articles {
-  code:number;
-  code_saisie: string;
-  designation: string;
-  actif: string;
-  qte:number;
+
+
+  /////////////////////////////////////////////////////////// new dev
+
+
+  dataTypeCaisseDde = new Array<TypeCaisse>();
+  listTypeCaissePushed = new Array<any>();
+  listTypeCaisseRslt = new Array<any>();
+  GelTypeCaisse() {
+    this.param_achat_service.GetAllTypeCaisse().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataTypeCaisseDde = data;
+      this.listTypeCaissePushed = [];
+      for (let i = 0; i < this.dataTypeCaisseDde.length; i++) {
+        this.listTypeCaissePushed.push({ label: this.dataTypeCaisseDde[i].designationAr, value: this.dataTypeCaisseDde[i].code })
+      }
+      this.listTypeCaisseRslt = this.listTypeCaissePushed;
+    })
+    // })
+  }
+
+  ListBanqueData = new Array<any>();
+  ListBQPushed = new Array;
+  ListBQRslt = new Array<any>();
+  GelAllBanque() {
+    this.param_achat_service.GetAllBanque().pipe(
+    ).subscribe((datas: any) => {
+      this.ListBanqueData = datas;
+      this.ListBQPushed = [];
+      for (let i = 0; i < this.ListBanqueData.length; i++) {
+        this.ListBQPushed.push({ label: this.ListBanqueData[i].designationAr, value: this.ListBanqueData[i].code })
+      }
+      this.ListBQRslt = this.ListBQPushed;
+    })
+
+  }
+
+
 }
 
+export interface ModeReglement {
+  code: number;
+  code_saisie: string;
+  designationAr: string;
+  designationLt: string;
+  actif: string;
+  codeTypeCaisse: number;
+  codeBanque: number;
+}
 
 
 

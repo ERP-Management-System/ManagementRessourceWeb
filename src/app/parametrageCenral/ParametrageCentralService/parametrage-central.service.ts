@@ -10,10 +10,17 @@ export class ParametrageCentralService {
 
   constructor(private http: HttpClient) { }
 
-  GetModRegActif(){
-    return this.http.get(`${environment.API_BASE_URL}modereglement/actif?actif=true`);
-  }
+  // GetModRegActif(){
+  //   return this.http.get(`${environment.API_BASE_URL}modereglement/actif?actif=true`);
+  // }
 
+
+
+
+
+
+
+  ///////////////
 
   GetFormControlName(desig:string){
     return this.http.get(`${environment.API_BASE_URL}FormControl/code?code=`+desig);
@@ -84,10 +91,6 @@ DeleteDdeTransfert(code : number){
 
 
 //////// ModeReglement 
-GetModeReglementActif(){
-
-  return this.http.get(`${environment.API_BASE_URL}mode_reglement/all`);
-}
 
 GetModeReglementActifAndIsPrincipal(){
 
@@ -114,5 +117,49 @@ DeleteOrdreAchat(code : number){
 GetDetailsOrdreAchatByCode(code : number){
   return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/`+code);
 }
+
+
+
+
+
+//////// new  WS 
+
+
+
+GetAllModeReglement(){
+
+  return this.http.get(`${environment.API_BASE_URL}mode_reglement/all`);
+}
+
+GetAllTypeCaisse(){
+
+  return this.http.get(`${environment.API_BASE_URL}type_caisse/all`);
+}
+
+
+GetAllBanque(){
+
+  return this.http.get(`${environment.API_BASE_URL}banque/all`);
+}
+
+
+PostModeReglement(body : any){
+  return this.http.post(`${environment.API_BASE_URL}mode_reglement`,body);
+}
+
+
+
+
+UpdateModeReglement(body : any){
+
+  return this.http.put(`${environment.API_BASE_URL}mode_reglement/update`,body);
+}
+
+
+
+
+
+
+
 
 }

@@ -41,7 +41,7 @@
     height: 100%;
     width: 78px;
     background: #11101d;
-    padding: 6px 14px;
+    padding: 4px 4px;
     z-index: 99;
     transition: all 0.5s ease;
 }
@@ -92,9 +92,14 @@
     height: calc(100% - 140px);
 }
 
-.sidebar .scroll {
+:host ::ng-deep  .sidebar .scroll {
     overflow-y: scroll;
     scrollbar-width: thin;
+    padding: 0px 0px 0px 0px;
+
+ 
+  scrollbar-color: #5a5555 #ffffff;
+
 }
 
 .sidebar .scroll::-webkit-scrollbar {
@@ -333,3 +338,4 @@
     font-weight: 500;
     margin: 18px;
 }
+

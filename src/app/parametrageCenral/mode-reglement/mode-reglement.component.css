@@ -52,38 +52,6 @@ tr.mat-footer-row {
 
 
 
-:host ::ng-deep label.p-checkbox-label.ng-star-inserted {
-  font-weight: 400;
-  font-size: 17px;
-  color: black;
-  padding: 3px 4px 0px 0px;
-}
-
-:host ::ng-deep .p-checkbox .p-checkbox-box {
-  border: 1px solid #ced4da;
-  color: #495057;
-  border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-
-:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
-  border-color: #363636;
-  background: #ffffff;
-}
-
-:host ::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
-  transition-duration: 0.2s;
-  color: #3B82F6;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-:host ::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-  border-color: #0062cc;
-  background: #fbfbfb;
-  color: #ffffff;
-}
-
 
 
 :host ::ng-deep .recherche {
@@ -140,7 +108,7 @@ tr.mat-footer-row {
 
 
 :host ::ng-deep .recherche-value {
-  width: 180px;
+  width: 130px;
   height: 30px;
   border-radius: 5px;
   border: 1px solid #afafaf;
@@ -184,6 +152,14 @@ tr.mat-footer-row {
   display: flex;
   justify-content: center;
   gap: 100px;
+  background-color: whitesmoke;
+  border-radius: 6px;
+  padding: 5px;
+}
+
+
+.modal-header {
+  margin: -16px;
 }
 
 /* table postion */
@@ -193,13 +169,30 @@ tr.mat-footer-row {
 
 /* /// button ajout et modif et suppri  */
 
-.Bouton-add-new {
-  margin-right: 8px;
+.Bouton-add-new1 {
+  margin-right: 5px;
   display: flex;
   height: 30px;
-  width: 110px;
-  padding: 2px 10px 0px;
+  width: 92px;
+  padding: 3px 7px 0px 5px;
   margin-bottom: 3px;
+}
+
+
+.Bouton-add-new2 {
+  margin-right: 5px;
+  display: flex;
+  height: 30px;
+  width: 100px;
+  padding: 3px 7px 0px 5px;
+  margin-bottom: 3px;
+}
+
+
+.bouton_style-2 {
+  font-size: 15px;
+  font-family: Cairo !important;
+  font-weight: bold;
 }
 
 
@@ -224,6 +217,13 @@ tr.mat-footer-row {
 
 .modif-icon {
   color: rgb(0, 102, 255);
+  user-select: none;
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 24px;
+  width: 24px;
+  overflow: hidden;
 }
 
 .delete-icon {
@@ -273,31 +273,6 @@ tr.mat-footer-row {
 }
 
 
-
-label input[type=checkbox].checkbox+span:before {
-  background: 0 0;
-  border-color: #888;
-  box-shadow: none;
-}
-
-label input[type=checkbox].checkbox:checked+span:before {
-  content: "\f00c";
-  color: #66665e;
-  border-color: #1293b8;
-}
-
-label input[type=checkbox].checkbox,
-checked+span {
-  font-weight: 400;
-}
-
-label:hover input[type=checkbox].checkbox+span:before {
-  border-color: #1293b8;
-}
-
-:host ::ng-deep label:hover input[type=checkbox].checkbox:checked+span:before {
-  border-color: #888;
-}
 
 :host ::ng-deep label input[type=radio].radiobox+span:before {
   background: 0 0;
@@ -364,84 +339,6 @@ textarea:focus {
   font-size: 15px;
   line-height: 1.5;
   width: 430px;
-}
-
-.checkbox input[type=checkbox].checkbox+span,
-.checkbox-inline input[type=checkbox].checkbox+span,
-.radio input[type=radio].radiobox+span,
-.radiobox-inline input[type=radio].radiobox+span {
-  margin-left: -20px;
-}
-
-:host ::ng-deep .form-inline .checkbox input[type=checkbox].checkbox+span,
-.form-inline .radiobox input[type=radio].radiobox+span {
-  margin-left: 0;
-}
-
-:host ::ng-deep .form-inline .checkbox,
-.form-inline .radiobox {
-  padding-left: 0;
-}
-
-:host ::ng-deep input[type=checkbox].checkbox+span,
-label input[type=radio].radiobox+span {
-  vertical-align: middle;
-  line-height: 20px;
-}
-
-:host ::ng-deep input[type=checkbox].checkbox+span,
-input[type=checkbox].checkbox+span:after,
-input[type=checkbox].checkbox+span:before,
-input[type=radio].radiobox+span,
-input[type=radio].radiobox+span:after,
-input[type=radio].radiobox+span:before {
-  box-sizing: content-box !important;
-}
-
-:host ::ng-deep input[type=checkbox].checkbox,
-input[type=radio].radiobox {
-  visibility: hidden;
-  position: absolute;
-  z-index: 20;
-  width: 18px;
-  height: 18px;
-}
-
-:host ::ng-deep label input[type=checkbox].checkbox+span,
-label input[type=radio].radiobox+span {
-  position: relative;
-  z-index: 19;
-  display: inline-block;
-  margin: 0;
-  line-height: 17px;
-  min-height: 14px;
-  min-width: 14px;
-  margin-right: 5px;
-}
-
-:host ::ng-deep label input[type=checkbox].checkbox+span:hover,
-label input[type=radio].radiobox+span:hover {
-  cursor: pointer;
-}
-
-:host ::ng-deep label input[type=checkbox].checkbox+span:before,
-label input[type=radio].radiobox+span:before {
-  font-family: FontAwesome;
-  font-size: 12px;
-  border-radius: 0;
-  content: "\a0";
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  padding: 1px;
-  height: 12px;
-  line-height: 12px;
-  min-width: 12px;
-  margin-right: 5px;
-  border: 1px solid #bfbfbf;
-  background-color: #f4f4f4;
-  font-weight: 400;
-  margin-top: -1px;
 }
 
 :host ::ng-deep label input[type=radio].radiobox+span:before {
@@ -545,131 +442,6 @@ label:hover input[type=radio][disabled].radiobox:checked+span:before {
   color: #A7A7A7;
 }
 
-label input[type=checkbox].checkbox+span:before {
-  content: "\a0"
-}
-
-label input[type=checkbox].checkbox:checked+span:before {
-  content: "\f00c"
-}
-
-label input[type=checkbox].checkbox:checked+span {
-  font-weight: 700;
-}
-
-label input[type=checkbox].checkbox:checked+span:before {
-  color: #2E7BCC;
-}
-
-label input[type=checkbox].checkbox.style-3:checked+span:before {
-  color: #fff;
-  border-color: #a90329;
-  background: #a90329;
-}
-
-label input[type=checkbox].checkbox.style-2+span:before {
-  background: 0 0;
-  border-color: #c1c1c1;
-  box-shadow: none;
-}
-
-label input[type=checkbox].checkbox.style-2:checked+span:before {
-  content: "\f00c";
-  color: #66665e;
-  border-color: #4d90fe;
-}
-
-label input[type=checkbox].checkbox.style-2,
-checked+span {
-  font-weight: 400;
-}
-
-label input[type=checkbox].checkbox.style-1+span:before {
-  color: #333;
-  background: #fff;
-  text-shadow: none;
-  box-shadow: none !important;
-  border-width: 1px;
-  height: 12px;
-  line-height: 13px;
-  min-width: 12px;
-}
-
-label input[type=checkbox].checkbox.style-1:checked+span:before {
-  color: #333;
-  border-color: #333;
-}
-
-label input[type=checkbox].checkbox.style-1:checked+span {
-  font-weight: 400;
-}
-
-label:active input[type=checkbox].checkbox+span:before {
-  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
-}
-
-label:hover input[type=checkbox].checkbox+span:before {
-  color: #2E7BCC;
-  border-color: #2E7BCC;
-}
-
-label:hover input[type=checkbox].checkbox.style-3+span:before {
-  color: #fff;
-  border-color: #A90327;
-}
-
-label:hover input[type=checkbox].checkbox.style-2+span:before {
-  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .1), 0 1px 0 0 rgba(255, 255, 255, .2);
-}
-
-label:hover input[type=checkbox].checkbox.style-2:checked+span:before {
-  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
-}
-
-label:hover input[type=checkbox].checkbox.style-1+span:before {
-  border-color: #333;
-}
-
-label:active input[type=checkbox].checkbox:checked+span:before {
-  color: #fff;
-  background: #2E7BCC;
-  border-color: #2E7BCC;
-}
-
-label:active input[type=checkbox].checkbox.style-3:checked+span:before {
-  color: #a90329;
-  background: #fff;
-  border-color: #a90329;
-}
-
-label:active input[type=checkbox].checkbox.style-2+span:before,
-label:active input[type=checkbox].checkbox.style-2:checked+span:before {
-  color: #66665e;
-  background: 0 0;
-  border-color: #c1c1c1;
-  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
-  padding-left: 10px !important;
-}
-
-label:active input[type=checkbox].checkbox.style-1:checked+span:before {
-  color: #fff;
-  background: #333;
-  border-color: #333;
-  padding-left: 10px !important;
-}
-
-label input[type=checkbox][disabled].checkbox+span,
-label input[type=checkbox][disabled].checkbox:checked+span,
-label:hover input[type=checkbox][disabled].checkbox:checked+span:before {
-  color: #A7A7A7;
-  cursor: not-allowed;
-}
-
-label input[type=checkbox][disabled].checkbox.style-2:checked+span:before,
-label input[type=checkbox][disabled].checkbox:checked+span:before {
-  content: "\f00c"
-}
-
 
 :host ::ng-deep .style td input {
   text-align: right !important;
@@ -770,13 +542,13 @@ fieldset[disabled] .form-control-dev {
 
 :host ::ng-deep .control-label {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   color: black;
 }
 
 :host ::ng-deep .p-dialog .p-dialog-content:last-of-type {
   border-radius: 6px !important;
-  overflow: auto;
+  overflow: visible;
 }
 
 
@@ -798,6 +570,8 @@ h4 {
   margin-top: 5px;
   color: black;
 }
+
+
 
 
 .flex-row-around {
@@ -855,7 +629,7 @@ textarea {
 .flex-6 {
   flex: 6;
   max-width: 100%;
-  padding: 5px 10px 15px;
+  padding: 3px 4px 2px;
 }
 
 .flex-7 {
@@ -889,10 +663,7 @@ textarea {
 }
 
 
-fieldset[disabled] label input[type=checkbox].checkbox+span:hover,
-fieldset[disabled] label input[type=radio].radiobox+span:hover {
-  cursor: not-allowed;
-}
+
 
 .flex-row-start {
   display: flex;
@@ -932,21 +703,29 @@ button.btn.btn-danger.cancel-voir {
   margin-top: 30px;
 }
 
-button.btn.btn-danger.cancel-delete {
+.cancel-delete {
   position: relative;
-
-  left: 219px;
+  height: 35px;
+  left: 200px;
   font-size: 13px;
   direction: ltr;
-  /* bottom: 3px; */
+  font-weight: 500;
+  /* top: 10px; */
 }
 
 .save-delete {
   position: relative;
-  left: 125px;
+  left: 105px;
   font-size: 13px;
   direction: ltr;
-  /* bottom: 3px; */
+  height: 35px;
+  font-weight: 500;
+  /* top: 10px; */
+}
+
+.headerForm {
+  padding: 0px 40px 0px 0px;
+  font-family: cursive;
 }
 
 .text-delete {
@@ -958,10 +737,376 @@ button.btn.btn-danger.cancel-delete {
   left: 5px;
 }
 
-.icon-fermer{
+.icon-fermer {
   color: red;
 }
 
-.icon-save{
+.icon-save {
   color: green;
+}
+
+
+
+/* //checkbox style  */
+
+
+
+:host ::ng-deep label.p-checkbox-label.ng-star-inserted {
+  font-weight: 400;
+  font-size: 13px;
+  color: black;
+  padding: 3px 4px 0px 0px;
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box {
+  border: 1px solid #ced4da;
+  color: #495057;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  border-color: #363636;
+  background: #ffffff;
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  transition-duration: 0.2s;
+  color: #3B82F6;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+:host ::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+  border-color: #0062cc;
+  background: #fbfbfb;
+  color: #ffffff;
+}
+
+:host ::ng-deep .p-checkbox-box {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox+span:before {
+  content: "\a0"
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox:checked+span:before {
+  content: "\f00c"
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox:checked+span {
+  font-weight: 700;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox:checked+span:before {
+  color: #2E7BCC;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-3:checked+span:before {
+  color: #fff;
+  border-color: #a90329;
+  background: #a90329;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-2+span:before {
+  background: 0 0;
+  border-color: #c1c1c1;
+  box-shadow: none;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-2:checked+span:before {
+  content: "\f00c";
+  color: #66665e;
+  border-color: #4d90fe;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-2,
+checked+span {
+  font-weight: 500;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-1+span:before {
+  color: #333;
+  background: #fff;
+  text-shadow: none;
+  box-shadow: none !important;
+  border-width: 1px;
+  height: 12px;
+  line-height: 13px;
+  min-width: 12px;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-1:checked+span:before {
+  color: #333;
+  border-color: #333;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox.style-1:checked+span {
+  font-weight: 300;
+}
+
+:host ::ng-deep label:active input[type=checkbox].checkbox+span:before {
+  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox+span:before {
+  color: #2E7BCC;
+  border-color: #2E7BCC;
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox.style-3+span:before {
+  color: #fff;
+  border-color: #A90327;
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox.style-2+span:before {
+  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .1), 0 1px 0 0 rgba(255, 255, 255, .2);
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox.style-2:checked+span:before {
+  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox.style-1+span:before {
+  border-color: #333;
+}
+
+:host ::ng-deep label:active input[type=checkbox].checkbox:checked+span:before {
+  color: #fff;
+  background: #2E7BCC;
+  border-color: #2E7BCC;
+}
+
+:host ::ng-deep label:active input[type=checkbox].checkbox.style-3:checked+span:before {
+  color: #a90329;
+  background: #fff;
+  border-color: #a90329;
+}
+
+:host ::ng-deep label:active input[type=checkbox].checkbox.style-2+span:before,
+label:active input[type=checkbox].checkbox.style-2:checked+span:before {
+  color: #66665e;
+  background: 0 0;
+  border-color: #c1c1c1;
+  box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, .3), 0 1px 0 0 rgba(255, 255, 255, .4);
+  padding-left: 10px !important;
+}
+
+:host ::ng-deep label:active input[type=checkbox].checkbox.style-1:checked+span:before {
+  color: #fff;
+  background: #333;
+  border-color: #333;
+  padding-left: 10px !important;
+}
+
+:host ::ng-deep label input[type=checkbox][disabled].checkbox+span,
+label input[type=checkbox][disabled].checkbox:checked+span,
+label:hover input[type=checkbox][disabled].checkbox:checked+span:before {
+  color: #A7A7A7;
+  cursor: not-allowed;
+}
+
+:host ::ng-deep label input[type=checkbox][disabled].checkbox.style-2:checked+span:before,
+label input[type=checkbox][disabled].checkbox:checked+span:before {
+  content: "\f00c"
+}
+
+
+:host ::ng-deep .checkbox input[type=checkbox].checkbox+span,
+.checkbox-inline input[type=checkbox].checkbox+span,
+.radio input[type=radio].radiobox+span,
+.radiobox-inline input[type=radio].radiobox+span {
+  margin-left: -20px;
+}
+
+:host ::ng-deep .form-inline .checkbox input[type=checkbox].checkbox+span,
+.form-inline .radiobox input[type=radio].radiobox+span {
+  margin-left: 0;
+}
+
+:host ::ng-deep .form-inline .checkbox,
+.form-inline .radiobox {
+  padding-left: 0;
+}
+
+:host ::ng-deep input[type=checkbox].checkbox+span,
+label input[type=radio].radiobox+span {
+  vertical-align: middle;
+  line-height: 20px;
+}
+
+:host ::ng-deep input[type=checkbox].checkbox+span,
+input[type=checkbox].checkbox+span:after,
+input[type=checkbox].checkbox+span:before,
+input[type=radio].radiobox+span,
+input[type=radio].radiobox+span:after,
+input[type=radio].radiobox+span:before {
+  box-sizing: content-box !important;
+}
+
+:host ::ng-deep input[type=checkbox].checkbox,
+input[type=radio].radiobox {
+  visibility: hidden;
+  position: absolute;
+  z-index: 20;
+  width: 18px;
+  height: 18px;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox+span,
+label input[type=radio].radiobox+span {
+  position: relative;
+  z-index: 19;
+  display: inline-block;
+  margin: 0;
+  line-height: 17px;
+  min-height: 14px;
+  min-width: 14px;
+  margin-right: 5px;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox+span:hover,
+label input[type=radio].radiobox+span:hover {
+  cursor: pointer;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox+span:before,
+label input[type=radio].radiobox+span:before {
+  font-family: FontAwesome;
+  font-size: 12px;
+  border-radius: 0;
+  content: "\a0";
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  padding: 1px;
+  height: 12px;
+  line-height: 12px;
+  min-width: 12px;
+  margin-right: 5px;
+  border: 1px solid #bfbfbf;
+  background-color: #f4f4f4;
+  font-weight: 400;
+  margin-top: -1px;
+}
+
+:host ::ng-deep fieldset[disabled] label input[type=checkbox].checkbox+span:hover,
+fieldset[disabled] label input[type=radio].radiobox+span:hover {
+  cursor: not-allowed;
+}
+
+
+:host ::ng-deep label input[type=checkbox].checkbox+span:before {
+  background: 0 0;
+  border-color: #888;
+  box-shadow: none;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox:checked+span:before {
+  content: "\f00c";
+  color: #66665e;
+  border-color: #1293b8;
+}
+
+:host ::ng-deep label input[type=checkbox].checkbox,
+checked+span {
+  font-weight: 500;
+}
+
+:host ::ng-deep label:hover input[type=checkbox].checkbox+span:before {
+  border-color: #1293b8;
+}
+
+label:hover input[type=checkbox].checkbox:checked+span:before {
+  border-color: #888;
+}
+
+:host ::ng-deep .checkbox-actif-visible {
+  text-align: center;
+  border: 1px solid #bfbfbf !important;
+  padding-left: 10px !important;
+  width: 68px;
+}
+
+
+
+:host ::ng-deep label.p-checkbox-label.ng-star-inserted.p-checkbox-label-active {
+  font-weight: 500;
+}
+
+
+
+
+
+/* ////// drop down select  */
+
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  font-size: 13px !important;
+  margin: 0;
+  padding: 0.75rem 1.25rem;
+  border: 0 none;
+  color: #495057;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+
+:host ::ng-deep span.ng-tns-c82-6.p-dropdown-label {
+  font-size: 12px;
+}
+
+:host ::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label {
+  padding-right: 1.75rem;
+  color: #555;
+  font-size: 13px;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-clear-icon {
+  position: inherit;
+  right: initial;
+  top: 16px;
+}
+
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  padding-right: -0.25rem !important;
+  margin-right: 0.25rem !important;
+  position: relative;
+  z-index: 5000;
+}
+
+.drop-control {
+  display: block !important;
+  position: relative !important;
+  flex: auto !important;
+  min-width: 0 !important;
+  width: 180px !important;
+  height: 4px !important;
+}
+
+.active+.ajax-dropdown {
+  animation-name: flipInY;
+  animation-duration: .7s;
+  animation-fill-mode: both;
+}
+
+:host ::ng-deep .chkActif {
+  padding: 0px 20px 0px 345px;
+}
+
+:host ::ng-deep .ChkVisib {
+  padding: 0px 5px 0px 0px;
+}
+
+
+
+:host ::ng-deep i.fa-lg.fa-fw.fa.fa-times.icon-required {
+  color: red;
+  font-size: smaller;
+  position: relative;
+  bottom: 25px;
+  right: 20px;
 }

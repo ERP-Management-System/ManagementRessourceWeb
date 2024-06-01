@@ -186,3 +186,9 @@ header {
 :host ::ng-deep .col-md-3 {
     width: 220px;
 }
+
+@media (min-width: 1200px) {
+    .container {
+        width: auto;
+    }
+}

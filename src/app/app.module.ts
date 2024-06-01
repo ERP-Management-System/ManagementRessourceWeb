@@ -99,36 +99,35 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
  
 import {  MatInputModule } from '@angular/material/input';
-import { MatTableModule } from '@angular/material/table' 
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; 
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+// import { MatCheckboxModule } from '@angular/material/checkbox';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatListModule } from '@angular/material/list';
-import { MatDialogModule } from '@angular/material/dialog';
+// import { MatSidenavModule } from '@angular/material/sidenav';
+// import { MatToolbarModule } from '@angular/material/toolbar';
+// import { MatAutocompleteModule } from '@angular/material/autocomplete';
+// import { MatListModule } from '@angular/material/list';
+// import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatMenuModule } from '@angular/material/menu';
+// import { MatMenuModule } from '@angular/material/menu';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { CalendarModule } from 'primeng/calendar';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CalendarModule } from 'primeng/calendar'; 
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { TableModule } from 'primeng/table';
 import { MessagesModule } from 'primeng/messages';
 import { CheckboxModule } from 'primeng/checkbox';
-import { MessageModule } from "primeng/message"; 
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageModule } from "primeng/message";  
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { MenuModule } from 'primeng/menu';     
-import { FileUploadModule } from 'primeng/fileupload';
-
+import { FileUploadModule } from 'primeng/fileupload';  
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ParametrageCentralService } from './parametrageCenral/ParametrageCentralService/parametrage-central.service';
 
 
 @NgModule({
@@ -235,12 +234,12 @@ import { FileUploadModule } from 'primeng/fileupload';
     AppRoutingModule, FormsModule,
     TableModule, DropdownModule, ButtonModule,ConfirmDialogModule,
     MatFormFieldModule,
-    MatInputModule,MatRadioModule
+    MatInputModule,MatRadioModule,MatSelectModule
     
   ],
-  providers: [
-    // provideAnimationsAsync()
-  ],
+  providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

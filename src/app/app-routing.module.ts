@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router'; 
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { BanqueComponent } from './parametrageCenral/banque/banque.component';
 import { DeviseComponent } from './parametrageCenral/devise/devise.component';
@@ -11,17 +11,28 @@ import { TypeCaisseComponent } from './parametrageCenral/type-caisse/type-caisse
 import { TestPageComponent } from './test-page/test-page.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent},
-  { path: '', redirectTo: '/home', pathMatch: 'full'},
-  {path: 'parametrage_central', component: ParametrageCentralComponent},
-  {path: 'test', component: TestPageComponent},
-  {path: 'mode_reglement', component: ModeReglementComponent},
-  {path: 'devise', component: DeviseComponent},
-  {path: 'banque', component: BanqueComponent},
-  {path: 'saison', component: SaisonComponent},
-  {path: 'type_caisse', component: TypeCaisseComponent},
-  {path: 'region', component: RegionComponent},
-  
+  // { path: 'home', component: HomeComponent},
+  // { path: '', redirectTo: '/', pathMatch: 'full'},
+  // {path: '', component: HomeComponent, pathMatch: 'full' , redirectTo: ''},
+  {
+    path: '',
+    children: [
+      {
+        pathMatch: 'full',
+        path: '',
+        component: HomeComponent,
+      }
+    ]
+  },
+  { path: 'parametrageCentral', component: ParametrageCentralComponent },
+  { path: 'test', component: TestPageComponent },
+  { path: 'mode_reglement', component: ModeReglementComponent },
+  { path: 'devise', component: DeviseComponent },
+  { path: 'banque', component: BanqueComponent },
+  { path: 'saison', component: SaisonComponent },
+  { path: 'type_caisse', component: TypeCaisseComponent },
+  { path: 'region', component: RegionComponent },
+
 
 ];
 

@@ -18,6 +18,9 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+                        "allowedCommonJsDependencies": [
+                            "rxjs-compat","alertifyjs","quill","lodash"
+                         ],
                         "outputPath": "dist/manage-ressource-web",
                         "index": "src/index.html",
                         "main": "src/main.ts",
@@ -38,7 +41,6 @@
                             "node_modules/quill/dist/quill.snow.css"
                         ],
                         "scripts": [
-                          "node_modules/quill/dist/quill.js"
 
                         ]
                     },
@@ -54,8 +56,7 @@
                                     "maximumWarning": "2kb",
                                     "maximumError": "4kb"
                                 }
-                            ],
-                            "outputHashing": "all"
+                            ],"outputHashing": "all"
                         },
                         "development": {
                             "buildOptimizer": false,
@@ -82,15 +83,18 @@
                         "development": {
                             "browserTarget": "ManageRessourceWeb:build:development",
                             "proxyConfig": "src/proxy.conf.json"
-                        } 
+                        } ,
+                        "quick": {
+                           "browserTarget": "ManageRessourceWeb:build:quick",
+                           "proxyConfig": "src/proxy.conf.json"
+                        }
                     },
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "ManageRessourceWeb:build",
-                        "proxyConfig": "src/proxy.conf.json"
+                        "browserTarget": "ManageRessourceWeb:build"
                     }
                 },
                 "test": {
