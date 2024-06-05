@@ -8,9 +8,10 @@ import { catchError, throwError, timeout, of } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { Banque, TypeCaisse } from '../domaine/ParametrageCentral';
+import { Banque, ModeReglement, TypeCaisse } from '../domaine/ParametrageCentral';
 import { ParametrageCentralService } from '../ParametrageCentralService/parametrage-central.service';
 
+declare const PDFObject: any;
 
 @Component({
   selector: 'app-mode-reglement',
@@ -31,11 +32,11 @@ export class ModeReglementComponent implements OnInit {
 
 
   constructor(private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-   
-  
+
+
   }
 
-  myDefaultValue='Soff';
+  myDefaultValue = 'Soff';
 
   // sourceProducts!: Article[];
 
@@ -61,14 +62,44 @@ export class ModeReglementComponent implements OnInit {
   // clonedProducts: { [s: string]: Article } = {};
   // colsAdd!: any[];
 
+  pdfData!: Blob;
+  isLoading = false;
   ngOnInit(): void {
 
-    this.checkRequiredFields(this.designationAr);
     this.GelAllModeReglementActif();
     this.Voids();
-    // this.getAllArticleModal();
 
 
+
+
+
+  }
+
+
+  RemplirePrint(): void {
+
+    this.param_achat_service.getPDFf().subscribe(blob => {
+      const reader = new FileReader();
+      const binaryString = reader.readAsDataURL(blob);
+      reader.onload = (event: any) => {
+        //Here you can do whatever you want with the base64 String
+        // console.log("File in Base64: ", event.target.result);
+        this.pdfData = event.target.result;
+        this.isLoading = false;
+        if (this.pdfData) {
+          this.handleRenderPdf(this.pdfData);
+        }
+      };
+
+      reader.onerror = (event: any) => {
+        console.log("File could not be read: " + event.target.error.code);
+      };
+    });
+
+  }
+
+  handleRenderPdf(data: any) {
+    const pdfObject = PDFObject.embed(data, '#pdfContainer');
   }
 
 
@@ -121,6 +152,7 @@ export class ModeReglementComponent implements OnInit {
   // data: any = null;
   searchTerm = '';
   visibleModal: boolean = false;
+  visibleModalPrint: boolean = false;
   visDelete: boolean = false;
   code!: number | null;
   codeSaisie: any;
@@ -147,6 +179,7 @@ export class ModeReglementComponent implements OnInit {
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
+    this.visible = event.data.visible;
     this.codeSaisie = event.data.codeSaisie;
     this.designationAr = event.data.designationAr;
     this.designationLt = event.data.designationLt;
@@ -164,15 +197,7 @@ export class ModeReglementComponent implements OnInit {
 
   //  }
 
-  ngOnChanges(changes: any) {
-    this.checkRequiredFields(this.designationAr);
-  }
 
-  checkRequiredFields(input: string | null) {
-    if (input === null) {
-      throw new Error("Attribute 'a' is required");
-    }
-  }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // article!: Article[];
@@ -269,8 +294,8 @@ export class ModeReglementComponent implements OnInit {
 
 
 
-  DeleteddeAchat(code: any) {
-    this.param_achat_service.DeleteDdeAchat(code).pipe(
+  DeleteModeReglement(code: any) {
+    this.param_achat_service.DeleteModeReglement(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -391,21 +416,24 @@ export class ModeReglementComponent implements OnInit {
 
     }
 
+    if (mode === 'Print') {
+
+    
+      button.setAttribute('data-target', '#ModalPrint');
+      this.formHeader = "Imprimer Liste Reglement"
+      this.visibleModalPrint = true;
+      this.RemplirePrint();
+ 
+
+    }
+
   }
 
-  coutdemande = "3200";
-  codeDemandeur !: number;
+    
   userCreate = "soufien";
   // datecreate !: Date;
-  currentDate = new Date();
-  // today = new Date();
-  // changedDate! : string |"" ;
-  // pipe = new DatePipe('en-US');
-  // changeFormat(today){
-  //   let ChangedFormat = this.pipe.transform(this.today, 'dd/MM/YYYY');
-  //   this.changedDate = ChangedFormat;
-  //   console.log(this.changedDate);
-  // }
+  currentDate = new Date(); 
+
   ajusterHourAndMinutes() {
     let hour = new Date().getHours();
     let hours;
@@ -483,6 +511,9 @@ export class ModeReglementComponent implements OnInit {
             this.ngOnInit();
             this.check_actif = true;
             this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
+
           }
         );
 
@@ -510,6 +541,8 @@ export class ModeReglementComponent implements OnInit {
             this.code;
             this.check_actif = true;
             this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
 
           }
         )
@@ -518,37 +551,7 @@ export class ModeReglementComponent implements OnInit {
 
 
   }
-  // codeAdressFilialle: {}[] = [];
-
-  // our = new Array<any>();
-  // pushvalue = new Array<any>();
-  // GetArticleActifs(): void {
-  //   this.param_achat_service.GetArticleActif().pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       let errorMessage = '';
-  //       if (error.error instanceof ErrorEvent) {
-  //       } else {
-  //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-  //       }
-  //       return throwError(errorMessage);
-  //     })
-  //   )
-  //     .subscribe((data: any) => {
-  //       this.products = data;
-  //       this.our = [];
-  //       for (let i = 0; i < data["length"]; i++) {
-  //       }
-  //       this.pushvalue = this.our;
-  //     });
-  // }
-  // clears(table: Table) {
-  //   table.lazy = false;
-  //   table.clear();
-  //   table.lazy = true;
-  //   table.clear();
-
-  // }
+ 
 
   Voids(): void {
     this.cars = [
@@ -579,36 +582,6 @@ export class ModeReglementComponent implements OnInit {
 
 
 
-  // dataBanque = new Array<Banque>();
-  // listBanquepushed = new Array<any>();
-  // listBanqueRslt = new Array<any>();
-  // getAllBanqueModal() {
-  //   this.param_achat_service.GetAllBanque().pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       let errorMessage = '';
-  //       if (error.error instanceof ErrorEvent) { } else {
-  //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-
-  //       }
-  //       return throwError(errorMessage);
-  //     })
-
-  //   ).subscribe((data: any) => {
-  //     this.dataBanque = data;
-  //     this.listBanquepushed = [];
-  //     for (let i = 0; i < this.dataBanque.length; i++) {
-  //       this.listBanquepushed.push({ label: this.dataBanque[i].designationAr, value: this.dataBanque[i].code })
-  //     }
-  //     this.listBanqueRslt = this.listBanquepushed;
-  //   })
-  //   // })
-  // }
-
-
-
-
-
 
 
 
@@ -617,44 +590,45 @@ export class ModeReglementComponent implements OnInit {
   selectedTypeCaisse: any;
   compteur: number = 0;
   listDesig = new Array<any>();
-  OnBlur() {
-    var exist = false;
-    for (var y = 0; y < this.cars.length; y++) {
-      if (this.selectedBanque.code != this.cars[y].code) {
-        exist = false;
-      } else {
-        exist = true;
-        break;
-      }
-    }
-    if ((this.selectedBanque != undefined) && (this.selectedBanque != "") && (!exist)) {
-      this.param_achat_service.GetArticleBycode(this.selectedBanque).subscribe((data: any) => {
-        this.cars[this.compteur] = data;
-        this.compteur = this.compteur + 1;
-        this.listDesig.push(data);
-      })
-    }
-  }
-  clickDropDownUp(dropDownModUp: any) {
-    if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
-      dropDownModUp.focus();
-      if (!dropDownModUp.overlayVisible) {
-        dropDownModUp.show();
-        event!.preventDefault();
-      } else {
-        dropDownModUp.hide();
-        event!.preventDefault();
-      }
-    }
-  }
+  // OnBlur() {
+  //   var exist = false;
+  //   for (var y = 0; y < this.cars.length; y++) {
+  //     if (this.selectedBanque.code != this.cars[y].code) {
+  //       exist = false;
+  //     } else {
+  //       exist = true;
+  //       break;
+  //     }
+  //   }
+  //   if ((this.selectedBanque != undefined) && (this.selectedBanque != "") && (!exist)) {
+  //     this.param_achat_service.GetArticleBycode(this.selectedBanque).subscribe((data: any) => {
+  //       this.cars[this.compteur] = data;
+  //       this.compteur = this.compteur + 1;
+  //       this.listDesig.push(data);
+  //     })
+  //   }
+  // }
+  // clickDropDownUp(dropDownModUp: any) {
+  //   if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
+  //     dropDownModUp.focus();
+  //     if (!dropDownModUp.overlayVisible) {
+  //       dropDownModUp.show();
+  //       event!.preventDefault();
+  //     } else {
+  //       dropDownModUp.hide();
+  //       event!.preventDefault();
+  //     }
+  //   }
+  // }
   cars!: Array<ModeReglement>;
   brands!: SelectItem[];
   clonedCars: { [s: string]: ModeReglement } = {};
-  NewDate = new Date();
+  // NewDate = new Date();
   codeModeReglementDde: {}[] = [];
   dataModeReglementDde = new Array<ModeReglement>();
-  listModeReglementPushed = new Array<any>();
-  listModeReglementRslt = new Array<any>();
+  banque: any;
+  // listModeReglementRslt = new Array<any>();
+  // listModeReglementPushed = new Array<any>();
   GelAllModeReglementActif() {
     this.param_achat_service.GetAllModeReglement().pipe(
       catchError((error: HttpErrorResponse) => {
@@ -668,12 +642,16 @@ export class ModeReglementComponent implements OnInit {
       })
 
     ).subscribe((data: any) => {
+
+
+
       this.dataModeReglementDde = data;
-      this.listModeReglementPushed = [];
-      for (let i = 0; i < this.dataModeReglementDde.length; i++) {
-        this.listModeReglementPushed.push({ label: this.dataModeReglementDde[i].designationAr, value: this.dataModeReglementDde[i].code })
-      }
-      this.listModeReglementRslt = this.listModeReglementPushed;
+      this.onRowUnselect(event);
+      // this.listModeReglementPushed = [];
+      // for (let i = 0; i < this.dataModeReglementDde.length; i++) {
+      //   this.listModeReglementPushed.push({ label: this.dataModeReglementDde[i].designationAr, value: this.dataModeReglementDde[i].code })
+      // }
+      // this.listModeReglementRslt = this.listModeReglementPushed;
     })
     // })
   }
@@ -713,6 +691,16 @@ export class ModeReglementComponent implements OnInit {
   ListBQRslt = new Array<any>();
   GelAllBanque() {
     this.param_achat_service.GetAllBanque().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
     ).subscribe((datas: any) => {
       this.ListBanqueData = datas;
       this.ListBQPushed = [];
@@ -725,17 +713,23 @@ export class ModeReglementComponent implements OnInit {
   }
 
 
+  // printInvoice() {
+  //   this.param_achat_service.findPendingInwardsPdf().subscribe((response) => {
+
+  //     const file = new Blob([response], { type: 'application/pdf' });
+  //     const fileURL = URL.createObjectURL(file);
+  //     window.open(fileURL);
+  //   });
+  // }
+
+  serviceUrl!: string;
+  reportServerUrl!: string;
+  reportPath!: string;
+  serverServiceAuthorizationToken!: string;
+
+
 }
 
-export interface ModeReglement {
-  code: number;
-  code_saisie: string;
-  designationAr: string;
-  designationLt: string;
-  actif: string;
-  codeTypeCaisse: number;
-  codeBanque: number;
-}
 
 
 

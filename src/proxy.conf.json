@@ -1,6 +1,6 @@
 {
   "/parametrage_achat": {
-      "target": "http://localhost:8080/api",
+      "target": "http://localhost:9000/api",
       "secure": false,
       "logLevel": "debug",
       "changeOrigin": true,

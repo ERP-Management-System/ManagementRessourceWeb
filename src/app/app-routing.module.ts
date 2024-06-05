@@ -8,7 +8,13 @@ import { ParametrageCentralComponent } from './parametrageCenral/parametrage-cen
 import { RegionComponent } from './parametrageCenral/region/region.component';
 import { SaisonComponent } from './parametrageCenral/saison/saison.component';
 import { TypeCaisseComponent } from './parametrageCenral/type-caisse/type-caisse.component';
-import { TestPageComponent } from './test-page/test-page.component';
+ 
+import { MenuParametrageMatiereComponent } from './ParametrageMatiere/menu-parametrage-matiere/menu-parametrage-matiere.component';
+import { ColorisComponent } from './ParametrageMatiere/coloris/coloris.component';
+import { GrilleTailleComponent } from './ParametrageMatiere/grille-taille/grille-taille.component';
+import { MatiereComponent } from './ParametrageMatiere/matiere/matiere.component';
+import { TailleComponent } from './ParametrageMatiere/taille/taille.component';
+import { TypeMatiereComponent } from './ParametrageMatiere/type-matiere/type-matiere.component';
 
 const routes: Routes = [
   // { path: 'home', component: HomeComponent},
@@ -25,13 +31,24 @@ const routes: Routes = [
     ]
   },
   { path: 'parametrageCentral', component: ParametrageCentralComponent },
-  { path: 'test', component: TestPageComponent },
+ 
   { path: 'mode_reglement', component: ModeReglementComponent },
   { path: 'devise', component: DeviseComponent },
   { path: 'banque', component: BanqueComponent },
   { path: 'saison', component: SaisonComponent },
   { path: 'type_caisse', component: TypeCaisseComponent },
   { path: 'region', component: RegionComponent },
+  { path: 'menu_parametrage_matiere', component: MenuParametrageMatiereComponent }
+, 
+  { path: 'menu_parametrage_matiere/matiere', component: MatiereComponent },
+  { path: 'menu_parametrage_matiere/taille', component: TailleComponent  },
+  { path: 'menu_parametrage_matiere/type_matiere', component: TypeMatiereComponent },
+  { path: 'menu_parametrage_matiere/coloris', component: ColorisComponent },
+  { path: 'menu_parametrage_matiere/grille_taille', component: GrilleTailleComponent },
+  // { path: 'matiere', component: MatiereComponent },
+  // { path: 'taille', component: TailleComponent },
+ 
+
 
 
 ];
@@ -40,4 +57,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { } 
+export const ArrayOfComponents = [MenuParametrageMatiereComponent, 
+  MatiereComponent, TailleComponent]

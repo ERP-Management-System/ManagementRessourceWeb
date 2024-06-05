@@ -147,6 +147,9 @@ PostModeReglement(body : any){
   return this.http.post(`${environment.API_BASE_URL}mode_reglement`,body);
 }
 
+getPDFf() {
+  return this.http.get(`${environment.API_BASE_URL}mode_reglement/exp`, { responseType: "blob" }); 
+}
 
 
 
@@ -159,7 +162,27 @@ UpdateModeReglement(body : any){
 
 
 
+DeleteModeReglement(code : number){
+  return this.http.delete(`${environment.API_BASE_URL}mode_reglement/delete/`+code);
+}
+
+
+GetMatiere(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}matiere/all`);
+}
 
 
 
+UpdateMatiere(body : any){
+
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}matiere/update`,body);
+}
+
+
+GetAllTypeMatiere(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}type_matiere/all`);
+}
+ 
 }

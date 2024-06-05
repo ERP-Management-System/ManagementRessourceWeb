@@ -87,3 +87,43 @@ export interface TypeCaisse{
   designationLt:string
   
   }
+
+  
+export interface ModeReglement {
+  code: number
+  code_saisie: string,
+  designationAr: string,
+  designationLt: string,
+  actif: string,
+  codeTypeCaisse: number,
+  codeBanque: number,
+  banque:{
+    code:number,
+    designationAr: string,
+    designationLt: string,
+
+  },
+  typecaisse:{
+    code:number;
+    designationAr: string,
+    designationLt: string,
+  }
+}
+
+
+
+export interface Matiere {
+  code: number
+  code_saisie: string,
+  designationAr: string,
+  designationLt: string,
+  actif: string,
+  codeTypeMatiereDTO:{
+    code:number,
+    code_saisie: string,
+    designationAr: string,
+    designationLt: string,
+    actif: string,
+  }
+  
+}

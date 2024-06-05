@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestPageComponent } from './test-page.component';
+import { TypeMatiereComponent } from './type-matiere.component';
 
-describe('TestPageComponent', () => {
-  let component: TestPageComponent;
-  let fixture: ComponentFixture<TestPageComponent>;
+describe('TypeMatiereComponent', () => {
+  let component: TypeMatiereComponent;
+  let fixture: ComponentFixture<TypeMatiereComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestPageComponent]
+      declarations: [TypeMatiereComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(TestPageComponent);
+    fixture = TestBed.createComponent(TypeMatiereComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, ArrayOfComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
  
 import {  FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavbarComponent } from './home/navbar/navbar.component';
-import { TestPageComponent } from './test-page/test-page.component';
+import { NavbarComponent } from './home/navbar/navbar.component'; 
 import { ParametrageCentralComponent } from './parametrageCenral/parametrage-central/parametrage-central.component';
 import { ModeReglementComponent } from './parametrageCenral/mode-reglement/mode-reglement.component'; 
 
@@ -26,7 +25,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
-
+// import { DefaultToPipe } from '@angular/common';
 ///////////////////////////////
 import { PickListModule } from 'primeng/picklist';
 import {ButtonModule} from 'primeng/button';
@@ -128,18 +127,32 @@ import { MenuModule } from 'primeng/menu';
 import { FileUploadModule } from 'primeng/fileupload';  
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParametrageCentralService } from './parametrageCenral/ParametrageCentralService/parametrage-central.service';
+ 
 
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { TypeMatiereComponent } from './ParametrageMatiere/type-matiere/type-matiere.component';
+import { ColorisComponent } from './ParametrageMatiere/coloris/coloris.component';
+import { MatiereComponent } from './ParametrageMatiere/matiere/matiere.component';
+import { TailleComponent } from './ParametrageMatiere/taille/taille.component';
+import { UniteComponent } from './ParametrageMatiere/unite/unite.component';
+import { GrilleTailleComponent } from './ParametrageMatiere/grille-taille/grille-taille.component';
+import { MenuParametrageMatiereComponent } from './ParametrageMatiere/menu-parametrage-matiere/menu-parametrage-matiere.component';
+import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+ 
 
 @NgModule({
   declarations: [
-    AppComponent,HomeComponent, NavbarComponent, TestPageComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent
-  ],
+    AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
+  ,ArrayOfComponents],
   imports: [
     BrowserModule,BrowserAnimationsModule,
     AppRoutingModule,FormsModule, ReactiveFormsModule,BreadcrumbModule,ToastModule
     ,ConfirmDialogModule,MatIconModule,DialogModule,EditorModule,
-
-
+ 
     ////////
     AvatarModule,
     BrowserModule,
@@ -234,9 +247,13 @@ import { ParametrageCentralService } from './parametrageCenral/ParametrageCentra
     AppRoutingModule, FormsModule,
     TableModule, DropdownModule, ButtonModule,ConfirmDialogModule,
     MatFormFieldModule,
-    MatInputModule,MatRadioModule,MatSelectModule
-    
-  ],
+    MatInputModule,MatRadioModule,MatSelectModule,
+ // report viewer
+ PdfViewerModule
+ ,
+ NgxExtendedPdfViewerModule,
+ CommonModule, RouterModule
+  ], 
   providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
     { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService
 ],

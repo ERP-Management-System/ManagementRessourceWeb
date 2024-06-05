@@ -263,6 +263,14 @@ tr.mat-footer-row {
 }
 
 
+:host ::ng-deep .ModalPrint {
+  border-radius: 6px;
+  width: 1100px;
+  font-family: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 :host ::ng-deep .p-datatable .p-datatable-header {
   background: #f8f9fa;
   color: #343a40;
@@ -703,7 +711,7 @@ button.btn.btn-danger.cancel-voir {
   margin-top: 30px;
 }
 
-.cancel-delete {
+.cancel-add {
   position: relative;
   height: 35px;
   left: 200px;
@@ -713,7 +721,7 @@ button.btn.btn-danger.cancel-voir {
   /* top: 10px; */
 }
 
-.save-delete {
+.save-add {
   position: relative;
   left: 105px;
   font-size: 13px;
@@ -1110,3 +1118,49 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   bottom: 25px;
   right: 20px;
 }
+
+
+/* /////// modal delete  */
+
+:host ::ng-deep .ModalDelete {
+  border-radius: 6px;
+  width: 625px;
+  font-family: auto;
+}
+
+
+:host ::ng-deep .save-delete {
+  position: relative;
+  left: 380px;
+  font-size: 13px;
+  direction: ltr;
+  bottom: 3px;
+  width: 80px;
+}
+
+
+:host ::ng-deep .btn-cancel-delete {
+  position: relative;
+  left: 219px !important;
+  font-size: 13px;
+  direction: ltr;
+  bottom: 3px;
+  width: 80px;
+}
+
+
+
+/* ///// fin modal delete  */
+
+
+/* report viewerrr */
+
+.pdfobject-container {
+  max-width: 100%;
+  width: 1300px;
+  height: 600px;
+  border: 10px solid rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+
