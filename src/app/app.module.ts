@@ -104,12 +104,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 // import { MatButtonModule } from '@angular/material/button';
 // import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
-// import { MatSidenavModule } from '@angular/material/sidenav';
-// import { MatToolbarModule } from '@angular/material/toolbar';
-// import { MatAutocompleteModule } from '@angular/material/autocomplete';
-// import { MatListModule } from '@angular/material/list';
-// import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';  
 import { MatRadioModule } from '@angular/material/radio';
 // import { MatMenuModule } from '@angular/material/menu';
 import { DropdownModule } from 'primeng/dropdown';
@@ -129,7 +124,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParametrageCentralService } from './parametrageCenral/ParametrageCentralService/parametrage-central.service';
  
 
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { TypeMatiereComponent } from './ParametrageMatiere/type-matiere/type-matiere.component';
@@ -141,13 +135,16 @@ import { GrilleTailleComponent } from './ParametrageMatiere/grille-taille/grille
 import { MenuParametrageMatiereComponent } from './ParametrageMatiere/menu-parametrage-matiere/menu-parametrage-matiere.component';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
+import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
+import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 
  
 
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents],
+  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent],
   imports: [
     BrowserModule,BrowserAnimationsModule,
     AppRoutingModule,FormsModule, ReactiveFormsModule,BreadcrumbModule,ToastModule
@@ -227,7 +224,7 @@ import { CommonModule } from '@angular/common';
     SplitterModule,
     SplitButtonModule,
     StepsModule,
-    TableModule,
+    TableModule, 
     TabMenuModule,
     TabViewModule,
     TagModule,
@@ -249,8 +246,8 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,MatRadioModule,MatSelectModule,
  // report viewer
- PdfViewerModule
- ,
+ 
+ 
  NgxExtendedPdfViewerModule,
  CommonModule, RouterModule
   ], 

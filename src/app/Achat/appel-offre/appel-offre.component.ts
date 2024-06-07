@@ -1,45 +1,67 @@
-
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component,  ChangeDetectorRef } from '@angular/core';
+import { Component,  ChangeDetectorRef, OnInit, ViewChild } from '@angular/core';
 import {   FormBuilder  } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { catchError, throwError  } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'  
-import { Matiere, ModeReglement, TypeCaisse } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { AO, AppelOffre, Coloris, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 
 
 declare const PDFObject: any;
 @Component({
-  selector: 'app-matiere',
-  templateUrl: './matiere.component.html',
-  styleUrl: './matiere.component.css', providers: [ConfirmationService, MessageService]
+  selector: 'app-appel-offre',
+  templateUrl: './appel-offre.component.html',
+  styleUrl: './appel-offre.component.css', providers: [ConfirmationService, MessageService]
 })
-export class MatiereComponent {
- 
+export class AppelOffreComponent  implements OnInit  {
+  cars!:any[];
+  cols!: any[];
+  // colors!: SelectItem<any>[];
+  // colors! : Array<any>;
+
+  v1!:any[];
+  v2!: any[];
+  // colors: SelectItem[];
+
+  // colorNames = ['Orange', 'Black', 'Gray', 'Blue', 'Orange', 'Yellow'];
+  
+  // uniteNames = ['Piece', 'Metre'];
+
+
   openModal!: boolean;
 
 
-  constructor(private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-
-
+  constructor(private confirmationService: ConfirmationService,
+     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) 
+  {
+  
+    
   }
-
-  // myDefaultValue = 'Soff';
-
 
   pdfData!: Blob;
   isLoading = false;
   ngOnInit(): void {
 
-    this.GelAllMatiere();
-    this.Voids();
-
-
-
-
+    this.GelAllAppelOffre();
+    // this.Voids();
+this.VoidsNew();
+ 
+    
+    this.v2 = [
+      { field: 'codeSaisie', header: 'Code Saisie' },
+      { field: 'designationAr', header: 'Designation' },
+      { field: 'unite', header: 'Unite' },
+      { field: 'coloris', header: 'Coloris' },
+      { field: 'quantite', header: 'Quantite' },
+      // { field: 'delete', header: 'Delete' },
+    ];
+    
+    // this.v1 = [
+    //   {"designation": "VW", "unite": 2012, "coloris": "Orange", "quantite": "dsad231ff"}
+    // ];
 
   }
  
@@ -105,8 +127,8 @@ export class MatiereComponent {
     this.actif = false;
     this.visible = false;
     this.codeSaisie = ''; 
-    this.selectedTypeMatiere = ''
-    this.listTypeMatiereRslt = []; 
+    this.selectedCodeModeReglement = ''
+    // this.listTypeAppelOffreRslt = []; 
     this.onRowUnselect(event);
 
   }
@@ -120,7 +142,7 @@ export class MatiereComponent {
   visDelete: boolean = false;
   code!: number | null;
   codeSaisie: any;
-  designationAr: string = 'NULL';
+  designationAr: any;
   designationLt: string = "NULL";
   codeTypeCaisse: number = 0;
   codeBanque: string = "NULL";
@@ -136,7 +158,7 @@ export class MatiereComponent {
     this.codeSaisie = event.data.codeSaisie;
     this.designationAr = event.data.designationAr;
     this.designationLt = event.data.designationLt;
-    this.selectedTypeMatiere = event.data.typeMatiere; 
+    this.selectedCodeModeReglement = event.data.codeModeReglement; 
 
     console.log('vtData : ', event);
   }
@@ -246,8 +268,8 @@ export class MatiereComponent {
 
 
 
-  DeleteMatiere(code: any) {
-    this.param_achat_service.DeleteMatiere(code).pipe(
+  DeleteAppelOffre(code: any) {
+    this.param_achat_service.DeleteAppelOffre(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -282,7 +304,20 @@ export class MatiereComponent {
   //    document.getElementById('main-container').reset();
 
   // }
+
+
+
+  
   public onOpenModal(mode: string) {
+
+    // this.getListActionBloc();
+
+///// tessttt dropdown  with table
+
+
+
+
+
     // this.showForm = true;
     // 
 
@@ -296,7 +331,7 @@ export class MatiereComponent {
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
       button.setAttribute('data-target', '#Modal');
-      this.formHeader = "Nouveau Matiere"
+      this.formHeader = "Nouveau AppelOffre"
       // this.codeSaisie = this.compteurs;
       this.onRowUnselect(event);
       // this.code ==null;
@@ -304,8 +339,11 @@ export class MatiereComponent {
       this.actif = false;
       this.visibleModal = true;
       this.code == undefined; 
-      this.GelTypeMatiere();
-
+      this.GelMatiereActifVisible();
+      this. GelAllModeReglement();
+      this.GelUniteActifVisible();
+      this.GetColorisActifVisible(); 
+      
     }
     if (mode === 'edit') {
 
@@ -322,15 +360,16 @@ export class MatiereComponent {
       } else {
 
         button.setAttribute('data-target', '#Modal');
-        this.formHeader = "Edit Matiere"
+        this.formHeader = "Edit AppelOffre"
         // this.GetDesignationFL();
         // this.GetDesignationFLSelected(this.codeFilialle);
-        // this.GetDesignationAdress();
+        this.GelMatiereActifVisible();
         this.visibleModal = true;
         this.onRowSelect;
-        this.GelAllBanque();
-        this.GelTypeMatiere();
+        this. GelAllModeReglement();
 
+        this.GetColorisActifVisible();
+        this.GelUniteActifVisible();
       }
 
       // }
@@ -360,9 +399,10 @@ export class MatiereComponent {
 
         {
           button.setAttribute('data-target', '#ModalDelete');
-          this.formHeader = "Delete Matiere"
+          this.formHeader = "Delete Appel D'Offre"
           this.visDelete = true;
-
+          this.GelMatiereActifVisible();
+          this. GelAllModeReglement();
         }
       }
 
@@ -404,7 +444,7 @@ export class MatiereComponent {
     return hours + ':' + mins
   }
   datform = new Date();
-  PostModeReglement() {
+  PostAppelOffre() {
     // let form= this.formatDate.valeur;
     // this.datecreate = new Date();
     // let x=('0' + new Date().getDate()).slice(-2) + '/' + ('0' + (new Date().getMonth() + 1)).slice(-2) + '/' + new Date().getFullYear()+'T'+this.ajusterHourAndMinutes();
@@ -417,7 +457,7 @@ export class MatiereComponent {
 
     // ;
 
-    if (!this.designationAr || !this.designationLt || !this.selectedTypeMatiere || !this.codeSaisie) {
+    if (!this.designationAr || !this.designationLt || !this.selectedCodeModeReglement || !this.codeSaisie) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
@@ -428,9 +468,9 @@ export class MatiereComponent {
         codeSaisie: this.codeSaisie,
         designationAr: this.designationAr,
         designationLt: this.designationLt,
-        typeMatiere: this.selectedTypeMatiere, 
+        codeModeReglement: this.selectedCodeModeReglement, 
         userCreate: this.userCreate,
-
+        codeFournisseur :null,
         dateCreate: new Date().toISOString(), //
         code: this.code,
         actif: this.actif,
@@ -440,7 +480,7 @@ export class MatiereComponent {
       if (this.code != null) {
         body['code'] = this.code;
 
-        this.param_achat_service.UpdateMatiere(body).pipe(
+        this.param_achat_service.UpdateAppelOffre(body).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) {
@@ -505,82 +545,205 @@ export class MatiereComponent {
  
 
   Voids(): void {
-    this.cars = [
+    this.matieres = [
 
     ].sort((car1, car2) => {
       return 0;
     });
 
   }
-  onRowEditInit(car: Matiere) {
-    this.clonedCars[car.code_saisie] = { ...car };
-  }
+  // onRowEditInit(car: AppelOffre) {
+  //   this.clonedCars[car.codeSaisie] = { ...car };
+ 
+
+  // }
 
 
   public remove(index: number): void {
     this.listDesig.splice(index, 1);
-    console.log(index);
-  }
-  onRowEditSave(car: ModeReglement) {
-    delete this.clonedCars[car.code_saisie];
+    console.log("index",index);
   }
 
-  onRowEditCancel(car: ModeReglement, index: number) {
-    this.cars[index] = this.clonedCars[car.code_saisie];
-    delete this.clonedCars[car.code_saisie];
-  }
+ 
+  // onRowEditSave(car: AppelOffre) {
+  //   delete this.clonedCars[car.codeSaisie];
+  // }
+
+  // onRowEditCancel(car: AppelOffre, index: number) {
+  //   this.cars[index] = this.clonedCars[car.codeSaisie];
+  //   delete this.clonedCars[car.codeSaisie];
+  // }
+
+  types!: any[];
 
 
 
 
 
 
-
-
-  selectedBanque: any;
-  selectedTypeMatiere: any;
+  selectedMatiere: any;
+  selectedCodeModeReglement: any;
   compteur: number = 0;
   listDesig = new Array<any>();
-  // OnBlur() {
-  //   var exist = false;
-  //   for (var y = 0; y < this.cars.length; y++) {
-  //     if (this.selectedBanque.code != this.cars[y].code) {
-  //       exist = false;
-  //     } else {
-  //       exist = true;
-  //       break;
-  //     }
-  //   }
-  //   if ((this.selectedBanque != undefined) && (this.selectedBanque != "") && (!exist)) {
-  //     this.param_achat_service.GetArticleBycode(this.selectedBanque).subscribe((data: any) => {
-  //       this.cars[this.compteur] = data;
-  //       this.compteur = this.compteur + 1;
-  //       this.listDesig.push(data);
-  //     })
-  //   }
-  // }
-  // clickDropDownUp(dropDownModUp: any) {
-  //   if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
-  //     dropDownModUp.focus();
-  //     if (!dropDownModUp.overlayVisible) {
-  //       dropDownModUp.show();
-  //       event!.preventDefault();
-  //     } else {
-  //       dropDownModUp.hide();
-  //       event!.preventDefault();
-  //     }
-  //   }
-  // }
-  cars!: Array<Matiere>;
+  matieres!: Matiere[];
+
+  
+
+
+ 
+  MouveToTable() {
+  
+    console.log( "selectedMatiere MouveToTable" ,this.selectedMatiere)
+    console.log( "matieres MouveToTable " ,this.matieres)
+    var exist = false;
+    for (var y = 0; y < this.matieres.length; y++) {
+      if (this.selectedMatiere != this.matieres[y].code) {
+        exist = false;
+      } else {
+        exist = true;
+
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Matière déjà choisie");
+
+        break;
+      }
+    }
+    if ((this.selectedMatiere != undefined) && (this.selectedMatiere != "") && (!exist)) {
+      this.param_achat_service.GetMatiereByCode(this.selectedMatiere).subscribe((xxx: any) => {
+        console.log( "mouve selectedMatiere after get " ,this.selectedMatiere)
+        console.log( "mouve matieres after get " ,this.matieres)
+        this.matieres[this.compteur] = xxx;
+        this.compteur = this.compteur + 1;
+        this.listDesig.push(xxx);
+      })
+    }
+  }
+  clickDropDownUp(dropDownModUp: any) {
+    if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
+      dropDownModUp.focus();
+      if (!dropDownModUp.overlayVisible) {
+        dropDownModUp.show();
+        event!.preventDefault();
+      } else {
+        dropDownModUp.hide();
+        event!.preventDefault();
+      }
+    }
+  }
+
+
+
+    
+  articles!: Matiere[];
+  selectedarticle: any;
+  // compteur: number = 0;
+  listDesig2 = new Array<any>();
+  MouveToTableNew() {
+    var exist = false;
+    for (var y = 0; y < this.listDesig2.length; y++) {
+      if (this.selectedarticle != this.listDesig2[y].code) {
+        exist = false;
+      } else {
+        exist = true;
+
+        alertifyjs.set('notifier', 'position', 'top-left');
+        alertifyjs.error('Item Used');
+        break;
+      }
+    }
+    if ((this.selectedarticle != undefined) && (this.selectedarticle != "") && (!exist)) {
+      this.param_achat_service.GetMatiereByCode(this.selectedarticle).subscribe((xxx: any) => {
+        this.articles[this.compteur] = xxx;
+        this.compteur = this.compteur + 1;
+        this.listDesig2.push(xxx);
+      })
+    }
+  }
+
+
+
+  VoidsNew(): void {
+    this.articles = [
+
+    ].sort((car1, car2) => {
+      return 0;
+    });
+
+  }
+ 
+
+  public removeNew(index: number): void {
+    this.listDesig2.splice(index, 1);
+    console.log(index);
+    // 
+  }
+
+
+
+
+
+  // cars!: Array<AppelOffre>;
   brands!: SelectItem[];
-  clonedCars: { [s: string]: Matiere } = {};
-  // NewDate = new Date();
+  clonedCars: { [s: string]: AppelOffre } = {}; 
   codeModeReglementDde: {}[] = [];
+  dataAppelOffre = new Array<AppelOffre>();
+  banque: any; 
+  GelAllAppelOffre() {
+    this.param_achat_service.GetAppelOffre().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+
+
+
+      this.dataAppelOffre = data;
+      this.onRowUnselect(event);
+ 
+    }) 
+  }
+
+ 
+  dataModeReglement = new Array<ModeReglement>();
+  listModeReglementPushed = new Array<any>();
+  listModeReglementRslt = new Array<any>();
+  GelAllModeReglement() {
+    this.param_achat_service.GetAllModeReglement().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataModeReglement = data;
+      this.listModeReglementPushed = [];
+      for (let i = 0; i < this.dataModeReglement.length; i++) {
+        this.listModeReglementPushed.push({ label: this.dataModeReglement[i].designationAr, value: this.dataModeReglement[i].code })
+      }
+      this.listModeReglementRslt = this.listModeReglementPushed;
+    }) 
+  }
+
+
+
+  
+ 
   dataMatiere = new Array<Matiere>();
-  banque: any;
-  // listModeReglementRslt = new Array<any>();
-  // listModeReglementPushed = new Array<any>();
-  GelAllMatiere() {
+  listMatierePushed = new Array<any>();
+  listMatiereRslt = new Array<any>();
+  GelMatiereActifVisible() {
     this.param_achat_service.GetMatiere().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
@@ -593,24 +756,23 @@ export class MatiereComponent {
       })
 
     ).subscribe((data: any) => {
-
-
-
       this.dataMatiere = data;
-      this.onRowUnselect(event);
- 
+      this.listMatierePushed = [];
+      for (let i = 0; i < this.dataMatiere.length; i++) {
+        this.listMatierePushed.push({ label: this.dataMatiere[i].designationAr, value: this.dataMatiere[i].code })
+      }
+      this.listMatiereRslt = this.listMatierePushed;
     }) 
   }
 
 
-  /////////////////////////////////////////////////////////// new dev
 
-
-  dataTypeMatiereDde = new Array<TypeCaisse>();
-  listTypeMatierePushed = new Array<any>();
-  listTypeMatiereRslt = new Array<any>();
-  GelTypeMatiere() {
-    this.param_achat_service.GetAllTypeMatiere().pipe(
+  DataUnite = new Array<Unite>();
+  listUnitePushed = new Array<any>();
+  listUniteRslt = new Array<any>();
+  selectedUnite:any;
+  GelUniteActifVisible() {
+    this.param_achat_service.GetUnite().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -622,21 +784,29 @@ export class MatiereComponent {
       })
 
     ).subscribe((data: any) => {
-      this.dataTypeMatiereDde = data;
-      this.listTypeMatierePushed = [];
-      for (let i = 0; i < this.dataTypeMatiereDde.length; i++) {
-        this.listTypeMatierePushed.push({ label: this.dataTypeMatiereDde[i].designationAr, value: this.dataTypeMatiereDde[i].code })
+      this.DataUnite = data;
+      this.listUnitePushed = [];
+      for (let i = 0; i < this.DataUnite.length; i++) {
+        this.listUnitePushed.push({ label: this.DataUnite[i].designationAr, value: this.DataUnite[i].codeSaisie  })
       }
-      this.listTypeMatiereRslt = this.listTypeMatierePushed;
-    })
-    // })
+      this.listUniteRslt = this.listUnitePushed;
+    }) 
   }
+ 
+  unite = this.listUniteRslt.map((name) => {
+    return { label: name, value: name }
+  }); 
 
-  ListBanqueData = new Array<any>();
-  ListBQPushed = new Array;
-  ListBQRslt = new Array<any>();
-  GelAllBanque() {
-    this.param_achat_service.GetAllBanque().pipe(
+
+
+
+  
+  DataColoris = new Array<Coloris>();
+  listColorisPushed = new Array<any>();
+  listColorisRslt = new Array<Coloris>();
+  selectedColoris: any | "";
+  GetColorisActifVisible() {
+    this.param_achat_service.GetColoris().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -647,20 +817,35 @@ export class MatiereComponent {
         return throwError(errorMessage);
       })
 
-    ).subscribe((datas: any) => {
-      this.ListBanqueData = datas;
-      this.ListBQPushed = [];
-      for (let i = 0; i < this.ListBanqueData.length; i++) {
-        this.ListBQPushed.push({ label: this.ListBanqueData[i].designationAr, value: this.ListBanqueData[i].code })
+    ).subscribe((data: any) => {
+      this.DataColoris = data;
+      this.listColorisPushed = [];
+      for (let i = 0; i < this.DataColoris.length; i++) {
+        this.listColorisPushed.push({ label: this.DataColoris[i].designationAr, value: this.DataColoris[i].codeSaisie  })
       }
-      this.ListBQRslt = this.ListBQPushed;
-    })
-
+      this.listColorisRslt = this.listColorisPushed;
+    }) 
   }
 
+ 
+  colors = this.listColorisRslt.map((name) => {
+    return { label: name, value: name }
+  }); 
 
-  
+  actionBlocs:any;
+  listeActionBlocs = new Array<any>();
+  getListActionBloc() {
+    this.listeActionBlocs = [];
+    this.param_achat_service.GetAllBanque().subscribe(data => {
+      this.actionBlocs = data;
+      for (let i = 0; i < this.actionBlocs.length; i++) {
+        this.listeActionBlocs.push({ label: this.actionBlocs[i].designationAr, value: this.actionBlocs[i].code });
+      }
+    });
+  }
 
+  codeEtatSelec: string = '';
 }
+ 
 
 

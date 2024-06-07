@@ -1,0 +1,9 @@
+@import "src/assets/assets/files/css/style.css";
+
+
+
+.ui-dropdown.showAbove .ui-dropdown-panel {
+    top: -202px !important;
+  }
+
+ 

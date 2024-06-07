@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve -- proxy-config src/proxy.conf.json",
     "build": "ng build",
+    "build:prod": "node --max_old_space_size=5048 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href ./",
+    "build:ci": "ng build --prod --base-href ./",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -23,7 +25,6 @@
     "alertifyjs": "^1.14.0",
     "material-design-icons": "^3.0.1",
     "material-icons": "^1.13.12",
-    "ng2-pdf-viewer": "^10.2.2",
     "ngx-extended-pdf-viewer": "^20.5.0-alpha.1",
     "primeicons": "^7.0.0",
     "primeng": "^14.0.0",

@@ -172,6 +172,21 @@ GetMatiere(){
   return this.http.get(`${environment.API_BASE_URL_ACHAT}matiere/all`);
 }
 
+GetMatiereByCode(code : number){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}matiere/`+code);
+}
+
+
+GetMatiereByCodeAO(code : number){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}matieres/`+code);
+}
+
+
+DeleteMatiere(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}matiere/delete/`+code);
+}
 
 
 UpdateMatiere(body : any){
@@ -184,5 +199,39 @@ GetAllTypeMatiere(){
 
   return this.http.get(`${environment.API_BASE_URL_ACHAT}type_matiere/all`);
 }
- 
+
+
+
+// Appel offre
+
+GetAppelOffre(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/all`);
+}
+
+
+UpdateAppelOffre(body : any){
+
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}appel_offre/update`,body);
+}
+
+
+DeleteAppelOffre(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}appel_offre/delete/`+code);
+}
+
+
+
+GetUnite(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}unite/all`);
+}
+
+GetColoris(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}coloris/all`);
+}
+
+
+
 }
