@@ -1295,3 +1295,9 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
     text-align: center;
     height: 15px;
 }
+
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: #d5dbe2;
+  color: #1D4ED8;
+}
