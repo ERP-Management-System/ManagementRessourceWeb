@@ -179,6 +179,34 @@ export interface Coloris {
 }
 
 
+export interface GrilleTaille {
+  code: number,
+  codeSaisie: string,
+  designationAr: any,
+  designationLt: string,
+  actif: boolean,
+}
+
+
+export interface Taille {
+  code: number,
+  codeSaisie: string,
+  designationAr: any,
+  designationLt: string,
+  actif: boolean,
+}
+
+
+export interface TypeMatiere {
+  code: number,
+  codeSaisie: string,
+  designationAr: any,
+  designationLt: string,
+  actif: boolean,
+}
+
+
+
 export interface DetailsAppelOffre{
   code:number,
   codeSaisie:string, 
@@ -219,6 +247,20 @@ export interface AO{
   unite:string,
   coloris:string,
   quantite:string, 
+  
+
+
+}
+
+
+
+export interface AODetails{
+  code:number,
+  code_matiere:number,
+  designation_matiere:string;
+  code_coloris:number,
+  designation_coloris:string,
+  qte_demander:number
   
 
 

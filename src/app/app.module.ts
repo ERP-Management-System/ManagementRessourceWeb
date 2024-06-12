@@ -138,13 +138,18 @@ import { CommonModule } from '@angular/common';
 import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
 import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
 import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
+import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
+
 
  
+ 
+
 
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent],
+  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, 
+  ],
   imports: [
     BrowserModule,BrowserAnimationsModule,
     AppRoutingModule,FormsModule, ReactiveFormsModule,BreadcrumbModule,ToastModule

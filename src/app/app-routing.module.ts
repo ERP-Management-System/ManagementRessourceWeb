@@ -18,6 +18,7 @@ import { TypeMatiereComponent } from './ParametrageMatiere/type-matiere/type-mat
 import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
 import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
+import { UniteComponent } from './ParametrageMatiere/unite/unite.component'; 
 
 const routes: Routes = [
   // { path: 'home', component: HomeComponent},
@@ -48,11 +49,37 @@ const routes: Routes = [
   { path: 'menu_parametrage_matiere/type_matiere', component: TypeMatiereComponent },
   { path: 'menu_parametrage_matiere/coloris', component: ColorisComponent },
   { path: 'menu_parametrage_matiere/grille_taille', component: GrilleTailleComponent },
+  { path: 'menu_parametrage_matiere/unite', component: UniteComponent },
  
   { path: 'menu_achat', component: AchatMenuComponent },
   { path: 'menu_achat/appel_offre', component: AppelOffreComponent },
   { path: 'menu_achat/demande_achat', component: DemandeAchatComponent },
-
+  {
+    path: 'home',
+    component: HomeComponent,
+    data: {
+      breadcrumb: null
+    },
+    children: []
+  },
+  {
+    path: 'product',
+    component: ParametrageCentralComponent,
+    data: {
+      breadcrumb: 'Product'
+    },
+    children: [
+      // {
+      //   path: 'types/:param2',
+      //   data: {
+      //     breadcrumb: 'Product Types'
+      //   },
+      //   component: RegionComponent,
+        
+      //   children: []
+      // }
+    ]
+  },
 ];
 
 @NgModule({

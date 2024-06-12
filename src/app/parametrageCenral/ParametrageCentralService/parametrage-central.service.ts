@@ -144,7 +144,7 @@ GetAllBanque(){
 
 
 PostModeReglement(body : any){
-  return this.http.post(`${environment.API_BASE_URL}mode_reglement`,body);
+  return this.http.post(`${environment.API_BASE_URL}mode_reglementss`,body);
 }
 
 getPDFf() {
@@ -178,10 +178,10 @@ GetMatiereByCode(code : number){
 }
 
 
-GetMatiereByCodeAO(code : number){
+// GetMatiereByCodeAO(code : number){
 
-  return this.http.get(`${environment.API_BASE_URL_ACHAT}matieres/`+code);
-}
+//   return this.http.get(`${environment.API_BASE_URL_ACHAT}matieres/`+code);
+// }
 
 
 DeleteMatiere(code : number){
@@ -209,6 +209,11 @@ GetAppelOffre(){
   return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/all`);
 }
 
+GetAppelOffreByCode(code : number){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}details_appel_offre/`+code);
+}
+
 
 UpdateAppelOffre(body : any){
 
@@ -221,17 +226,101 @@ DeleteAppelOffre(code : number){
 }
 
 
-
-GetUnite(){
-
-  return this.http.get(`${environment.API_BASE_URL_ACHAT}unite/all`);
+PostAppelOffreWithDetails(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}details_appel_offre`,body);
 }
 
+PostAppelOffre(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}appel_offre`,body);
+}
+ 
 GetColoris(){
 
   return this.http.get(`${environment.API_BASE_URL_ACHAT}coloris/all`);
 }
 
+DeleteColoris(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}coloris/delete/`+code);
+}
+UpdateColoris(body : any){
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}coloris/update`,body);
+}
+PostColoris(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}coloris`,body);
+}
 
+
+
+///grille taille 
+
+GetGrilleTaille(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}grille_taille/all`);
+}
+
+
+DeleteGrilleTaille(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}grille_taille/delete/`+code);
+}
+UpdateGrilleTaille(body : any){
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}grille_taille/update`,body);
+}
+PostGrilleTaille(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}grille_taille`,body);
+}
+
+
+
+///taille 
+
+GetTaille(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}taille/all`);
+}
+DeleteTaille(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}taille/delete/`+code);
+}
+UpdateTaille(body : any){
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}taille/update`,body);
+}
+PostTaille(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}taille`,body);
+}
+
+
+
+
+///type matiere 
+
+GetTypeMatiere(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}type_matiere/all`);
+}
+DeleteTypeMatiere(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}type_matiere/delete/`+code);
+}
+UpdateTypeMatiere(body : any){
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}type_matiere/update`,body);
+}
+PostTypeMatiere(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}type_matiere`,body);
+}
+
+
+///Unite 
+
+GetUnite(){
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}unite/all`);
+}
+DeleteUnite(code : number){
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}unite/delete/`+code);
+}
+UpdateUnite(body : any){
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}unite/update`,body);
+}
+PostUnite(body : any){
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}unite`,body);
+}
 
 }
