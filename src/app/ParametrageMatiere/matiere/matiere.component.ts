@@ -404,7 +404,7 @@ export class MatiereComponent {
     return hours + ':' + mins
   }
   datform = new Date();
-  PostModeReglement() {
+  PostMatiere() {
     // let form= this.formatDate.valeur;
     // this.datecreate = new Date();
     // let x=('0' + new Date().getDate()).slice(-2) + '/' + ('0' + (new Date().getMonth() + 1)).slice(-2) + '/' + new Date().getFullYear()+'T'+this.ajusterHourAndMinutes();

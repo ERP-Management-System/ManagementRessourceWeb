@@ -127,83 +127,78 @@
 
 <!-- modal primeNG ADD -->
 <p-dialog id="Modal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModal"
-    data-backdrop="false" [modal]="true" styleClass="ModalAdd"   >
-    <div>
-        <!-- <ng-template pTemplate="header"> -->
-        <div class="modal-header">
-            <h3 class="footer-dev">
-                <div class="action">
-                    <h2 class="text-default headerForm"> {{formHeader}}</h2>
+    data-backdrop="false" [modal]="true" styleClass="ModalAdd">
 
-                    <button class="btn btn-default cancel-add" :closable="false" data-dismiss="modal"
-                        (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
-                    </button>
-                    <button class="btn btn-default save-add" (click)="PostGrilleTaille()"> <i
-                            class="fa-lg fa-fw fa fa-check icon-save"></i>
-                        Save
-                    </button>
-                    <p-toast key="toast1"></p-toast>
 
-                </div>
-            </h3>
-        </div>
 
-        <div class="modal-body">
-            <!-- <form> -->
+    <ng-template pTemplate="header">
+        <h2 class="text-default headerForm"> {{formHeader}}</h2>
+        <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
+            (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+        </button>
+        <button class="btn btn-default save-add-ModalSmall" (click)="PostGrilleTaille()"> <i
+                class="fa-lg fa-fw fa fa-check icon-save"></i>
+            Save
+        </button>
+        <p-toast key="toast1"></p-toast>
+    </ng-template>
+
+    <div class="modal-body">
+        <!-- <form> -->
+        <div class="flex-row-start flex-12">
+            <fieldset class="flex-12">
                 <div class="flex-row-start flex-12">
-                    <fieldset class="flex-12">
-                        <div class="flex-row-start flex-12">
-                            <section class="flex-row-start flex-6"  >
-                                <label class="control-label flex-6">Code</label>
-                                <div class="control-input  flex-6">
-                                    <input id="codeSaisie" disabled=false maxlength="10" name="codeSaisie" type="text"
-                                        class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                                </div>
-                            </section>
-                            <section class="flex-row-start flex-6">
-                                <p-checkbox style="
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">Code</label>
+                        <div class="control-input  flex-6">
+                            <input id="codeSaisie" disabled=false maxlength="10" name="codeSaisie" type="text"
+                                class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-6">
+                        <p-checkbox style="
                                     padding: 0px 20px 0px 0px;
-                                " [binary]="true" name="actif" value="val3" label="Actif" [(ngModel)]="actif"></p-checkbox>
-    
-                                <p-checkbox [binary]="true" name="visible" value="val3" label="Visible"
-                                    [(ngModel)]="visible"></p-checkbox>
-    
-                            </section>
+                                " [binary]="true" name="actif" value="val3" label="Actif"
+                            [(ngModel)]="actif"></p-checkbox>
+
+                        <p-checkbox [binary]="true" name="visible" value="val3" label="Visible"
+                            [(ngModel)]="visible"></p-checkbox>
+
+                    </section>
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">Desgiantion Arabic </label>
+                        <div class="control-input flex-6">
+                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
+                                [required]="true">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
-                        <div class="flex-row-start flex-12">
-                            <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Desgiantion Arabic </label>
-                                <div class="control-input flex-6">
-                                    <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                                        class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
-                                        [required]="true">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                                </div>
-                            </section>
-                            <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Desgiantion Latine </label>
-                                <div class="control-input flex-6">
-                                    <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                                        class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
-                                        [required]="true">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                                </div>
-                            </section>
-    
+                    </section>
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">Desgiantion Latine </label>
+                        <div class="control-input flex-6">
+                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
+                                [required]="true">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
-    
-    
-                    </fieldset>
-    
+                    </section>
+
                 </div>
 
 
+            </fieldset>
 
- 
         </div>
+
+
+
 
     </div>
+
 </p-dialog>
 
 <!-- modal primeNG  Delete-->
@@ -248,7 +243,7 @@
                 <div class="action">
                     <h2 class="text-default headerForm"> {{formHeader}}</h2>
 
-                    <button class="btn btn-default cancel-add" :closable="false" data-dismiss="modal"
+                    <button class="btn btn-default cancel-add-ModalSmall" :closable="false" data-dismiss="modal"
                         (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
                     </button>
 
@@ -260,7 +255,7 @@
         <div class="modal-body">
             <div id="pdfContainer"></div>
 
-            
+
             <!-- <div id="myContainer">
                 <div id="outerContainer">
 ////sidebarContainer

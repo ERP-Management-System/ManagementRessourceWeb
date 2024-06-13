@@ -128,25 +128,19 @@
 <!-- modal primeNG ADD -->
 <p-dialog id="Modal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModal"
     data-backdrop="false" [modal]="true" styleClass="ModalAdd"   >
-    <div>
-        <!-- <ng-template pTemplate="header"> -->
-        <div class="modal-header">
-            <h3 class="footer-dev">
-                <div class="action">
-                    <h2 class="text-default headerForm"> {{formHeader}}</h2>
+   
 
-                    <button class="btn btn-default cancel-add" :closable="false" data-dismiss="modal"
-                        (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
-                    </button>
-                    <button class="btn btn-default save-add" (click)="PostTaille()"> <i
-                            class="fa-lg fa-fw fa fa-check icon-save"></i>
-                        Save
-                    </button>
-                    <p-toast key="toast1"></p-toast>
-
-                </div>
-            </h3>
-        </div>
+        <ng-template pTemplate="header">
+            <h2 class="text-default headerForm"> {{formHeader}}</h2>
+            <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
+                (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+            </button>
+            <button class="btn btn-default save-add-ModalSmall" (click)="PostTaille()"> <i
+                    class="fa-lg fa-fw fa fa-check icon-save"></i>
+                Save
+            </button>
+            <p-toast key="toast1"></p-toast>
+        </ng-template>
 
         <div class="modal-body">
             <!-- <form> -->
@@ -202,8 +196,7 @@
 
  
         </div>
-
-    </div>
+ 
 </p-dialog>
 
 <!-- modal primeNG  Delete-->
@@ -248,7 +241,7 @@
                 <div class="action">
                     <h2 class="text-default headerForm"> {{formHeader}}</h2>
 
-                    <button class="btn btn-default cancel-add" :closable="false" data-dismiss="modal"
+                    <button class="btn btn-default cancel-add-ModalSmall" :closable="false" data-dismiss="modal"
                         (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
                     </button>
 

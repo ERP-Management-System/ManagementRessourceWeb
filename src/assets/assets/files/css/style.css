@@ -7,13 +7,14 @@
 :host ::ng-deep .p-datatable-thead th {
   text-align: left !important;
   color: rgb(253 253 253) !important;
-  background-color: #367bb3 !important;
-  border: 44px solid #bfbfbf !important;
-  border-width: 1px 1px 1px 1px !important;
+  background-color: #324960 !important;
+  border: 1px solid #ffffff !important;
+  /* border-width: 1px 1px 1px 1px !important; */
   height: 29px !important;
   padding: 0px 10px 0px !important;
   box-shadow: 4px -8px 20px 0px rgb(179 179 179 / 36%);
   font-family: auto;
+  border-radius: 4px 4px 4px 4px;
 }
 
 :host ::ng-deep th {
@@ -29,9 +30,7 @@
   height: 25px !important;
 }
 
-:host ::ng-deep .ui-state-highlight {
-  background: red;
-}
+ 
 
 /* :host ::ng-deep .p-datatable .p-datatable-tbody>tr.p-highlight {
     background: #d1d1d1 !important;
@@ -220,7 +219,7 @@ tr.mat-footer-row {
 }
 
 .modif-icon {
-  color: rgb(0, 102, 255);
+  color: rgb(6 57 135);
   user-select: none;
   background-repeat: no-repeat;
   display: inline-block;
@@ -722,7 +721,7 @@ button.btn.btn-danger.cancel-voir {
   margin-top: 30px;
 }
 
-.cancel-add {
+.cancel-add-ModalLarge {
   position: relative;
   height: 35px;
   left: 500px;
@@ -730,9 +729,12 @@ button.btn.btn-danger.cancel-voir {
   direction: ltr;
   font-weight: 500;
   /* top: 10px; */
+ 
 }
 
-.save-add {
+
+
+.save-add-ModalLarge {
   position: relative;
   left: 250px;
   font-size: 13px;
@@ -740,6 +742,24 @@ button.btn.btn-danger.cancel-voir {
   height: 35px;
   font-weight: 500;
   /* top: 10px; */
+}
+
+.cancel-add-ModalSmall {
+  position: relative;
+  height: 35px;
+  left: 200px; 
+  font-size: 13px;
+  direction: ltr;
+  font-weight: 500;
+}
+
+.save-add-ModalSmall {
+  position: relative;
+  left: 105px; 
+  font-size: 13px;
+  direction: ltr;
+  height: 35px;
+ 
 }
 
 .headerForm {
@@ -1358,3 +1378,7 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
 
  
  
+/* :host ::ng-deep .ui-state-highlight {
+  background: red !important;
+}
+ */

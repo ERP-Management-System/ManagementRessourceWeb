@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { catchError, Subject, throwError } from 'rxjs';
@@ -8,6 +8,7 @@ import { Table } from 'primeng/table';
 import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
+
 
 
 declare const PDFObject: any;
@@ -20,6 +21,7 @@ declare const PDFObject: any;
   styleUrl: './appel-offre.component.css', providers: [ConfirmationService, MessageService]
 })
 export class AppelOffreComponent {
+
 
   dtTrigger: Subject<any> = new Subject();
 
@@ -35,67 +37,52 @@ export class AppelOffreComponent {
   }
 
 
-  public ProductHeader = [
-    { name: "test", code: "1" },
-    { name: "test1", code: "2" },
-    { name: "test2", code: "3" },
-    { name: "test3", code: "4" },
-    { name: "test4", code: "5" }
-  ];
-  persons: any = [];
 
-
-  cars!: any[];
-  cols!: any[];
-  // colors!: SelectItem<any>[];
-  // colors! : Array<any>;
-
-  v1!: any[];
   v2!: any[];
-  // colors: SelectItem[];
-
-  // colorNames = ['Orange', 'Black', 'Gray', 'Blue', 'Orange', 'Yellow'];
-
-  // uniteNames = ['Piece', 'Metre'];
-
 
   openModal!: boolean;
-
+  highlighted: any;
+  @ViewChild('draggable') private draggableElement!: ElementRef;
 
   constructor(private confirmationService: ConfirmationService,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-
+    // this.isRowSelectable = this.isRowSelectable.bind(this);
 
   }
+  // isRowSelectable(event:any) {
+  //   return !this.isOutOfStock(event.data);
+  // }
+  // isOutOfStock(data:any) {
+  //   return data.quantity <= 10;
+  // }
   selectedMatiere: any;
 
-  owner = [1, 2, 3];
+  // owner = [1, 2, 3];
 
-  selectedId: any;
-  brandss = [
-    {
-      Id: 1,
-      name: "test"
-    },
-    {
-      Id: 2,
-      name: "test2"
-    },
-    {
-      Id: 3,
-      name: "test3"
-    }
-  ];
+  // selectedId: any;
+  // brandss = [
+  //   {
+  //     Id: 1,
+  //     name: "test"
+  //   },
+  //   {
+  //     Id: 2,
+  //     name: "test2"
+  //   },
+  //   {
+  //     Id: 3,
+  //     name: "test3"
+  //   }
+  // ];
 
 
   pdfData!: Blob;
   isLoading = false;
   ngOnInit(): void {
 
-
+    this.ionViewDidLoad();
 
     this.GelAllAppelOffre();
-    // this.Voids();
     this.VoidsNew();
 
     this.v2 = [
@@ -107,9 +94,6 @@ export class AppelOffreComponent {
       // { field: 'delete', header: 'Delete' },
     ];
 
-    // this.v1 = [
-    //   {"designation": "VW", "unite": 2012, "coloris": "Orange", "quantite": "dsad231ff"}
-    // ];
 
   }
 
@@ -176,10 +160,11 @@ export class AppelOffreComponent {
     this.visible = false;
     this.codeSaisie = '';
     this.selectedModeReglement = '';
-    this.selectedMatiereToAdd='';
+    this.selectedMatiereToAdd = '';
     // this.listTypeAppelOffreRslt = []; 
     this.onRowUnselect(event);
     this.listDataAOWithDetails = new Array<any>();
+
   }
   check_actif = false;
   check_inactif = false;
@@ -190,7 +175,7 @@ export class AppelOffreComponent {
   visibleNewModal: boolean = false;
   visibleModalPrint: boolean = false;
   visDelete: boolean = false;
-  code!: number | null;
+  code!: any | null;
   codeSaisie: any;
   designationAr: any;
   designationLt: string = "NULL";
@@ -199,7 +184,12 @@ export class AppelOffreComponent {
   actif!: boolean;
   visible!: boolean;
 
-  selectedAppelOffre!: AppelOffre;
+  // selectedAppelOffre= new Array<AppelOffre>;
+
+
+  selectedAppelOffre!: any;
+
+
   // selectedModeReglement!:ModeReglement;
   selectedModeReglement: any;
   // selectedCar!: string;
@@ -210,22 +200,21 @@ export class AppelOffreComponent {
     this.codeSaisie = event.data.codeSaisie;
     this.designationAr = event.data.designationAr;
     this.designationLt = event.data.designationLt;
-    this.selectedModeReglement = event.data.codeModeReglement; 
+    this.selectedModeReglement = event.data.codeModeReglement;
     this.observation = event.data.observation;
     console.log('vtData : ', event);
+    this.selectedAppelOffre == null;
+
   }
+
   onRowUnselect(event: any) {
     console.log('row unselect : ', event);
     this.code = event.data = null;
-    // this.listDataAOWithDetails = new Array<any>();
-    this.selectedModeReglement =null;
-    this.selectedMatiereToAdd =null;
-    this.observation =null;
+    this.selectedModeReglement = null;
+    this.selectedMatiereToAdd = null;
+    this.observation = null;
+    this.selectedAppelOffre = null;
   }
-
-  //   ngOnInit() {
-
-  //  }
 
 
 
@@ -379,9 +368,9 @@ export class AppelOffreComponent {
       button.setAttribute('data-target', '#NewModal');
       this.formHeader = "Nouveau Appel Offre";
       // document.getElementById('DecontamBoiteBloc').style.display = 'none';
-    
+
       this.listDataAOWithDetails = new Array<any>();
-      this.onRowUnselect(event); 
+      this.onRowUnselect(event);
       this.clearSelected();
       this.actif = false;
       this.visibleNewModal = true;
@@ -392,117 +381,103 @@ export class AppelOffreComponent {
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
 
-    }else
-    if (mode === 'edit') {
+    } else
+      if (mode === 'edit') {
 
-      // this.visibleNewModal = false;
-      // this.visDelete = false;
-      if (this.code == undefined) {
-        // alert("Choise A row Please");
+        // this.visibleNewModal = false;
+        // this.visDelete = false;
+        if (this.code == undefined) {
+          // alert("Choise A row Please");
 
-         this.visDelete = false ; this.visibleNewModal = false
-        this.clearForm();
-        this.onRowUnselect(event);
-        alertifyjs.set('notifier', 'position', 'top-right');
-    
-        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' +   " Choise A row Please");
+          this.visDelete = false; this.visibleNewModal = false
+          this.clearForm();
+          this.onRowUnselect(event);
+          alertifyjs.set('notifier', 'position', 'top-right');
 
-        // this.listDataAOWithDetails = new Array<any>();
-   
-      } else {
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Choise A row Please");
 
-        button.setAttribute('data-target', '#NewModal');
-        this.formHeader = "Edit Appel Offre"
- 
-        this.GelMatiereActifVisible();
-     
+          // this.listDataAOWithDetails = new Array<any>();
 
-        this.onRowSelect;
-        this.GelAllModeReglement();
+        } else {
 
-        this.GetColorisActifVisible();
-        this.GelUniteActifVisible();
-        this.GetAppelOffreByCode();
-        this.visibleNewModal = true;
-        this.visDelete = false;
-      }
+          button.setAttribute('data-target', '#NewModal');
+          this.formHeader = "Edit Appel Offre"
 
-    }else
-
-    if (mode === 'Delete') {
-
-      if (this.code == undefined) {
-        // alert("Choise A row Please");
-
-        // 
-        this.onRowUnselect;
-        alertifyjs.set('notifier', 'position', 'top-right');
-        alertifyjs.error("Choise A row Please");
-        // this.visDelete = false ; this.visibleNewModal = false
-      } else {
-
-        {
-          button.setAttribute('data-target', '#ModalDelete');
-          this.formHeader = "Delete Appel D'Offre"
-          
           this.GelMatiereActifVisible();
+
+
+          this.onRowSelect;
           this.GelAllModeReglement();
-          this.visDelete = true;
+
+          this.GetColorisActifVisible();
+          this.GelUniteActifVisible();
+          this.GetAppelOffreByCode(this.selectedAppelOffre);
           this.visibleNewModal = true;
+          this.visDelete = false;
         }
-      }
 
-    }
-    // (mode === 'Print') 
-    else {
+      } else
+
+        if (mode === 'Delete') {
+
+          if (this.code == undefined) {
+            // alert("Choise A row Please");
+
+            // 
+            this.onRowUnselect;
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error("Choise A row Please");
+            // this.visDelete = false ; this.visibleNewModal = false
+          } else {
+
+            {
+              button.setAttribute('data-target', '#ModalDelete');
+              this.formHeader = "Delete Appel D'Offre"
+
+              this.GelMatiereActifVisible();
+              this.GelAllModeReglement();
+              this.visDelete = true;
+              this.visibleNewModal = true;
+            }
+          }
+
+        }
+        // (mode === 'Print') 
+        else {
 
 
-      button.setAttribute('data-target', '#ModalPrint');
-      this.formHeader = "Imprimer Liste Reglement"
-      this.visibleModalPrint = true;
-      this.RemplirePrint();
+          button.setAttribute('data-target', '#ModalPrint');
+          this.formHeader = "Imprimer Liste Reglement"
+          this.visibleModalPrint = true;
+          this.RemplirePrint();
 
 
-    }
-    // if (mode === 'Newadd') {
-    //   button.setAttribute('data-target', '#NewModal');
-    //   this.formHeader = "Nouveau Appel Offre" 
-    //   this.onRowUnselect(event); 
-    //   this.clearSelected();
-    //   this.actif = false;
-    //   this.visibleNewModal = true;
-    //   this.code == undefined;
-    //   this.GelMatiereActifVisible();
-    //   this.GelAllModeReglement();
-    //   this.GelUniteActifVisible();
-    //   this.GetColorisActifVisible();
+        }
 
-    // }
   }
 
 
   userCreate = "soufien";
-  // datecreate !: Date;
-  currentDate = new Date();
+  // currentDate = new Date();
 
-  ajusterHourAndMinutes() {
-    let hour = new Date().getHours();
-    let hours;
-    if (hour < 10) {
-      hours = '0' + hour;
-    } else {
-      hours = hour;
-    }
-    let min = new Date().getMinutes();
-    let mins;
-    if (min < 10) {
-      mins = '0' + min;
-    } else {
-      mins = min;
-    }
-    return hours + ':' + mins
-  }
-  datform = new Date();
+  // ajusterHourAndMinutes() {
+  //   let hour = new Date().getHours();
+  //   let hours;
+  //   if (hour < 10) {
+  //     hours = '0' + hour;
+  //   } else {
+  //     hours = hour;
+  //   }
+  //   let min = new Date().getMinutes();
+  //   let mins;
+  //   if (min < 10) {
+  //     mins = '0' + min;
+  //   } else {
+  //     mins = min;
+  //   }
+  //   return hours + ':' + mins
+  // }
+  // datform = new Date();
 
   GetDataFromTableEditor: any;
   final = new Array<any>();
@@ -553,7 +528,7 @@ export class AppelOffreComponent {
         codeEtatReception: "2"
       }
 
-      
+
 
       if (this.code != null) {
         body['code'] = this.code;
@@ -575,16 +550,16 @@ export class AppelOffreComponent {
           (res: any) => {
             alertifyjs.set('notifier', 'position', 'top-right');
             alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
- 
+
             this.clearForm();
             this.ngOnInit();
             this.check_actif = true;
             this.check_inactif = false;
             this.onRowUnselect(event);
             this.clearSelected();
-            this.visibleNewModal =false;
-            this.visDelete =false;
-             
+            this.visibleNewModal = false;
+            this.visDelete = false;
+
 
           }
         );
@@ -608,15 +583,15 @@ export class AppelOffreComponent {
             alertifyjs.set('notifier', 'position', 'top-right');
             // alertifyjs.success("Success Saved");
             alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
-            this.visibleNewModal =false;
-            this.visDelete =false;
+            this.visibleNewModal = false;
+            this.visDelete = false;
             this.clearForm();
             this.ngOnInit();
             this.code;
             this.check_actif = true;
             this.check_inactif = false;
             this.onRowUnselect(event);
-            this.clearSelected(); 
+            this.clearSelected();
 
           }
         )
@@ -627,20 +602,6 @@ export class AppelOffreComponent {
   }
 
 
-  Voids(): void {
-    this.matieres = [
-
-    ].sort((car1, car2) => {
-      return 0;
-    });
-
-  }
-  // onRowEditInit(car: AppelOffre) {
-  //   this.clonedCars[car.codeSaisie] = { ...car };
-
-
-  // }
-
 
   public remove(index: number): void {
     this.listDataAOWithDetails.splice(index, 1);
@@ -648,19 +609,6 @@ export class AppelOffreComponent {
   }
 
 
-  public pushCodeColoris(index: number): void {
-    this.listDataAOWithDetails.push(index, this.selectedUniteForPush);
-    console.log("index", index);
-  }
-
-  // onRowEditSave(car: AppelOffre) {
-  //   delete this.clonedCars[car.codeSaisie];
-  // }
-
-  // onRowEditCancel(car: AppelOffre, index: number) {
-  //   this.cars[index] = this.clonedCars[car.codeSaisie];
-  //   delete this.clonedCars[car.codeSaisie];
-  // }
 
   types!: any[];
 
@@ -679,33 +627,6 @@ export class AppelOffreComponent {
 
 
 
-  // MouveToTable() {
-
-  //   console.log("selectedMatiere MouveToTable", this.selectedMatiere)
-  //   console.log("matieres MouveToTable ", this.matieres)
-  //   var exist = false;
-  //   for (var y = 0; y < this.matieres.length; y++) {
-  //     if (this.selectedMatiere != this.matieres[y].code) {
-  //       exist = false;
-  //     } else {
-  //       exist = true;
-
-  //       alertifyjs.set('notifier', 'position', 'top-right');
-  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Matière déjà choisie");
-
-  //       break;
-  //     }
-  //   }
-  //   if ((this.selectedMatiere != undefined) && (this.selectedMatiere != "") && (!exist)) {
-  //     this.param_achat_service.GetMatiereByCode(this.selectedMatiere).subscribe((xxx: any) => {
-  //       console.log("mouve selectedMatiere after get ", this.selectedMatiere)
-  //       console.log("mouve matieres after get ", this.matieres)
-  //       this.matieres[this.compteur] = xxx;
-  //       this.compteur = this.compteur + 1;
-  //       this.listDesig.push(xxx);
-  //     })
-  //   }
-  // }
   clickDropDownUp(dropDownModUp: any) {
     if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
       dropDownModUp.focus();
@@ -726,30 +647,6 @@ export class AppelOffreComponent {
   // selectedarticle: any;
   // compteur: number = 0;
   listDesig2 = new Array<any>();
-  // MouveToTableNew() {
-  //   var exist = false;
-  //   for (var y = 0; y < this.listDesig2.length; y++) {
-  //     if (this.selectedarticle != this.listDesig2[y].code) {
-  //       exist = false;
-  //     } else {
-  //       exist = true;
-
-  //       alertifyjs.set('notifier', 'position', 'top-left');
-  //       alertifyjs.error('Item Used');
-  //       break;
-  //     }
-  //   }
-  //   if ((this.selectedarticle != undefined) && (this.selectedarticle != "") && (!exist)) {
-  //     this.param_achat_service.GetMatiereByCode(this.selectedarticle).subscribe((xxx: any) => {
-  //       this.articles[this.compteur] = xxx;
-  //       this.compteur = this.compteur + 1;
-  //       this.listDesig2.push(xxx);
-  //       console.log(" MouveToTableNew listDesig2", this.listDesig2);
-  //       console.log(" MouveToTableNew articles", this.articles);
-
-  //     })
-  //   }
-  // }
 
 
 
@@ -762,21 +659,9 @@ export class AppelOffreComponent {
 
   }
 
-
-  public removeNew(index: number): void {
-    this.listDesig2.splice(index, 1);
-    console.log(index);
-    // 
-  }
-
-
-
-
-
-  // cars!: Array<AppelOffre>;
   brands!: SelectItem[];
-  clonedCars: { [s: string]: AppelOffre } = {};
-  codeModeReglementDde: {}[] = [];
+  // clonedCars: { [s: string]: AppelOffre } = {};
+  // codeModeReglementDde: {}[] = [];
   dataAppelOffre = new Array<AppelOffre>();
   banque: any;
   GelAllAppelOffre() {
@@ -796,7 +681,7 @@ export class AppelOffreComponent {
 
 
       this.dataAppelOffre = data;
-      this.onRowUnselect(event);
+      // this.onRowUnselect(event);
 
     })
   }
@@ -920,56 +805,6 @@ export class AppelOffreComponent {
     return { label: name, value: name }
   });
 
-  // actionBlocs: any;
-  // listeActionBlocs = new Array<any>();
-  // getListActionBloc() {
-  //   this.listeActionBlocs = [];
-  //   this.param_achat_service.GetAllBanque().subscribe(data => {
-  //     this.actionBlocs = data;
-  //     for (let i = 0; i < this.actionBlocs.length; i++) {
-  //       this.listeActionBlocs.push({ label: this.actionBlocs[i].designationAr, value: this.actionBlocs[i].code });
-  //     }
-  //   });
-  // }
-
-  // codeEtatSelec: string = '';
-
-
-
-
-  // new table angular material 
-
-
-
-
-  // articles!: Matiere[];
-  // selectedarticle: any;
-  // // compteur: number = 0;
-  // listDesig2 = new Array<any>();
-  // MouveToTableNew() {
-  //   var exist = false;
-  //   for (var y = 0; y < this.listDesig2.length; y++) {
-  //     if (this.selectedarticle != this.listDesig2[y].code) {
-  //       exist = false;
-  //     } else {
-  //       exist = true;
-
-  //       alertifyjs.set('notifier', 'position', 'top-left');
-  //       alertifyjs.error('Item Used');
-  //       break;
-  //     }
-  //   }
-  //   if ((this.selectedarticle != undefined) && (this.selectedarticle != "") && (!exist)) {
-  //     this.param_achat_service.GetMatiereByCode(this.selectedarticle).subscribe((xxx: any) => {
-  //       this.articles[this.compteur] = xxx;
-  //       this.compteur = this.compteur + 1;
-  //       this.listDesig2.push(xxx);
-  //       console.log(" MouveToTableNew listDesig2", this.listDesig2);
-  //       console.log(" MouveToTableNew articles", this.articles);
-
-  //     })
-  //   }
-  // }
 
 
 
@@ -981,7 +816,7 @@ export class AppelOffreComponent {
   ListMatiere!: Matiere[];
   listDataAOWithDetails = new Array<any>();
   Newcompteur: number = 0;
-  codeMatieres:any;
+  codeMatieres: any;
   PushTableData() {
     var exist = false;
     // console.log(" PushTableData selectedMatiereToAdd", this.selectedMatiereToAdd );
@@ -1002,7 +837,7 @@ export class AppelOffreComponent {
       this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => {
         // this.ListMatiere[this.Newcompteur] = Newdata;
         this.Newcompteur = this.Newcompteur + 1;
-        
+
         this.listDataAOWithDetails.push(Newdata);
         console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails);
 
@@ -1012,10 +847,10 @@ export class AppelOffreComponent {
     }
   }
 
- 
-  GetAppelOffreByCode() {
 
-    this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre.code).pipe(
+  GetAppelOffreByCode(code: number) {
+
+    this.param_achat_service.GetAppelOffreByCode(this.code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -1026,16 +861,136 @@ export class AppelOffreComponent {
         return throwError(errorMessage);
       })
 
-    ).subscribe((data: any) => { 
+    ).subscribe((data: any) => {
       this.listDataAOWithDetails = new Array<any>();
-      this.listDataAOWithDetails=data; 
+      this.listDataAOWithDetails = data;
       console.log("listDataAOWithDetails is ", this.listDataAOWithDetails);
 
-      
+
     })
   }
 
+
+
+  getPicNonReceptionner()
+  {
+    return "url('assets/assets/images/icons8-delivery-50.png')";
+  }
+
+  getPicReceptionnerPartiell()
+  {
+    return "url('assets/assets/images/icons8-enveloppe-réception-48.png')";
+  }
+
+  getPicReceptionnerFinal()
+  {
+    return "url('assets/assets/images/icons8-receive-64.png')";
+  }
+
+
+  ionViewDidLoad() {
+    let comArr = document.getElementsByClassName("command"); // Fetches a nodelist with all command cells
+    for (let i = 0; i < comArr.length; i++) {
+      let elString = document.getElementsByClassName("command")[i].innerHTML; // Fetches string for this iteration of the loop
+      document.getElementsByClassName("command")[i].innerHTML = ""; // Clears raw text from column
+      for (let j = 0; j < elString.length; j++) {
+        let newImg = document.createElement("img"); // creates new <img>
+        newImg.setAttribute("class", "inputImg"); //  sets class for <img>
+        let alphaNum = elString[j];
+
+        switch (alphaNum) {
+
+          //Diretions
+          case "1": //Lower Left
+            newImg.setAttribute("src", "assets/assets/imgs/input/1.png");
+            break;
+
+          case "2": //Bottom
+            newImg.setAttribute("src", "assets/assets/imgs/input/2.png");
+            break;
+
+          case "3": //Lower Right
+            newImg.setAttribute("src", "assets/assets/imgs/input/3.png");
+            break;
+
+          case "4": //Left
+            newImg.setAttribute("src", "assets/imgs/input/4.png");
+            break;
+
+          case "6": //Right
+            newImg.setAttribute("src", "assets/imgs/input/6.png");
+            break;
+
+          case "7": //Upper Left
+            newImg.setAttribute("src", "assets/imgs/input/7.png");
+            break;
+
+          case "8": //Top
+            newImg.setAttribute("src", "assets/imgs/input/8.png");
+            break;
+
+          case "9": //Upper Right
+            newImg.setAttribute("src", "assets/imgs/input/9.png");
+            break;
+
+          //Standard Buttons
+          case "A": //Horizontal
+            newImg.setAttribute("src", "assets/imgs/input/A.png");
+            break;
+
+          case "B": //Vertical
+            newImg.setAttribute("src", "assets/imgs/input/B.png");
+            break;
+
+          case "K": //Kick
+            newImg.setAttribute("src", "assets/imgs/input/K.png");
+            break;
+
+          case "G": //Guard
+            newImg.setAttribute("src", "assets/imgs/input/G.png");
+            break;
+
+          //Multi Button
+          case "2": // A~B Horizontal ~ Vertical
+            newImg.setAttribute("src", "assets/imgs/input/M.png");
+            newImg.setAttribute("class", "inputImgWide");
+            break;
+
+          case "N": // B~A Vertical ~ Horizontal
+            newImg.setAttribute("src", "assets/imgs/input/N.png");
+            newImg.setAttribute("class", "inputImgWide");
+            break;
+
+          case "O": // K~A Kick ~ Horizontal
+            newImg.setAttribute("src", "assets/imgs/input/O.png");
+            newImg.setAttribute("class", "inputImgWide");
+            break;
+
+          case "P": // K~B Kick ~ Vertical
+            newImg.setAttribute("src", "assets/imgs/input/P.png");
+            newImg.setAttribute("class", "inputImgWide");
+            break;
+
+          // States (Not complete yet)
+          case "C": // Full Crouch
+            break;
+
+          case "T": // Back Turn
+            break;
+
+          case "R": // Run
+            break;
+
+          case "W": // While Rising
+            break;
+        }
+        document.getElementsByClassName("command")[i].appendChild(newImg) // appends <img> child to corresponding cell
+      }
+    }
+  }
 }
+
+
 
 
 
