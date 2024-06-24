@@ -55,12 +55,12 @@
                                 }
                             ],
                             "outputHashing": "all",
-                            "optimization": true,
+                            "optimization": false,
                             "sourceMap": false,
                             "namedChunks": false,
                             "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
+                            "vendorChunk": true,
+                            "buildOptimizer": false
                         },
                         "development": {
                             "buildOptimizer": false,
@@ -81,6 +81,10 @@
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "ManageRessourceWeb:build",
+                        "port": 4500
+                      },
                     "configurations": {
                         "production": {
                             "browserTarget": "ManageRessourceWeb:build:production",

@@ -30,7 +30,7 @@
   height: 25px !important;
 }
 
- 
+
 
 /* :host ::ng-deep .p-datatable .p-datatable-tbody>tr.p-highlight {
     background: #d1d1d1 !important;
@@ -182,6 +182,15 @@ tr.mat-footer-row {
 }
 
 
+.dropbtn {
+  margin-right: 5px;
+  display: flex;
+  height: 30px;
+  width: 100px;
+  padding: 3px 7px 0px 5px;
+  margin-bottom: 3px;
+}
+
 .Bouton-add-new2 {
   margin-right: 5px;
   display: flex;
@@ -191,6 +200,15 @@ tr.mat-footer-row {
   margin-bottom: 3px;
 }
 
+
+.Bouton-add-new-other {
+  margin-right: 5px;
+  display: flex;
+  height: 30px;
+  width: 150px;
+  padding: 3px 7px 0px 5px;
+  margin-bottom: 3px;
+}
 
 .bouton_style-2 {
   font-size: 15px;
@@ -216,6 +234,7 @@ tr.mat-footer-row {
 .add-icon {
   color: green;
   font-weight: bold;
+  padding: 0px 0px 0px 2px;
 }
 
 .modif-icon {
@@ -255,10 +274,10 @@ tr.mat-footer-row {
 }
 
 :host ::ng-deep .p-dialog .p-dialog-header-icons {
-  display: none; 
+  display: none;
 }
- 
- 
+
+
 :host ::ng-deep .p-dialog .p-dialog-header {
   border-bottom: 0 none;
   background: #f8f9fa;
@@ -271,10 +290,14 @@ tr.mat-footer-row {
 
 :host ::ng-deep .ModalAdd {
   border-radius: 6px;
-  width: 750px;
+  width: 800px;
   font-family: auto;
   overflow-y: auto;
   overflow-x: hidden;
+  /* width: 90% !important; */
+  height: 450px !important;
+  top: 5% !important;
+  left: 0% !important;
 }
 
 :host ::ng-deep .ModalAddOrder {
@@ -289,7 +312,7 @@ tr.mat-footer-row {
   border-radius: 6px;
   width: 1100px;
   font-family: auto;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   overflow-x: hidden;
 }
 
@@ -331,7 +354,7 @@ label:hover input[type=radio].radiobox:checked+span:before {
 }
 
 input[type=number] {
-  text-align: right;
+  text-align: left;
 }
 
 
@@ -723,47 +746,56 @@ button.btn.btn-danger.cancel-voir {
 
 .cancel-add-ModalLarge {
   position: relative;
-  height: 35px;
-  left: 500px;
+  float: inline-end;
   font-size: 13px;
   direction: ltr;
   font-weight: 500;
-  /* top: 10px; */
- 
+  height: 35px;
+  margin: 5px 8px 5px 10px;
 }
 
 
 
 .save-add-ModalLarge {
   position: relative;
-  left: 250px;
+  float: inline-end;
   font-size: 13px;
   direction: ltr;
   height: 35px;
   font-weight: 500;
-  /* top: 10px; */
+  margin: 5px 8px 5px 10px;
 }
 
 .cancel-add-ModalSmall {
   position: relative;
   height: 35px;
-  left: 200px; 
+  left: 200px;
   font-size: 13px;
   direction: ltr;
   font-weight: 500;
 }
 
+.close-ModalPrint {
+  position: relative;
+  height: 35px;
+  left: 365px;
+  font-size: 13px;
+  direction: ltr;
+  font-weight: 500;
+}
+
+
 .save-add-ModalSmall {
   position: relative;
-  left: 105px; 
+  left: 105px;
   font-size: 13px;
   direction: ltr;
   height: 35px;
- 
+
 }
 
 .headerForm {
-  padding: 0px 40px 0px 30px;
+  padding: 0px 40px 0px 15px;
   font-family: cursive;
 }
 
@@ -1108,10 +1140,39 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   font-size: 13px;
 }
 
+
+:host ::ng-deep .p-disabled,
+.p-disabled * {
+  cursor: default !important;
+  pointer-events: none;
+  font-size: 13px !important;
+}
+
+:host ::ng-deep .NewModalAddOrderNew {
+  border-radius: 6px;
+  /* width: 1300px; */
+  font-family: auto;
+  overflow-y: auto;
+  overflow-x: hidden; 
+  width: 95% !important;
+  height: 90% !important;
+  top: 5% !important;
+  left: 0% !important;
+}
+
+:host ::ng-deep .ng-trigger.ng-trigger-overlayAnimation.ng-tns-c3832276034-6.p-dropdown-panel.p-component.ng-star-inserted {
+  top: 0px !important;
+}
+
 :host ::ng-deep .p-dropdown .p-dropdown-clear-icon {
   position: inherit;
   right: initial;
   top: 16px;
+}
+
+
+:host ::ng-deep .p-dropdown:disabled {
+  font-size: 13px !important;
 }
 
 
@@ -1354,9 +1415,15 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   flex: none !important;
 }
 
+:host ::ng-deep .p-inputtext  {
+ 
+  font-size: 13px;
+}
+
 :host ::ng-deep .p-inputtext:enabled:hover {
   border-color: #3B82F6;
-  height: 22px !important;
+  /* height: 30px !important; */
+  /* font-size: 13px; */
 }
 
 
@@ -1369,16 +1436,102 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   width: 150px;
 }
 
- .InputQte{
-  width: 100px;
+
+.DropChoisie:disabled {
+  border: 1px solid #ff0000;
+  margin: 0px -6px 2px -5px !important;
+  padding: 0px 0px 0px 0px;
+  height: 25px;
+  width: 150px;
+}
+
+
+.DropChoisie:hover,
+.DropChoisie:focus {
+  border: 1px solid #398fc1;
+  margin: 0px -6px 2px -5px !important;
+  padding: 0px 0px 0px 0px;
+  height: 25px;
+  width: 150px;
+}
+
+.DropDownItems {
+  border-radius: 6px !important;
+  border: 1px solid gray !important;
+  /* background-color: rgb(141, 141, 141); */
+  text-decoration: overline !important;
+}
+
+
+
+
+
+.InputQte {
+  width: 90px;
   margin: 0px 0px 3px -6px;
   height: 24px;
   border: 1px solid #e2e2e2;
 }
 
- 
- 
-/* :host ::ng-deep .ui-state-highlight {
-  background: red !important;
+
+
+.dropbtn{
+  font-size: 14px;
+  font-weight: 600;
 }
- */
+
+/* Dropdown button on hover & focus */
+/* .dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+} */
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  /* display: inline-block; */
+
+}
+
+.p-dialog-header.ng-tns-c2656225073-7.ng-star-inserted {
+  flex: 12;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 5px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
+}
+
+
+:host ::ng-deep .p-datatable .p-datatable-tfoot > tr > td {
+  text-align: left;
+  padding: 5px;
+  border: 1px solid #dee2e6; 
+  font-weight: 400;
+  color: #343a40;
+  background: #f8f9fa;
+  border-radius: 6px;
+  width: 150px !important;
+}

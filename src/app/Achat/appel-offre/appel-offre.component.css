@@ -4,18 +4,3 @@
  
 
 
-:host ::ng-deep .NewModalAddOrderNew {
-  border-radius: 6px;
-  /* width: 1300px; */
-  font-family: auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  /* max-height: 95vh;
-  min-height: 95vh; */
-
-
-  width: 90% !important;
-  height: 90% !important;
-  top: 0% !important;
-  left: 0% !important;
-}

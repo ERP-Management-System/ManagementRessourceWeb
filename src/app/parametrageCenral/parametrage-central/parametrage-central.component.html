@@ -2,68 +2,90 @@
     <div class="row text-center">
         <h2> Parametrage Central</h2>
         <div id="menu-box">
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/mode_reglement']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/mode_reglement']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi  pi-book"></i>
                     </div>
                     <div class="block2">
                         <span>Mode Reglement</span>
+                        <p>Cash , Banqe , Visa , ...</p>
+
                     </div>
                 </div>
             </div>
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/devise']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/devise']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi pi-dollar" aria-hidden="true"></i>
                     </div>
                     <div class="block2">
                         <span>Devise</span>
+                        <p>$ Dollar , € Euro , TND , ...</p>
                     </div>
                 </div>
             </div>
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/banque']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/banque']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi pi-building-columns"></i>
                     </div>
                     <div class="block2">
                         <span>Banque</span>
+                        <p>Banque Central , ...</p>
                     </div>
                 </div>
             </div>
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/saison']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/saison']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi pi-calendar-clock"></i>
                     </div>
                     <div class="block2">
                         <span>Saison</span>
+                        <p>24H , 24E , ...</p>
+
                     </div>
                 </div>
             </div>
 
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/type_caisse']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/type_caisse']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi pi-equals"></i>
                     </div>
                     <div class="block2">
                         <span>Type Caisse</span>
+                        <p>Cash , Banque , ...</p>
                     </div>
                 </div>
             </div>
 
-            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/region']">
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/region']">
                 <div class="container-block">
                     <div class="block1">
                         <i class="pi pi-compass"></i>
                     </div>
                     <div class="block2">
                         <span> Région</span>
+                        <p>Sousse , Monastir ,Tunis , ...</p>
                     </div>
                 </div>
             </div>
+
+
+            <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage/taxe']">
+                <div class="container-block">
+                  <div class="block1">
+                    <i class="fa fa-tag" aria-hidden="true"></i>
+                  </div>
+                  <div class="block2">
+                    <span>Taxe</span> 
+                     <p>9% , 18% , ...</p>
+                  </div>
+                </div>    
+              </div>
+
 
             <!-- <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/facture_bon_reception']">
                 <div class="container-block">

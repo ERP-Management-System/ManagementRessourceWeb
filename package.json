@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -- proxy-config src/proxy.conf.json",
+    "start": "ng serve --port 4500 -- proxy-config src/proxy.conf.json",
     "build": "ng build",
     "build:prod": "node --max_old_space_size=5048 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href ./",
     "build:ci": "ng build --prod --base-href ./",
@@ -24,6 +24,7 @@
     "@angular/router": "^18.0.0",
     "alertifyjs": "^1.14.0",
     "angular-material-data-table": "^0.10.10",
+    "angular2-text-mask": "^9.0.0",
     "material-design-icons": "^3.0.1",
     "material-icons": "^1.13.12",
     "ngx-extended-pdf-viewer": "^20.5.0-alpha.1",

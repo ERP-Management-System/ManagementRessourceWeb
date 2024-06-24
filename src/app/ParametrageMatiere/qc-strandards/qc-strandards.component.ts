@@ -7,17 +7,16 @@ import { catchError, throwError } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { Matiere, ModeReglement, StatuMatiere, TypeCaisse } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { Coloris, Matiere, ModeReglement, StatuMatiere, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
-
 
 declare const PDFObject: any;
 @Component({
-  selector: 'app-matiere',
-  templateUrl: './matiere.component.html',
-  styleUrl: './matiere.component.css', providers: [ConfirmationService, MessageService]
+  selector: 'app-qc-strandards',
+  templateUrl: './qc-strandards.component.html',
+  styleUrl: './qc-strandards.component.css', providers: [ConfirmationService, MessageService]
 })
-export class MatiereComponent {
+export class QcStrandardsComponent {
 
   openModal!: boolean;
 
@@ -34,7 +33,7 @@ export class MatiereComponent {
   isLoading = false;
   ngOnInit(): void {
 
-    this.GelAllMatiere();
+    // this.GelAllMatiere();
     this.Voids();
 
 
@@ -108,14 +107,14 @@ export class MatiereComponent {
     this.selectedTypeMatiere = ''
     this.listTypeMatiereRslt = [];
     this.onRowUnselect(event);
-
+    this.visibleNewModal = false;
   }
   check_actif = false;
   check_inactif = false;
 
   formHeader = ".....";
   searchTerm = '';
-  visibleModal: boolean = false;
+  visibleNewModal: boolean = false;
   visibleModalPrint: boolean = false;
   visDelete: boolean = false;
   code!: number | null;
@@ -141,7 +140,7 @@ export class MatiereComponent {
     this.selectedTypeMatiere = event.data.typeMatiere;
     this.qteMaxStock = event.data.qteMaxStock;
     this.qteMinStock = event.data.qteMinStock;
-    this.selectedStatuMatiere =  event.data.codeStatuMatiere;
+    this.selectedStatuMatiere = event.data.codeStatuMatiere;
 
 
     console.log('vtData : ', event);
@@ -293,7 +292,7 @@ export class MatiereComponent {
     // 
 
 
-    this.visibleModal = false;
+    this.visibleNewModal = false;
     this.visDelete = false;
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
@@ -308,11 +307,11 @@ export class MatiereComponent {
       // this.code ==null;
       this.clearSelected();
       this.actif = false;
-      this.visibleModal = true;
+      this.visibleNewModal = true;
       this.code == undefined;
       this.GelTypeMatiere();
-      
-      this. GelStatuMatiere();
+
+      this.GelStatuMatiere();
 
     }
     if (mode === 'edit') {
@@ -326,7 +325,7 @@ export class MatiereComponent {
         this.onRowUnselect(event);
         alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.error("Choise A row Please");
-        this.visDelete == false && this.visibleModal == false
+        this.visDelete == false && this.visibleNewModal == false
       } else {
 
         button.setAttribute('data-target', '#Modal');
@@ -334,11 +333,11 @@ export class MatiereComponent {
         // this.GetDesignationFL();
         // this.GetDesignationFLSelected(this.codeFilialle);
         // this.GetDesignationAdress();
-        this.visibleModal = true;
+        this.visibleNewModal = true;
         this.onRowSelect;
         this.GelAllBanque();
         this.GelTypeMatiere();
-        this. GelStatuMatiere();
+        this.GelStatuMatiere();
 
       }
 
@@ -364,7 +363,7 @@ export class MatiereComponent {
         this.onRowUnselect;
         alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.error("Choise A row Please");
-        this.visDelete == false && this.visibleModal == false
+        this.visDelete == false && this.visibleNewModal == false
       } else {
 
         {
@@ -414,7 +413,7 @@ export class MatiereComponent {
   }
   datform = new Date();
   PostMatiere() {
-  
+
 
     if (!this.designationAr || !this.designationLt || !this.selectedStatuMatiere || !this.selectedTypeMatiere || !this.codeSaisie || !this.qteMaxStock || !this.qteMinStock) {
       alertifyjs.set('notifier', 'position', 'top-right');
@@ -458,7 +457,7 @@ export class MatiereComponent {
           (res: any) => {
             alertifyjs.set('notifier', 'position', 'top-right');
             alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
-            this.visibleModal = false;
+            this.visibleNewModal = false;
             this.clearForm();
             this.ngOnInit();
             this.check_actif = true;
@@ -487,7 +486,7 @@ export class MatiereComponent {
             alertifyjs.set('notifier', 'position', 'top-right');
             // alertifyjs.success("Success Saved");
             alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
-            this.visibleModal = false;
+            this.visibleNewModal = false;
             this.clearForm();
             this.ngOnInit();
             this.code;
@@ -532,7 +531,7 @@ export class MatiereComponent {
   }
 
 
-
+  selectedMatiereToAdd: any;
 
 
 
@@ -578,31 +577,31 @@ export class MatiereComponent {
   clonedCars: { [s: string]: Matiere } = {};
   // NewDate = new Date();
   codeModeReglementDde: {}[] = [];
-  dataMatiere = new Array<Matiere>();
-  banque: any;
-  // listModeReglementRslt = new Array<any>();
-  // listModeReglementPushed = new Array<any>();
-  GelAllMatiere() {
-    this.param_achat_service.GetMatiere().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  // dataMatiere = new Array<Matiere>();
+  // banque: any;
+  // // listModeReglementRslt = new Array<any>();
+  // // listModeReglementPushed = new Array<any>();
+  // GelAllMatiere() {
+  //   this.param_achat_service.GetMatiere().pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) { } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-        }
-        return throwError(errorMessage);
-      })
+  //       }
+  //       return throwError(errorMessage);
+  //     })
 
-    ).subscribe((data: any) => {
+  //   ).subscribe((data: any) => {
 
 
 
-      this.dataMatiere = data;
-      this.onRowUnselect(event);
+  //     this.dataMatiere = data;
+  //     this.onRowUnselect(event);
 
-    })
-  }
+  //   })
+  // }
 
 
   /////////////////////////////////////////////////////////// new dev
@@ -631,7 +630,7 @@ export class MatiereComponent {
       }
       this.listTypeMatiereRslt = this.listTypeMatierePushed;
     })
- 
+
   }
 
   ListBanqueData = new Array<any>();
@@ -688,6 +687,138 @@ export class MatiereComponent {
     // })
   }
 
+
+  dataMatiere = new Array<Matiere>();
+  listMatierePushed = new Array<any>();
+  listMatiereRslt = new Array<any>();
+  GelMatiereActifVisible() {
+    this.param_achat_service.GetMatiere().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataMatiere = data;
+      this.listMatierePushed = [];
+      for (let i = 0; i < this.dataMatiere.length; i++) {
+        this.listMatierePushed.push({ label: this.dataMatiere[i].designationAr, value: this.dataMatiere[i].code })
+      }
+      this.listMatiereRslt = this.listMatierePushed;
+    })
+  }
+
+
+  clickDropDownUp(dropDownModUp: any) {
+    if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
+      dropDownModUp.focus();
+      if (!dropDownModUp.overlayVisible) {
+        dropDownModUp.show();
+        event!.preventDefault();
+      } else {
+        dropDownModUp.hide();
+        event!.preventDefault();
+      }
+    }
+  }
+
+  Newcompteur: number = 0;
+  listDataOAWithDetails = new Array<any>();
+  disp: boolean = false;
+  PushTableData() {
+    var exist = false;
+
+    for (var y = 0; y < this.listDataOAWithDetails.length; y++) {
+      if (this.selectedMatiereToAdd != this.listDataOAWithDetails[y].code) {
+        exist = false;
+      } else {
+        exist = true;
+
+        alertifyjs.set('notifier', 'position', 'top-left');
+        alertifyjs.error('Item Used');
+        break;
+      }
+
+
+    }
+    // control remplire codeUnite + codeColoris + qte 
+
+
+    if ((this.selectedMatiereToAdd != undefined) && (this.selectedMatiereToAdd != "") && (!exist)) {
+      this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => {
+        // this.ListMatiere[this.Newcompteur] = Newdata;
+        this.Newcompteur = this.Newcompteur + 1;
+
+        this.listDataOAWithDetails.push(Newdata);
+        console.log(" PushTableData listDataDAWithDetails", this.listDataOAWithDetails);
+
+        // console.log(" PushTableData articles", this.ListMatiere);
+        this.disp = true;
+      })
+    }
+
+  }
+
+  MakeEnabled() {
+    this.disp = false;
+  }
+
+
+
+  DataUnite = new Array<Unite>();
+  listUnitePushed = new Array<any>();
+  listUniteRslt = new Array<any>();
+  selectedUnite: any;
+  GelUniteActifVisible() {
+    this.param_achat_service.GetUnite().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+        }
+        return throwError(errorMessage);
+      })
+    ).subscribe((data: any) => {
+      this.DataUnite = data;
+      this.listUnitePushed = [];
+      for (let i = 0; i < this.DataUnite.length; i++) {
+        this.listUnitePushed.push({ label: this.DataUnite[i].designationAr, value: this.DataUnite[i].code })
+      }
+      this.listUniteRslt = this.listUnitePushed;
+    })
+  }
+
+  DataColoris = new Array<Coloris>();
+  listColorisPushed = new Array<any>();
+  listColorisRslt = new Array<any>();
+  selectedColoris: any | "";
+  GetColorisActifVisible() {
+    this.param_achat_service.GetColoris().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+        }
+        return throwError(errorMessage);
+      })
+    ).subscribe((data: any) => {
+      this.DataColoris = data;
+      this.listColorisPushed = [];
+      for (let i = 0; i < this.DataColoris.length; i++) {
+        this.listColorisPushed.push({ label: this.DataColoris[i].designationAr, value: this.DataColoris[i].code })
+      }
+      this.listColorisRslt = this.listColorisPushed;
+    })
+  }
+
 }
+
 
 

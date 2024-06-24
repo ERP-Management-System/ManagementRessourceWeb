@@ -90,8 +90,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { TreeModule } from 'primeng/tree';
-import { TreeTableModule } from 'primeng/treetable';
-// import { AnimateModule } from 'primeng/animate';
+import { TreeTableModule } from 'primeng/treetable'; 
 import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -99,14 +98,9 @@ import { RippleModule } from 'primeng/ripple';
  
 import {  MatInputModule } from '@angular/material/input';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; 
-// import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatDatepickerModule } from '@angular/material/datepicker';
-// import { MatNativeDateModule } from '@angular/material/core';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';  
 import { MatSelectModule } from '@angular/material/select';  
-import { MatRadioModule } from '@angular/material/radio';
-// import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio'; 
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar'; 
@@ -122,7 +116,9 @@ import { MenuModule } from 'primeng/menu';
 import { FileUploadModule } from 'primeng/fileupload';  
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParametrageCentralService } from './parametrageCenral/ParametrageCentralService/parametrage-central.service';
+import {MatCardModule} from '@angular/material/card';
  
+
 
 
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
@@ -139,24 +135,30 @@ import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
 import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
 import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
-
-
  
+
+import {MatToolbarModule} from '@angular/material/toolbar'; 
+import { LoginComponent } from './login/login.component';
+import { TableComponent } from './Achat/demande-achat/table-component';
+import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
+import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
+import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
+ 
+
  
 
 
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, 
+  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,
     AppRoutingModule,FormsModule, ReactiveFormsModule,BreadcrumbModule,ToastModule
     ,ConfirmDialogModule,MatIconModule,DialogModule,EditorModule,
- 
-    ////////
-    AvatarModule,
+    MatCardModule, 
+    AvatarModule, 
     BrowserModule,
     FormsModule,
     HttpClientModule,
@@ -238,7 +240,7 @@ import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
     TimelineModule,
     ToastModule,
     ToggleButtonModule,
-    ToolbarModule,
+    ToolbarModule,MatToolbarModule,
     TooltipModule,
     TriStateCheckboxModule,
     TreeModule,
@@ -257,7 +259,7 @@ import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
  CommonModule, RouterModule
   ], 
   providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService
+    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService 
 ],
   bootstrap: [AppComponent]
 })

@@ -2,7 +2,7 @@
     <!-- Note: This example only works with Windows Insider Preview Builds 16237+. -->
 
     <header>
-        <label class="header_name">Matiere</label>
+        <label class="header_name">Taxe</label>
     </header>
     <aside>
         <div class="Groupe-Bouton">
@@ -14,8 +14,8 @@
         <div class="material-table">
             <div class="card">
                 <p-toast></p-toast>
-                <p-table #dt1 [value]="dataMatiere" [globalFilterFields]="['designationAr', 'designationLt']"
-                    selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedModeReglement"
+                <p-table #dt1 [value]="dataTaxe" [globalFilterFields]="['designationAr', 'designationLt']"
+                    selectionMode="single" [metaKeySelection]="false" [(selection)]="selectedTaxe"
                     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="code"
                     [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
@@ -40,7 +40,7 @@
                                 <mat-icon class="search-icon">search</mat-icon>
                             </button>
                             <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add"
-                                (click)="clear(dt1)" (click)="GelAllMatiere()">
+                                (click)="clear(dt1)" (click)="GelAllTaxe()">
                                 <div class="bouton_style-2">Actualiser</div>
                                 <mat-icon class="search-icon">refresh</mat-icon>
                             </button>
@@ -77,14 +77,12 @@
 
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
-                            <th style="width: 100px;">code Saisie</th>
-                            <th  >Designation Arabic</th>
-                            <th  >Designation Latin</th>
-
-                            <th style="width: 130px;">Type Matiere</th>
-                            <th style="width: 95px;">Min. Stock</th>
-                            <th style="width: 100px;">Max. Stock</th>
-                            <th style="width: 95px; text-align: center !important; ">Statu</th>
+                            <th>code Saisie</th>
+                            <th>Designation Arabic</th>
+                            <th>Designation Latin</th>
+                            <th>TYpe Taxe</th>
+                            <th class="act-col">Actif</th>
+                            <th class="act-col">Visible</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
@@ -92,17 +90,17 @@
                             <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td>
                             <td style="font-size: 15px !important;">{{fl.designationAr}}</td>
                             <td style="font-size: 15px !important;">{{fl.designationLt}}</td>
+                            <td style="font-size: 15px !important;">{{fl.typeTaxeDTO.designation}}</td>
 
-                            <td style="font-size: 15px !important;">{{fl.codeTypeMatiereDTO.designationAr}}</td>
                             <td class="act-col">
-                                {{fl.qteMinStock}}
+
+                                <p-checkbox [readonly]="true" [(ngModel)]="fl.actif" [binary]="true"
+                                    inputId="binary">{{fl.actif}}</p-checkbox>
                             </td>
                             <td class="act-col">
-                                {{fl.qteMaxStock}}
-                            </td>
-                            <td>
-                                {{fl.statuMatiereDTO.designationAr}}
-                                 
+
+                                <p-checkbox [readonly]="true" [(ngModel)]="fl.visible" [binary]="true"
+                                    inputId="binary">{{fl.visible}}</p-checkbox>
                             </td>
 
 
@@ -131,122 +129,103 @@
 
 <!-- modal primeNG ADD -->
 <p-dialog id="Modal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModal"
-    data-backdrop="false" [modal]="true" styleClass="ModalAdd" [draggable]="false" [resizable]="false">
+    data-backdrop="false" [modal]="true" styleClass="ModalAdd"   >
+    
 
-
+        
 
     <ng-template pTemplate="header">
         <h2 class="text-default headerForm"> {{formHeader}}</h2>
         <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
             (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
         </button>
-        <button class="btn btn-default save-add-ModalSmall" (click)="PostMatiere()"> <i
+        <button class="btn btn-default save-add-ModalSmall" (click)="PostTaxe()"> <i
                 class="fa-lg fa-fw fa fa-check icon-save"></i>
             Save
         </button>
         <p-toast key="toast1"></p-toast>
     </ng-template>
 
-    <div class="modal-body">
-        <!-- <form> -->
-        <fieldset>
-            <div class="flex-row-space">
-                <section class="flex-row-space flex-12" disabled="">
 
-                    <label class="control-label flex-6">Code</label>
-                    <div class="control-input  flex-6">
-                        <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
-                            class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-
-                </section>
-
-                <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Statu Matiere</label>
-                    <div class="dop control-input flex-6">
-                        <p-dropdown name="ModeReglementDde" class="dropdown" [options]="listStatuMatiereRslt"
-                            [(ngModel)]="selectedStatuMatiere" [showClear]="true" [style]="{'width':'100%'}"
-                            [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
-                            #ModeReglementDde="ngModel">
-                        </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-
-                </section>
-
-            </div>
-            <div class="flex-row-space">
-                <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Arabic </label>
-                    <div class="control-input flex-6">
-                        <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-                </section>
-                <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Latine </label>
-                    <div class="control-input flex-6">
-                        <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-                </section>
-
-            </div>
-            <div class="flex-row-space">
-                <section class="flex-row-space flex-7">
-                    <label class="control-label flex-5">Type Matiere</label>
-                    <div class="dop control-input flex-2">
-                        <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
-                            [options]="listTypeMatiereRslt" [(ngModel)]="selectedTypeMatiere" [filter]="true"
-                            [showClear]="true" [style]="{'width':'100%'}" filterBy="label,value"
-                            [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
-                            #ModeReglementDde="ngModel">
-                        </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-
-                </section>
-
-            </div>
-            <div class="flex-row-space">
-                <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Quantite Min Stock </label>
-                    <div class="control-input flex-6">
-                        <input type="number" id="qteMinStock" maxlength="200" name="qteMinStock"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="qteMinStock"
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-                </section>
-                <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Quantite Max Stock </label>
-                    <div class="control-input flex-6">
-                        <input type="number" id="qteMaxStock" maxlength="200" name="qteMaxStock"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="qteMaxStock"
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                    </div>
-                </section>
-
-            </div>
+        <div class="modal-body">
+            <!-- <form> -->
+                <div class="flex-row-start flex-12">
+                    <fieldset class="flex-12">
+                        <div class="flex-row-start flex-12">
+                            <section class="flex-row-start flex-6"  >
+                                <label class="control-label flex-6">Code</label>
+                                <div class="control-input  flex-6">
+                                    <input id="codeSaisie" [disabled]="dis" maxlength="10" name="codeSaisie" type="text"
+                                        class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
+                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                </div>
+                            </section>
+                            <section class="flex-row-start flex-6">
+                                <p-checkbox styleClass="ChkActif" [binary]="true" name="actif" value="val3" label="Actif" [(ngModel)]="actif"></p-checkbox>
+    
+                                <p-checkbox [binary]="true" name="visible" value="val3" label="Visible"
+                                    [(ngModel)]="visible"></p-checkbox>
+    
+                            </section>
+                        </div>
+                        <div class="flex-row-start flex-12">
+                            <section class="flex-row-start flex-6">
+                                <label class="control-label flex-6">Desgiantion Arabic </label>
+                                <div class="control-input flex-6">
+                                    <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                                        class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
+                                        [required]="true">
+                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                </div>
+                            </section>
+                            <section class="flex-row-start flex-6">
+                                <label class="control-label flex-6">Desgiantion Latine </label>
+                                <div class="control-input flex-6">
+                                    <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                                        class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
+                                        [required]="true">
+                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                </div>
+                            </section>
+    
+                        </div>
+                        <div class="flex-row-start flex-12">
+                            <section class="flex-row-start flex-6">
+                                <label class="control-label flex-6">Type Taxe</label>
+                                <div class="dop control-input flex-6">
+                                    <p-dropdown name="ModeReglementDde"   class="dropdown"
+                                        [options]="RsltTypeTaxe" [(ngModel)]="selectedTypeTaxe" 
+                                        [showClear]="true" [style]="{'width':'100%'}"  
+                                          placeholder="&nbsp;" [required]="true" [lazy]="true"
+                                        #ModeReglementDde="ngModel">
+                                    </p-dropdown>
+                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                </div>
+            
+                            </section>
+                            <section class="flex-row-start flex-6">
+                                <label class="control-label flex-6">Valeur Taxe</label>
+                                <div class="control-input flex-6">
+                                    <input type="number" id="valeur_taxe" maxlength="200" name="valeur_taxe"
+                                        class="onlyForCentral form-control-dev input-xs" [(ngModel)]="ValeurTaxe"
+                                        [required]="true">
+                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                </div>
+                            </section>
+    
+                        </div>
+                         
+    
+    
+                    </fieldset>
+    
+                </div>
 
 
 
-
-
-
-        </fieldset>
-
-
-
-
-    </div>
-
+ 
+        </div>
+ 
 </p-dialog>
 
 <!-- modal primeNG  Delete-->
@@ -264,7 +243,7 @@
             <fieldset class="deleteForms">
                 <h4 class="text-delete ">Êtes-vous sûr de vouloir supprimer ?
                     <p-button icon="pi pi-save" data-dismiss="modal" label="supprimer"
-                        styleClass="save-delete p-button-success" (click)="DeleteMatiere(code)"></p-button>
+                        styleClass="save-delete p-button-success" (click)="DeleteColoris(code)"></p-button>
                     <p-button icon="pi pi-sign-out" label="Fermer" styleClass="btn-cancel-delete p-button-danger"
                         data-dismiss="modal"> </p-button>
 
@@ -301,31 +280,24 @@
             </h3>
         </div>
         <div class="modal-body">
+            <div id="pdfContainer"></div>
 
-
-
-
-
-
-
-
-
-
-            <div id="myContainer">
+            
+            <!-- <div id="myContainer">
                 <div id="outerContainer">
+////sidebarContainer
+                    <div id="sidebarContainer"> </div>  
 
-                    <div id="sidebarContainer">
-                    </div> <!-- sidebarContainer -->
 
-                    <div id="mainContainer">
-                        <div id="pdfContainer"></div>
-                    </div> <!-- mainContainer -->
+                 /// /mainContainer 
+                    <div id="mainContainer"> </div> 
 
-                    <div id="overlayContainer" class="hidden">
-                    </div> <!-- overlayContainer -->
 
-                </div> <!-- outerContainer -->
-            </div>
+                /// overlayContainer
+                    <div id="overlayContainer" class="hidden"> </div> 
+
+                </div>  
+            </div> -->
 
         </div>
 

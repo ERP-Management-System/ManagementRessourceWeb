@@ -1,37 +1,24 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
-import { catchError, Subject, throwError, timeout } from 'rxjs';
+import { catchError, Subject, throwError } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, Coloris, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, Coloris, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
-
 
 
 declare const PDFObject: any;
 
-
-
 @Component({
-  selector: 'app-appel-offre',
-  templateUrl: './appel-offre.component.html',
-  styleUrl: './appel-offre.component.css', providers: [ConfirmationService, MessageService]
+  selector: 'app-ordre-achat',
+  templateUrl: './ordre-achat.component.html',
+  styleUrl: './ordre-achat.component.css', providers: [ConfirmationService, MessageService]
 })
-export class AppelOffreComponent {
+export class OrdreAchatComponent {
 
-
-  dtTrigger: Subject<any> = new Subject();
-
-  selectedUniteForPush(event: any) {
-    console.log(event.target.value) 
-  }
-  selectedColorisForPush(event: any) {
-    console.log(event.target.value) 
-
-  }
 
 
 
@@ -52,7 +39,7 @@ export class AppelOffreComponent {
   ngOnInit(): void {
 
 
-    this.GelAllAppelOffre();
+    this.GelAllOrdreAchat();
     this.VoidsNew();
 
     this.v2 = [
@@ -60,19 +47,19 @@ export class AppelOffreComponent {
       { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
       { field: 'unite', header: 'Unite' },
       { field: 'coloris', header: 'Coloris' },
-      { field: 'quantite', header: 'Quantite' }, 
+      { field: 'quantite', header: 'Quantite' },  
     ];
 
 
   }
-  codeAppelOffre!:number;
-  RemplirePrint(codeAppelOffre:any): void {
-    if(this.selectedAppelOffre == null){
+  codeDemandeAchat!:number;
+  RemplirePrint(codeDemandeAchat:any): void {
+    if(this.selectedOrdreAchat == null){
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>'  + "Select any row please");
     this.visibleModalPrint = false;
     }else{ 
-      this.param_achat_service.getAppelOffreEdition(codeAppelOffre).subscribe(blob => {
+      this.param_achat_service.getDemandeAchatEdition(codeDemandeAchat).subscribe(blob => {
         const reader = new FileReader();
         const binaryString = reader.readAsDataURL(blob);
         reader.onload = (event: any) => { 
@@ -117,7 +104,7 @@ export class AppelOffreComponent {
     this.selectedModeReglement = '';
     this.selectedMatiereToAdd = ''; 
     this.onRowUnselect(event);
-    this.listDataAOWithDetails = new Array<any>();
+    this.listDataOAWithDetails = new Array<any>();
     this.final = new Array<any>();
 
   }
@@ -126,7 +113,7 @@ export class AppelOffreComponent {
     this.visibleModalPrint = false;
     this.onRowUnselect(event);
     this.clearSelected(); 
-    this.selectedAppelOffre =null ; 
+    this.selectedOrdreAchat =null ; 
     this.pdfData = new  Blob; 
  
   }
@@ -137,6 +124,7 @@ export class AppelOffreComponent {
   searchTerm = ''; 
   visibleNewModal: boolean = false;
   visibleModalPrint: boolean = false;
+  visibleModalDdeDirect: boolean = false;
   visDelete: boolean = false;
   code!: any | null;
   codeSaisie: any;
@@ -147,10 +135,11 @@ export class AppelOffreComponent {
   actif!: boolean;
   visible!: boolean;
  
-  DateLivraison!:Date ;
-
-  selectedAppelOffre!: any;
-
+ 
+  selectedAppelOffre!:any;
+  selectedOrdreAchat!: any;
+  selectedDemandeAchat!: any;
+  selectedDepot:any;
  
   selectedModeReglement: any; 
   onRowSelect(event: any) {
@@ -162,8 +151,10 @@ export class AppelOffreComponent {
     this.designationLt = event.data.designationLt;
     this.selectedModeReglement = event.data.codeModeReglement;
     this.observation = event.data.observation;
-    console.log('vtData : ', event ,  'selected AO code : ' ,this.selectedAppelOffre);
-    this.selectedAppelOffre == null;
+    this.selectedDemandeAchat = event.data.codeDemandeAchat;
+    this.selectedAppelOffre =  event.data.codeAppelOffre  
+    console.log('vtData : ', event ,  'selected AO code : ' ,this.selectedOrdreAchat);
+    // 
 
   }
 
@@ -173,16 +164,18 @@ export class AppelOffreComponent {
     this.selectedModeReglement = null;
     this.selectedMatiereToAdd = null;
     this.observation = null;
-    this.selectedAppelOffre = '';
-    console.log(" selectedAppelOffre", this.selectedAppelOffre)
-
+    this.selectedOrdreAchat = '';
+    this.selectedDemandeAchat='';
+    this.selectedAppelOffre='';
+    // console.log(" selectedDemandeAchat", this.selectedOrdreAchat)
+     
   }
 
 
  
 
-  DeleteAppelOffre(code: any) {
-    this.param_achat_service.DeleteAppelOffre(code).pipe(
+  DeleteOrdreAchat(code: any) {
+    this.param_achat_service.DeleteOrdreAchat(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -212,7 +205,7 @@ export class AppelOffreComponent {
     this.designationLt = '';
     this.actif = false;
     this.visible = false;
-    this.listDataAOWithDetails = new Array<any>();
+    this.listDataOAWithDetails = new Array<any>();
  
 
   }
@@ -228,9 +221,9 @@ export class AppelOffreComponent {
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'Newadd') {
       button.setAttribute('data-target', '#NewModal');
-      this.formHeader = "Nouveau Appel Offre"; 
+      this.formHeader = "Nouveau Ordre Achat"; 
 
-      this.listDataAOWithDetails = new Array<any>();
+      this.listDataOAWithDetails = new Array<any>();
       this.onRowUnselect(event);
       this.clearSelected();
       this.actif = false;
@@ -241,14 +234,13 @@ export class AppelOffreComponent {
       this.GelAllModeReglement();
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
+      this.GelAllAppelOffre();
+      this.GetDemandeAchat();
 
     } else
       if (mode === 'edit') {
-
-        // this.visibleNewModal = false;
-        // this.visDelete = false;
-        if (this.code == undefined) {
-          // alert("Choise A row Please");
+ 
+        if (this.code == undefined) { 
 
           this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
           this.clearForm();
@@ -256,23 +248,23 @@ export class AppelOffreComponent {
           alertifyjs.set('notifier', 'position', 'top-right');
 
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Choise A row Please");
-
-          // this.listDataAOWithDetails = new Array<any>();
+ 
 
         } else {
 
           button.setAttribute('data-target', '#NewModal');
-          this.formHeader = "Edit Appel Offre"
+          this.formHeader = "Edit Ordre Achat"
 
           this.GelMatiereActifVisible();
 
 
+          this.GetDemandeAchat();
           this.onRowSelect;
           this.GelAllModeReglement();
 
           this.GetColorisActifVisible();
           this.GelUniteActifVisible();
-          this.GetAppelOffreByCode(this.selectedAppelOffre);
+          this.GetOrdreAchatByCode(this.selectedOrdreAchat);
           this.visibleNewModal = true;
           this.visDelete = false;
           this.visibleModalPrint=false;
@@ -286,27 +278,23 @@ export class AppelOffreComponent {
             this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
             this.onRowUnselect;
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error("Choise A row Please");
-            // this.visDelete = false ; this.visibleNewModal = false
+            alertifyjs.error("Choise A row Please"); 
           } else {
 
             {
               button.setAttribute('data-target', '#ModalDelete');
-              this.formHeader = "Delete Appel D'Offre"
-
-              // this.GelMatiereActifVisible();
-              // this.GelAllModeReglement();
+              this.formHeader = "Delete Ordre Achat"
+ 
               this.visDelete = true; 
             }
           }
 
-        }
-    // (mode === 'Print') 
+        } 
     if (mode === 'Print') {
 
 
       button.setAttribute('data-target', '#ModalPrint');
-      this.formHeader = "Imprimer Appel Offre"
+      this.formHeader = "Imprimer Ordre Achat"
       this.visibleModalPrint = true;
       this.RemplirePrint(this.code);
 
@@ -316,42 +304,46 @@ export class AppelOffreComponent {
   }
 
 
+  
+  public onOpenModalOrderDirect(mode: string) {
+ 
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'NewaddOrdreDirect') {
+      button.setAttribute('data-target', '#NewModalDdeDirect');
+      this.formHeader = "Nouveau Ordre Achat Direct"; 
+
+      this.listDataOAWithDetails = new Array<any>();
+      this.onRowUnselect(event);
+      this.clearSelected();
+      this.actif = false;
+      this.visibleModalDdeDirect = true;
+      this.visDelete = false;
+      this.visibleNewModal = false;
+      this.visibleModalPrint = false;
+      this.code == undefined;
+      this.GelMatiereActifVisible();
+      this.GelAllModeReglement();
+      this.GelUniteActifVisible();
+      this.GetColorisActifVisible();
+
+    }  
+
+  }
+
   userCreate = "soufien";
-  // currentDate = new Date();
-
-  // ajusterHourAndMinutes() {
-  //   let hour = new Date().getHours();
-  //   let hours;
-  //   if (hour < 10) {
-  //     hours = '0' + hour;
-  //   } else {
-  //     hours = hour;
-  //   }
-  //   let min = new Date().getMinutes();
-  //   let mins;
-  //   if (min < 10) {
-  //     mins = '0' + min;
-  //   } else {
-  //     mins = min;
-  //   }
-  //   return hours + ':' + mins
-  // }
-  // datform = new Date();
-
+  
   GetDataFromTableEditor: any;
   final = new Array<any>();
   codeColoris: any;
-  qteDemander: any;
+  qteOrdre: any;
   codeSaisieMaitere: any;
   codeUnite: any;
-  observation: any;
-  // codeColoriss:any;
-  // codeUnites:any;
-
-  // listDataAOWithDetails = new Array<any>();
-
-  listDataAOWithDetailsTemp = new Array<any>();
-  PostAppelOffre() {
+  observation: any;  
+  PostDemandeAchat() {
 
 
 
@@ -360,21 +352,21 @@ export class AppelOffreComponent {
 
 
 
-    if (!this.designationAr || !this.designationLt || !this.selectedModeReglement || !this.codeSaisie || this.listDataAOWithDetails.length == 0) {
+    if (!this.designationAr || !this.designationLt || !this.selectedModeReglement || !this.codeSaisie || this.listDataOAWithDetails.length == 0) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
     } else {
 
-      for (let y = 0; y < this.listDataAOWithDetails.length; y++) {
+      for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
 
         this.GetDataFromTableEditor = {
 
 
-          codematiere: { code: this.listDataAOWithDetails[y].codeMatieres },
-          codeUnite: { code: this.listDataAOWithDetails[y].codeUnites },
-          codeColoris: { code: this.listDataAOWithDetails[y].codeColoriss },
-          qteDemander: this.listDataAOWithDetails[y].qteDemander, userCreate: this.userCreate,
+          codematiere: { code: this.listDataOAWithDetails[y].codeMatieres },
+          codeUnite: { code: this.listDataOAWithDetails[y].codeUnites },
+          codeColoris: { code: this.listDataOAWithDetails[y].codeColoriss },
+          qteOrdre: this.listDataOAWithDetails[y].qteOrdre, userCreate: this.userCreate,
         }
         this.final.push(this.GetDataFromTableEditor);
 
@@ -392,7 +384,7 @@ export class AppelOffreComponent {
         code: this.code,
         actif: this.actif,
         visible: this.visible,
-        detailsAppelOffreDTOs: this.final,
+        detailsDemandeAchatDTOs: this.final,
         observation: this.observation,
         codeEtatReception: "2"
       }
@@ -402,7 +394,7 @@ export class AppelOffreComponent {
       if (this.code != null) {
         body['code'] = this.code;
         console.log("Body to Update", body)
-        this.param_achat_service.UpdateAppelOffre(body).pipe(
+        this.param_achat_service.UpdateOrdreAchat(body).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) {
@@ -428,19 +420,15 @@ export class AppelOffreComponent {
             this.clearSelected();
             this.visibleNewModal = false;
             this.visDelete = false;
-            this.codeAppelOffre = this.selectedAppelOffre.code
-            this.visibleModalPrint = false;
-
-
+            this.codeDemandeAchat = this.selectedOrdreAchat.code
+            this.visibleModalPrint = false; 
           }
         );
-
-
       }
       else {
         console.log("Body to Post", body)
 
-        this.param_achat_service.PostAppelOffre(body).pipe(
+        this.param_achat_service.PostOrdreAchatWithDetails(body).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
@@ -468,8 +456,8 @@ export class AppelOffreComponent {
             body : {};
             this.visibleModalPrint = true; 
             console.log("res",res);
-            this.codeAppelOffre = res.code;
-            this.RemplirePrint(this.codeAppelOffre); 
+            this.codeDemandeAchat = res.code;
+            this.RemplirePrint(this.codeDemandeAchat); 
          
 
           }
@@ -489,7 +477,7 @@ export class AppelOffreComponent {
   NewCodeAO = new Array<AppelOffre>;
 
   public remove(index: number): void {
-    this.listDataAOWithDetails.splice(index, 1);
+    this.listDataOAWithDetails.splice(index, 1);
     console.log("index", index);
   }
 
@@ -547,17 +535,16 @@ export class AppelOffreComponent {
   brands!: SelectItem[];
   // clonedCars: { [s: string]: AppelOffre } = {};
   // codeModeReglementDde: {}[] = [];
-  dataAppelOffre = new Array<AppelOffre>();
+  dataOrdreAchat = new Array<OrdreAchat>();
   banque: any;
-  GelAllAppelOffre() {
-    this.param_achat_service.GetAppelOffre().pipe(
+  GelAllOrdreAchat() {
+    this.param_achat_service.GetOrdreAchat().pipe(
       catchError((error: HttpErrorResponse) => {
-      
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-          alertifyjs.timer = 100;
+
         }
         return throwError(errorMessage);
       })
@@ -566,7 +553,7 @@ export class AppelOffreComponent {
 
 
 
-      this.dataAppelOffre = data;
+      this.dataOrdreAchat = data;
       // this.onRowUnselect(event);
 
     })
@@ -599,6 +586,31 @@ export class AppelOffreComponent {
   }
 
 
+ 
+  dataAppelOffre = new Array<AppelOffre>();
+  listAppelOffrePushed = new Array<any>();
+  listAppelOffreRslt = new Array<any>();
+  GelAllAppelOffre() {
+    this.param_achat_service.GetAppelOffre().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataAppelOffre = data;
+      this.listAppelOffrePushed = [];
+      for (let i = 0; i < this.dataAppelOffre.length; i++) {
+        this.listAppelOffrePushed.push({ label: this.dataAppelOffre[i].designationAr, value: this.dataAppelOffre[i].code })
+      }
+      this.listAppelOffreRslt = this.listAppelOffrePushed;
+    })
+  }
 
 
 
@@ -652,10 +664,7 @@ export class AppelOffreComponent {
       this.listUniteRslt = this.listUnitePushed;
     })
   }
-  // unite = this.listUniteRslt.map((name) => {
-  //   return { label: name, value: name }
-  // });
-
+ 
   DataColoris = new Array<Coloris>();
   listColorisPushed = new Array<any>();
   listColorisRslt = new Array<any>();
@@ -700,15 +709,15 @@ export class AppelOffreComponent {
   AODetails = new Array<AODetails>();
   selectedMatiereToAdd: any;
   ListMatiere!: Matiere[];
-  listDataAOWithDetails = new Array<any>();
+  listDataOAWithDetails = new Array<any>();
   Newcompteur: number = 0;
   codeMatieres: any;
   disp: boolean = false;
   PushTableData() {
     var exist = false;
 
-    for (var y = 0; y < this.listDataAOWithDetails.length; y++) {
-      if (this.selectedMatiereToAdd != this.listDataAOWithDetails[y].code) {
+    for (var y = 0; y < this.listDataOAWithDetails.length; y++) {
+      if (this.selectedMatiereToAdd != this.listDataOAWithDetails[y].code) {
         exist = false;
       } else {
         exist = true;
@@ -717,14 +726,7 @@ export class AppelOffreComponent {
         alertifyjs.error('Item Used');
         break;
       }
-      // if (this.listDataAOWithDetails[y].codeColoriss == null && this.listDataAOWithDetails[y].codeUnites ==null || this.listDataAOWithDetails[y].qteDemander ==null) {
-
-      //   alertifyjs.set('notifier', 'position', 'top-left');
-      //   alertifyjs.error('Remplire All Data For Row '); this.disp = true;
-      //   break;
-
-
-      // }  
+    
 
     }
     // control remplire codeUnite + codeColoris + qte 
@@ -735,8 +737,8 @@ export class AppelOffreComponent {
         // this.ListMatiere[this.Newcompteur] = Newdata;
         this.Newcompteur = this.Newcompteur + 1;
 
-        this.listDataAOWithDetails.push(Newdata);
-        console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails);
+        this.listDataOAWithDetails.push(Newdata);
+        console.log(" PushTableData listDataDAWithDetails", this.listDataOAWithDetails);
 
         // console.log(" PushTableData articles", this.ListMatiere);
         this.disp = true;
@@ -749,9 +751,9 @@ export class AppelOffreComponent {
     this.disp = false;
   }
 
-  GetAppelOffreByCode(code: number) {
+  GetOrdreAchatByCode(code: number) {
 
-    this.param_achat_service.GetAppelOffreByCode(this.code).pipe(
+    this.param_achat_service.GetOrdreAchatByCode(this.selectedOrdreAchat.code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -763,9 +765,9 @@ export class AppelOffreComponent {
       })
 
     ).subscribe((data: any) => {
-      this.listDataAOWithDetails = new Array<any>();
-      this.listDataAOWithDetails = data;
-      console.log("listDataAOWithDetails is ", this.listDataAOWithDetails);
+      this.listDataOAWithDetails = new Array<any>();
+      this.listDataOAWithDetails = data;
+      console.log("listDataDAWithDetails is ", this.listDataOAWithDetails);
 
 
     })
@@ -773,22 +775,260 @@ export class AppelOffreComponent {
 
 
 
-  getPicNonReceptionner() {
-    return "url('assets/assets/images/etat_NRCP.png')";
+  getIconCirDirect() {
+    return "url('assets/assets/images/cir_direct.png')";
   }
 
-  getPicReceptionnerPartiell() {
-    return "url('assets/assets/images/etat_RCPPartiel.png')";
+  getIconCirInDirect() {
+    return "url('assets/assets/images/cir_indirect.png')";
+  }
+ 
+
+  
+  dataDepot = new Array<Depot>();
+  listDepotPushed = new Array<any>();
+  listDepotRslt = new Array<any>();
+  GelAllDepotPrincipal() {
+    this.param_achat_service.GetDepotPrincipal().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataDepot = data;
+      this.listDepotPushed = [];
+      for (let i = 0; i < this.dataDepot.length; i++) {
+        this.listDepotPushed.push({ label: this.dataDepot[i].designationAr, value: this.dataDepot[i].code })
+      }
+      this.listDepotRslt = this.listDepotPushed;
+    })
   }
 
-  getPicReceptionnerFinal() {
-    return "url('assets/assets/images/etat_RCTotal.png')";
+  
+  
+  dataDemandeAchat = new Array<DemandeAchat>();
+  listDemandeAchatPushed = new Array<any>();
+  listDemandeAchatRslt = new Array<any>();
+  GetDemandeAchat() {
+    this.param_achat_service.GetDemandeAchat().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataDemandeAchat = data;
+      this.listDemandeAchatPushed = [];
+      for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+        this.listDemandeAchatPushed.push({ label: this.dataDemandeAchat[i].codeSaisie, value: this.dataDemandeAchat[i].code })
+      }
+      this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+    }
+    )
   }
 
 
+
+  valeurTVA: any;
+  remiseEnPourcent: any;
+  prixTotalTTC: any;
+  TotalTTCValue: any;
+  totalTax19: any;
+  TotalTax7: any;
+  mntTimbre: any;
+  TotalTaxeTmb: any;
+  thisYearTotal!: any;
+  calculateThisYearTotal() {
+    let total = 0.000000;
+    let mnttotalHT19 = 0.000000;
+    let mnttotalHT0 = 0.000000;
+    let mnttotalHT7 = 0.000000;
+    for (let sale of this.listDataOAWithDetails) {
+      total += +sale.prixTotTTC;
+      let mnttaxe = sale.codeTaxe / 100;
+      if (sale.codeTaxe == 19) {
+
+        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
+        this.totalTax19 = mnttotalHT19;
+        let valuetx19 = this.totalTax19;
+        this.totalTax19 = valuetx19.toFixed(6);
+
+      }
+      if (sale.codeTaxe == 7) {
+        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+        this.TotalTax7 = mnttotalHT7;
+        let valuetx7 = this.TotalTax7;
+        this.TotalTax7 = valuetx7.toFixed(6);
+      }if(sale.codeTaxe == 0){
+        this.TotalTax7=mnttotalHT7;
+        this.totalTax19=mnttotalHT19;
+      }
+
+
+    }
+    console.log("total", total)
+    this.thisYearTotal = total;
+    let value2 = this.thisYearTotal;
+    this.thisYearTotal = value2.toFixed(6);
+
+    this.TotalTTCValue = this.thisYearTotal;
+  
+
+    this.CalculeTaxeTimbre();
+    
+  }
+  
+  codeTaxeA: any;
+  DataTimbre = new Array<Param>;
+  DataTimbrePushed = new Array<any>;
+  DataTimbreReslt = new Array<any>;
+  CalculeTaxeTimbre() {
+
+
+    this.param_achat_service.GetMntTimbre().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.DataTimbre = data;
+      this.DataTimbrePushed = [];
+      for (let i = 0; i < this.DataTimbre.length; i++) {
+
+        this.mntTimbre = this.DataTimbre[i].valeur
+        this.TotalTaxeTmb = +this.TotalTax7  + +this.totalTax19 + +this.DataTimbre[i].valeur
+      }
+
+    })
+    
+
+ 
+  }
+
+
+  ValueQteChanged() {
+    for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
+
+      this.GetDataFromTableEditor = {
+        qteDemander: this.listDataOAWithDetails[y].qteDemander,
+        prixAchat: this.listDataOAWithDetails[y].prixAchat,
+        codeTaxe: this.listDataOAWithDetails[y].codeTaxe
+
+      }
+      this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
+      this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
+      this.listDataOAWithDetails[y].codeTaxe = this.GetDataFromTableEditor.codeTaxe;
+      this.listDataOAWithDetails[y].prixTotalHT = this.GetDataFromTableEditor.prixTotalHT;
+
+      let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
+      let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
+      let valeurtaxe = this.GetDataFromTableEditor.codeTaxe / 100;
+
+      let pxtotal = qteDemander1 * prixUniAchat1;
+      let valeurTaxe1 = valeurtaxe * pxtotal;
+      let valeurTotalTTC = pxtotal + +valeurTaxe1
+      this.listDataOAWithDetails[y].prixTotTTC = valeurTotalTTC;
+      let value = this.listDataOAWithDetails[y].prixTotTTC;
+      this.listDataOAWithDetails[y].prixTotTTC = value.toFixed(6);
+
+
+      this.listDataOAWithDetails[y].prixTotalHT = pxtotal;
+      let value2 = this.listDataOAWithDetails[y].prixTotalHT;
+      this.listDataOAWithDetails[y].prixTotalHT = value2.toFixed(6);
+
+    }
+    this.calculateThisYearTotal();
+  }
+
+  GetDemandeAchatByCode(code: number) {
+
+    if (this.selectedDemandeAchat == null) {
+      this.listDataOAWithDetails = new Array<any>();
+    } else {
+
+      this.param_achat_service.GetDemandeAchatByCode(this.selectedDemandeAchat).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  
+          }
+          return throwError(errorMessage);
+        })
+      ).subscribe((data: any) => {
+        this.listDataOAWithDetails = new Array<any>();
+        this.listDataOAWithDetails = data;
+        console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataOAWithDetails);
+        for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
+
+          this.GetDataFromTableEditor = {
+            qteDemander: this.listDataOAWithDetails[y].qteDemander,
+            prixAchat: this.listDataOAWithDetails[y].prixAchat,
+            codeTaxe: this.listDataOAWithDetails[y].codeTaxe
+
+          }
+          this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
+          this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
+          this.listDataOAWithDetails[y].codeTaxe = this.GetDataFromTableEditor.codeTaxe;
+          this.listDataOAWithDetails[y].prixTotalHT = this.GetDataFromTableEditor.prixTotalHT;
+
+          let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
+          let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
+
+          this.listDataOAWithDetails[y].prixAchat = prixUniAchat1;
+          let value3 = this.listDataOAWithDetails[y].prixAchat;
+          this.listDataOAWithDetails[y].prixAchat = value3.toFixed(6);
+
+
+          let valeurtaxe = this.GetDataFromTableEditor.codeTaxe / 100;
+
+          let pxtotal = qteDemander1 * prixUniAchat1;
+          let valeurTaxe1 = valeurtaxe * pxtotal;
+          let valeurTotalTTC = pxtotal + +valeurTaxe1;
+
+          this.listDataOAWithDetails[y].prixTotTTC = valeurTotalTTC;
+          let value = this.listDataOAWithDetails[y].prixTotTTC;
+          this.listDataOAWithDetails[y].prixTotTTC = value.toFixed(6);
+
+
+          this.listDataOAWithDetails[y].prixTotalHT = pxtotal;
+          let value2 = this.listDataOAWithDetails[y].prixTotalHT;
+          this.listDataOAWithDetails[y].prixTotalHT = value2.toFixed(6);
+
+          console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
+           
+
+
+        }
+
+        this.calculateThisYearTotal();
+        console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataOAWithDetails);
+
+
+      })
+    }
+
+
+  }
 }
-
-
 
 
 
