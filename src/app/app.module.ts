@@ -95,7 +95,8 @@ import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
- 
+import {DatePipe} from '@angular/common';
+
 import {  MatInputModule } from '@angular/material/input';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';  
@@ -259,7 +260,7 @@ import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
  CommonModule, RouterModule
   ], 
   providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService 
+    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService ,DatePipe
 ],
   bootstrap: [AppComponent]
 })

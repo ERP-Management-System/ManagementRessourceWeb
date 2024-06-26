@@ -1535,3 +1535,22 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   border-radius: 6px;
   width: 150px !important;
 }
+
+:host ::ng-deep  .p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: #ffffff;
+  /* background: #963bf6; */
+  background: cadetblue;
+}
+
+:host ::ng-deep .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+  border-color: #ffffff;
+  /* background: #963bf6; */
+  background: cadetblue;
+  color: #ffffff;
+}
+
+:host ::ng-deep .p-radiobutton-box.p-highlight .p-radiobutton-icon {
+  transform: translateZ(0) scale(1.0, 1.0);
+  visibility: visible;
+  background: cadetblue;
+}

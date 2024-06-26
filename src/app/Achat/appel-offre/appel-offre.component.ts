@@ -1,15 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService, SelectItem } from 'primeng/api';
 import { catchError, Subject, throwError, timeout } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
-
-
+import { DatePipe } from '@angular/common';
+ 
 
 declare const PDFObject: any;
 
@@ -26,10 +26,10 @@ export class AppelOffreComponent {
   dtTrigger: Subject<any> = new Subject();
 
   selectedUniteForPush(event: any) {
-    console.log(event.target.value) 
+    console.log(event.target.value)
   }
   selectedColorisForPush(event: any) {
-    console.log(event.target.value) 
+    console.log(event.target.value)
 
   }
 
@@ -39,18 +39,21 @@ export class AppelOffreComponent {
 
   openModal!: boolean;
 
-  constructor(private confirmationService: ConfirmationService,
+  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
- 
+     
   }
- 
+
   selectedMatiere: any;
- 
+  items!: MenuItem[];
 
   pdfData!: Blob;
   isLoading = false;
   ngOnInit(): void {
-
+    this.items = [
+      { label: 'View', icon: 'pi pi-fw pi-search', command: () => this.approveAO('ApproveModal') },
+      // {label: 'Delete', icon: 'pi pi-fw pi-times', command: () => this.deleteProduct(this.selectedAppelOffre)}
+    ];
 
     this.GelAllAppelOffre();
     this.VoidsNew();
@@ -60,36 +63,62 @@ export class AppelOffreComponent {
       { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
       { field: 'unite', header: 'Unite' },
       { field: 'coloris', header: 'Coloris' },
-      { field: 'quantite', header: 'Quantite' }, 
+      { field: 'quantite', header: 'Quantite' },
     ];
 
 
   }
-  codeAppelOffre!:number;
-  RemplirePrint(codeAppelOffre:any): void {
-    if(this.selectedAppelOffre == null){
+  selectedValue!: number;
+  diss: boolean = false;
+  approveAO(mode: string) {
+
+    const container = document.getElementById('main-container');
+    const contextMenu = document.createElement('button');
+    contextMenu.type = 'button';
+    contextMenu.style.display = 'none';
+    contextMenu.setAttribute('data-toggle', 'modal');
+    if (mode === 'ApproveModal') {
+      contextMenu.setAttribute('data-target', '#ModalApprove');
+      this.formHeader = "Valider Appel Offre";
+      this.visibleModalApprove = true;
+      this.visDelete = false;
+      this.visibleNewModal = false;
+      this.visibleModalPrint = false;
+      this.GelMatiereActifVisible();
+      this.onRowSelect;
+      this.GelAllModeReglement();
+      this.GetColorisActifVisible();
+      this.GelUniteActifVisible();
+      this.GetAppelOffreByCode(this.selectedAppelOffre);
+      this.diss = true;
+
+    }
+  }
+  codeAppelOffre!: number;
+  RemplirePrint(codeAppelOffre: any): void {
+    if (this.selectedAppelOffre == null) {
       alertifyjs.set('notifier', 'position', 'top-right');
-      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>'  + "Select any row please");
-    this.visibleModalPrint = false;
-    }else{ 
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Select any row please");
+      this.visibleModalPrint = false;
+    } else {
       this.param_achat_service.getAppelOffreEdition(codeAppelOffre).subscribe(blob => {
         const reader = new FileReader();
         const binaryString = reader.readAsDataURL(blob);
-        reader.onload = (event: any) => { 
+        reader.onload = (event: any) => {
           this.pdfData = event.target.result;
           this.isLoading = false;
           if (this.pdfData) {
             this.handleRenderPdf(this.pdfData);
           }
         };
-  
+
         reader.onerror = (event: any) => {
           console.log("File could not be read: " + event.target.error.code);
         };
       });
     }
 
-    
+
 
   }
 
@@ -101,7 +130,7 @@ export class AppelOffreComponent {
     const pdfObject = PDFObject.embed(data, '#pdfContainer', options);
   }
 
- 
+
   clear(table: Table) {
     table.clear();
     this.searchTerm = '';
@@ -115,7 +144,7 @@ export class AppelOffreComponent {
     this.visible = false;
     this.codeSaisie = '';
     this.selectedModeReglement = '';
-    this.selectedMatiereToAdd = ''; 
+    this.selectedMatiereToAdd = '';
     this.onRowUnselect(event);
     this.listDataAOWithDetails = new Array<any>();
     this.final = new Array<any>();
@@ -125,17 +154,18 @@ export class AppelOffreComponent {
   closeModalPrint() {
     this.visibleModalPrint = false;
     this.onRowUnselect(event);
-    this.clearSelected(); 
-    this.selectedAppelOffre =null ; 
-    this.pdfData = new  Blob; 
- 
+    this.clearSelected();
+    this.selectedAppelOffre = null;
+    this.pdfData = new Blob;
+
   }
   check_actif = false;
   check_inactif = false;
 
   formHeader = ".....";
-  searchTerm = ''; 
+  searchTerm = '';
   visibleNewModal: boolean = false;
+  visibleModalApprove: boolean = false;
   visibleModalPrint: boolean = false;
   visDelete: boolean = false;
   code!: any | null;
@@ -146,13 +176,16 @@ export class AppelOffreComponent {
   codeBanque: string = "NULL";
   actif!: boolean;
   visible!: boolean;
- 
-  DateLivraison!:Date ;
+
+  dateLivraison: any;
 
   selectedAppelOffre!: any;
 
- 
-  selectedModeReglement: any; 
+  getFormatedDate(date: Date, format: string) {
+    const datePipe = new DatePipe('en-US'); // culture of your date
+    return datePipe.transform(date, format);
+  }
+  selectedModeReglement: any;
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
@@ -162,8 +195,12 @@ export class AppelOffreComponent {
     this.designationLt = event.data.designationLt;
     this.selectedModeReglement = event.data.codeModeReglement;
     this.observation = event.data.observation;
-    console.log('vtData : ', event ,  'selected AO code : ' ,this.selectedAppelOffre);
-    this.selectedAppelOffre == null;
+    // let x = event.data.dateCreate;
+    this.dateLivraison = event.data.dateLivraison 
+
+
+    console.log('vtData : ', event, 'selected AO code : ', this.selectedAppelOffre , "date",   ) ;
+
 
   }
 
@@ -179,7 +216,7 @@ export class AppelOffreComponent {
   }
 
 
- 
+
 
   DeleteAppelOffre(code: any) {
     this.param_achat_service.DeleteAppelOffre(code).pipe(
@@ -213,14 +250,14 @@ export class AppelOffreComponent {
     this.actif = false;
     this.visible = false;
     this.listDataAOWithDetails = new Array<any>();
- 
+
 
   }
- 
+
 
 
   public onOpenModal(mode: string) {
- 
+
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
@@ -228,7 +265,7 @@ export class AppelOffreComponent {
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'Newadd') {
       button.setAttribute('data-target', '#NewModal');
-      this.formHeader = "Nouveau Appel Offre"; 
+      this.formHeader = "Nouveau Appel Offre";
 
       this.listDataAOWithDetails = new Array<any>();
       this.onRowUnselect(event);
@@ -250,7 +287,7 @@ export class AppelOffreComponent {
         if (this.code == undefined) {
           // alert("Choise A row Please");
 
-          this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
+          this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
           this.clearForm();
           this.onRowUnselect(event);
           alertifyjs.set('notifier', 'position', 'top-right');
@@ -275,7 +312,7 @@ export class AppelOffreComponent {
           this.GetAppelOffreByCode(this.selectedAppelOffre);
           this.visibleNewModal = true;
           this.visDelete = false;
-          this.visibleModalPrint=false;
+          this.visibleModalPrint = false;
         }
 
       } else
@@ -283,7 +320,7 @@ export class AppelOffreComponent {
         if (mode === 'Delete') {
 
           if (this.code == undefined) {
-            this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
+            this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
             this.onRowUnselect;
             alertifyjs.set('notifier', 'position', 'top-right');
             alertifyjs.error("Choise A row Please");
@@ -296,7 +333,7 @@ export class AppelOffreComponent {
 
               // this.GelMatiereActifVisible();
               // this.GelAllModeReglement();
-              this.visDelete = true; 
+              this.visDelete = true;
             }
           }
 
@@ -382,6 +419,8 @@ export class AppelOffreComponent {
 
 
       }
+      // let dte = this.datePipe.transform(this.dateLivraison,'yyyy-MM-dd') ;
+      // console.log("dte", dte)
       let body = {
         codeSaisie: this.codeSaisie,
         designationAr: this.designationAr,
@@ -394,7 +433,9 @@ export class AppelOffreComponent {
         visible: this.visible,
         detailsAppelOffreDTOs: this.final,
         observation: this.observation,
-        codeEtatReception: "2"
+        codeEtatReception: "2",
+        
+        dateLivraison : this.dateLivraison ,
       }
 
 
@@ -427,6 +468,7 @@ export class AppelOffreComponent {
             this.onRowUnselect(event);
             this.clearSelected();
             this.visibleNewModal = false;
+            this.visibleModalApprove = false;
             this.visDelete = false;
             this.codeAppelOffre = this.selectedAppelOffre.code
             this.visibleModalPrint = false;
@@ -457,6 +499,7 @@ export class AppelOffreComponent {
             this.visibleNewModal = false;
             this.visDelete = false;
             this.visibleModalPrint = true;
+            this.visibleModalApprove = false;
             this.clearForm();
             this.ngOnInit();
             this.code;
@@ -465,12 +508,12 @@ export class AppelOffreComponent {
             this.check_inactif = false;
             this.onRowUnselect(event);
             this.clearSelected();
-            body : {};
-            this.visibleModalPrint = true; 
-            console.log("res",res);
+            body: { };
+            this.visibleModalPrint = true;
+            console.log("res", res);
             this.codeAppelOffre = res.code;
-            this.RemplirePrint(this.codeAppelOffre); 
-         
+            this.RemplirePrint(this.codeAppelOffre);
+
 
           }
         )
@@ -552,7 +595,7 @@ export class AppelOffreComponent {
   GelAllAppelOffre() {
     this.param_achat_service.GetAppelOffre().pipe(
       catchError((error: HttpErrorResponse) => {
-      
+
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
@@ -705,6 +748,7 @@ export class AppelOffreComponent {
   codeMatieres: any;
   disp: boolean = false;
   PushTableData() {
+    console.log("selectedValue", this.selectedValue)
     var exist = false;
 
     for (var y = 0; y < this.listDataAOWithDetails.length; y++) {
