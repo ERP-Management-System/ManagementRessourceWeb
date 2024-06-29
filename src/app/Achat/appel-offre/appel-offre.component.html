@@ -14,17 +14,19 @@
         <div class="material-table">
             <div class="card">
                 <p-toast></p-toast>
-                <p-contextMenu #cm [model]="items" data-original-title="ModalApprove" data-toggle="modal"
-                    data-target="#ModalApprove"></p-contextMenu>
+                <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal"
+                    data-target="#ModalPassword"  ></p-contextMenu>
 
                 <p-table #dt1 [contextMenu]="cm" [(contextMenuSelection)]="selectedAppelOffre" [value]="dataAppelOffre"
                     [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single"
                     [(selection)]="selectedAppelOffre" (onRowSelect)="onRowSelect($event)"
-                    (onRowUnselect)="onRowUnselect($event)" dataKey="code"
+                    (onRowUnselect)="onRowUnselect($event)" dataKey="code" [rowHover]="true"
                     [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                     <ng-template pTemplate="caption" class="col-md-12">
 
+                     
+                            
                         <mat-radio-group aria-label="Select an option" class="radio-actif-inactif">
 
                             <!-- <mat-radio-button value="actif" [checked]="check_actif === true" (click)="GetModeReglementActif()" (click)="clear(dt1)">متدوال</mat-radio-button>
@@ -32,6 +34,35 @@
                         </mat-radio-group>
 
                         <div class="recherche col-md-6">
+                            <div style="width: 140px;">
+                                <p-dropdown  (onChange)="GetCodeEtatApprouver()"  
+                                (onClear)="ngOnInit()"
+                                [options]="countries" 
+                                [(ngModel)]="selectedCountry" [style]="{'width':'120px '}"
+                                optionLabel="name"
+                                [showClear]="true"
+                                placeholder="Etat Valid."
+                                
+                                >
+                                    <ng-template pTemplate="selectedItem">
+                                        <div class="flex align-items-center gap-2" *ngIf="selectedCountry" style="width: 150px !important; display: flex;">
+                                            <img 
+                                                src={{selectedCountry.url}}
+                                                [class]="'flag flag-' + selectedCountry.code.toLowerCase()"
+                                                style="width: 18px" /> 
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-country pTemplate="item">
+                                        <div class="flex align-items-center gap-2" style="width: 150px !important; display: flex; align-items: center;">
+                                            <img  
+                                                src={{country.url}}
+                                                [class]="'flag flag-' + country.code.toLowerCase()" 
+                                                style="width: 18px" />
+                                            <div style="padding-left: 20px;"  >    {{ country.name }}</div>
+                                        </div>
+                                    </ng-template>
+                            </p-dropdown>
+                              </div>
                             <mat-label class="label-recherche"> Designation : </mat-label>
                             <span class="p-input-icon-left ml-auto">
                                 <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
@@ -64,7 +95,7 @@
                                 <div class="bouton_style-2">Ajouter</div>
                                 <mat-icon class="add-icon">add</mat-icon>
                             </button>
-                            <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
+                            <button [disabled]="disBtnModif" data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
                                 data-original-title="edit" data-toggle="modal" data-target="#NewModal"
                                 (click)="onOpenModal('edit')">
                                 <!-- <button  type="button" class="Bouton-add-new1 btn btn-labeled btn-default " data-original-title="Edit" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('edit')"> -->
@@ -72,21 +103,21 @@
                                 <div class="bouton_style-2">Modifier</div>
                                 <mat-icon class="modif-icon">create</mat-icon>
                             </button>
-                            <button type="button" class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
+                            <button *ngIf="VisBtnDeleteAO" [disabled]="disBtnDelete" type="button" class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
                                 data-toggle="modal" data-target="#ModalDelete" (click)="onOpenModal('Delete')">
                                 <div class="bouton_style-2">Supprimer</div>
                                 <mat-icon class="delete-icon">delete</mat-icon>
                             </button>
-                            <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
+                            <button *ngIf="VisBtnPrintAO"  data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
                                 data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
                                 (click)="onOpenModal('Print')">
                                 <div class="bouton_style-2">Imprimer</div>
                                 <mat-icon class="print-icon"> local_printshop</mat-icon>
                             </button>
 
-                            <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
-                                data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
-                                (click)="onOpenModal('Print')">
+                            <button [disabled]="disBtnValider" data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
+                                data-original-title="ModalApprove" data-toggle="modal" data-target="#ModalApprove"
+                                (click)="ApproveAppelOffre('ApproveModal')">
                                 <div class="bouton_style-2">Valider</div>
                                 <mat-icon class="modif-icon"> save</mat-icon>
 
@@ -97,38 +128,27 @@
 
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
-                            <th style=" width: 40px;padding: 2px 0px 0px 4px !important;">Etat</th>
-                            <th style="width: 100px;">code Saisie</th>
+                            <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.</th>
+                            <th style="width: 120px;">code Saisie</th>
                             <th>Designation Arabic</th>
-                            <th>Designation Latin</th>
-
-
-                            <th class="act-col">Actif</th>
-                            <th class="act-col">Visible</th>
+                            <th>Designation Latin</th> 
                             <th>Date Livraison</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
                         <tr [pSelectableRow]="fl" [pContextMenuRow]="fl">
                             <td style="font-size: 15px !important; width: 50px; " class="warning"
-                                [ngStyle]="{'background-image': (fl.codeEtatReception < 3) ? (getPicNonReceptionner()) : ((fl.codeEtatReception < 6) ? (getPicReceptionnerPartiell()) : (getPicReceptionnerFinal())) }"
+                                [ngStyle]="{'background-image': (fl.codeEtatApprouverOrdreAchat == 2) ? (getPicValider()) : ((fl.codeEtatApprouverOrdreAchat == 1) ? (getPicNonEncore()) : (getPicRefuser())) }"
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
                             </td>
+
+                            <!-- <td style="font-size: 15px !important; width: 50px; " class="warning"
+                                [ngStyle]="{'background-image': (fl.codeEtatReception < 3) ? (getPicNonReceptionner()) : ((fl.codeEtatReception < 6) ? (getPicReceptionnerPartiell()) : (getPicReceptionnerFinal())) }"
+                                style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
+                            </td> -->
                             <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td>
                             <td style="font-size: 15px !important;">{{fl.designationAr}}</td>
-                            <td style="font-size: 15px !important;">{{fl.designationLt}}</td>
-
-
-                            <td class="act-col">
-
-                                <p-checkbox [readonly]="true" [(ngModel)]="fl.actif" [binary]="true"
-                                    inputId="binary">{{fl.actif}}</p-checkbox>
-                            </td>
-                            <td class="act-col">
-
-                                <p-checkbox [readonly]="true" [(ngModel)]="fl.visible" [binary]="true"
-                                    inputId="binary">{{fl.visible}}</p-checkbox>
-                            </td>
+                            <td style="font-size: 15px !important;">{{fl.designationLt}}</td> 
                             <td style="font-size: 15px !important;">{{fl.dateLivraison}}</td>
                         </tr>
                     </ng-template>
@@ -237,14 +257,14 @@
 <p-dialog id="NewModal" header="Header" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
     [scrollLeft]="true" [(visible)]="visibleNewModal" data-backdrop="false" [modal]="true"
     styleClass="NewModalAddOrderNew" [draggable]="false" [resizable]="false">
-    <!-- <div> -->
+ 
     <ng-template pTemplate="header">
 
 
 
         <fieldset class="flex-12">
             <div class="flex-row-start flex-12">
-                <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
+                <h2 class="text-default headerForm flex-4"> xx {{formHeader}}</h2>
 
                 <div class="flex-10">
                     <button class="  btn btn-default save-add-ModalLarge" (click)="PostAppelOffre()"> <i
@@ -271,10 +291,10 @@
         <div class="flex-row-start flex-12">
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6" disabled="">
+                    <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Code</label>
                         <div class="control-input  flex-6">
-                            <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
+                            <input   disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -292,7 +312,7 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Desgiantion Arabic </label>
                         <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                            <input type="text" id="designation_ar" maxlength="30" name="designation_ar"
                                 class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
                                 [required]="true">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
@@ -301,7 +321,7 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Desgiantion Latine </label>
                         <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                            <input type="text" id="designation_lt" maxlength="30" name="designation_lt"
                                 class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
                                 [required]="true">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
@@ -313,14 +333,8 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Date Livraison</label>
                         <div class="control-input flex-6">
-                            <!-- <p-calendar  class=""
-                            [(ngModel)]="DateLivraison" 
-                            [showIcon]="true"  [showClear]="true"
-                            inputId="buttondisplay" dateFormat="dd/mm/yy"  
-                            [showOnFocus]="false" 
-                            [iconDisplay]="'input'"   inputId="icondisplay" 
-                            /> -->
-                            <p-calendar [(ngModel)]="dateLivraison" [showButtonBar]="true" [readonlyInput]="true"
+                             
+                            <p-calendar [(ngModel)]="dateLivraison"  (onSelect)="transformDateFormat()" (onChange)="transformDateFormat()"  [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -328,9 +342,14 @@
 
                     </section>
                     <section class="flex-row-start flex-6">
-
-
-
+                        <label class="control-label flex-6">Adresse Livraison</label>
+                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px;right: 10px;"></i>
+                        <div class="dop control-input flex-8">
+                            <textarea [(ngModel)]="adressLivraison"
+                                style="height: 70px;width: 180px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
+                                id="w3review" name="w3review" rows="4" cols="50">
+                                    </textarea>
+                        </div>
                     </section>
                 </div>
 
@@ -525,7 +544,7 @@
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Save
                     </button>
-                    <button class=" btn btn-default cancel-add-ModalLarge" :closable="true" data-dismiss="modal"> <i
+                    <button class=" btn btn-default cancel-add-ModalLarge" (click)="CloseModal()" :closable="true" data-dismiss="modal"> <i
                             class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
                     </button>
                 </div>
@@ -539,14 +558,19 @@
                 <section class="flex-row-start flex-4" disabled="">
                     <label class="control-label flex-6"> Validation : </label>
                     <div class="control-input  flex-6">
-                        <p-radioButton name="groupname" value=1 [(ngModel)]="selectedValue"
+                        <p-radioButton name="groupname" value=2 [(ngModel)]="selectedValue"
                             inputId="Valider"></p-radioButton>
                         <label for="city1" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Valider</label>
                     </div>
                     <div class="control-input  flex-6">
-                        <p-radioButton name="groupname" value=0 [(ngModel)]="selectedValue"
+                        <p-radioButton name="groupname" value=3 [(ngModel)]="selectedValue"
                             inputId="Refuser"></p-radioButton>
                         <label for="city2" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Refuser</label>
+                    </div>
+                    <div class="control-input  flex-6">
+                        <p-radioButton name="groupname" value=1 [(ngModel)]="selectedValue"
+                            inputId="Encours"></p-radioButton>
+                        <label for="city2" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Encours</label>
                     </div>
                 </section>
 
@@ -590,7 +614,7 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Desgiantion Latine </label>
                         <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
+                            <input type="text" id="designation_lt" maxlength="200" name="designation_lt"
                                 class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
                                 [required]="true">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
@@ -601,8 +625,9 @@
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Date Livraison</label>
-                        <div class="control-input flex-6"> 
-                            <p-calendar [(ngModel)]="dateLivraison" [showButtonBar]="true" [readonlyInput]="true"
+                        <div class="control-input flex-6">
+                             
+                            <p-calendar [(ngModel)]="dateLivraison"  (onSelect)="transformDateFormat()" (onChange)="transformDateFormat()"  [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -610,9 +635,14 @@
 
                     </section>
                     <section class="flex-row-start flex-6">
-
-
-
+                        <label class="control-label flex-6">Adresse Livraison</label>
+                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px;right: 10px;"></i>
+                        <div class="dop control-input flex-8">
+                            <textarea [(ngModel)]="adressLivraison"
+                                style="height: 70px;width: 180px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
+                                id="w3review" name="w3review" rows="4" cols="50">
+                                    </textarea>
+                        </div>
                     </section>
                 </div>
 
@@ -784,6 +814,58 @@
             </fieldset>
 
         </div>
+
+
+    </div>
+
+    <!-- </div> -->
+</p-dialog>
+
+
+
+
+
+<!-- modal password update -->
+<p-dialog id="ModalPassword" header="Header" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
+    [scrollLeft]="true" [(visible)]="visbileModalPassword" data-backdrop="false" [modal]="true"
+    styleClass="ModalPassword" [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+        <fieldset class="flex-12">
+            <div class="flex-row-start flex-12">
+                <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
+                <div class="flex-10">
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="approveAO('ApproveModal')"> <i
+                            class="fa-lg fa-fw fa fa-check icon-save"></i>
+                        Ouvrire
+                    </button>
+                    <button class=" btn btn-default cancel-add-ModalLarge" :closable="true" data-dismiss="modal"> <i
+                            class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+        <p-toast key="toast1"></p-toast>
+    </ng-template>
+    <div class="modal-body">
+        <fieldset class="flex-12">
+            <div class="flex-row-start flex-6">
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-12">
+                        <label class="control-label flex-4">Password</label>
+                        <!-- <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i> -->
+                        <div class="dop control-input flex-8">
+                            <input type="password" id="password" maxlength="200" name="password"
+                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
+                            [required]="true">
+
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </fieldset>
+
+          
 
 
     </div>

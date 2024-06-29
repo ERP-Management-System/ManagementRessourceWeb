@@ -6,7 +6,7 @@ import { catchError, Subject, throwError } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, Coloris, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 
 
@@ -31,6 +31,30 @@ export class OrdreAchatComponent {
  
   }
  
+
+  
+  
+DataCodeSaisie = new Array<Compteur>(); 
+GetCodeSaisie(){
+  this.param_achat_service.GetcompteurCodeSaisie("codeSaisieOA").pipe(
+    catchError((error: HttpErrorResponse) => {
+      let errorMessage = '';
+      if (error.error instanceof ErrorEvent) { } else {
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+      }
+      return throwError(errorMessage);
+    })
+
+  ).subscribe((data: any) => {
+    this.DataCodeSaisie = data;
+    this.codeSaisie = data.prefixe + data.suffixe;
+     
+ 
+  })
+}
+
   selectedMatiere: any;
  
 
@@ -236,6 +260,7 @@ export class OrdreAchatComponent {
       this.GetColorisActifVisible();
       this.GelAllAppelOffre();
       this.GetDemandeAchat();
+      this.GetCodeSaisie();
 
     } else
       if (mode === 'edit') {
@@ -847,7 +872,7 @@ export class OrdreAchatComponent {
   totalTax19: any;
   TotalTax7: any;
   mntTimbre: any;
-  TotalTaxeTmb: any;
+ totalTaxeTmb!: number;
   thisYearTotal!: any;
   calculateThisYearTotal() {
     let total = 0.000000;
@@ -909,12 +934,7 @@ export class OrdreAchatComponent {
 
     ).subscribe((data: any) => {
       this.DataTimbre = data;
-      this.DataTimbrePushed = [];
-      for (let i = 0; i < this.DataTimbre.length; i++) {
-
-        this.mntTimbre = this.DataTimbre[i].valeur
-        this.TotalTaxeTmb = +this.TotalTax7  + +this.totalTax19 + +this.DataTimbre[i].valeur
-      }
+      this.mntTimbre = data.valeur
 
     })
     

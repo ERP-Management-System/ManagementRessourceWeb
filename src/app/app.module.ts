@@ -144,6 +144,10 @@ import { TableComponent } from './Achat/demande-achat/table-component';
 import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
 import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
 import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
+import { DepartementComponent } from './DepotDepartement/departement/departement.component';
+import { MenuDepotDepartementComponent } from './DepotDepartement/menu-depot-departement/menu-depot-departement.component';
+import { DepotComponent } from './DepotDepartement/depot/depot.component';
+import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
  
 
  
@@ -152,7 +156,7 @@ import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent
+  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,

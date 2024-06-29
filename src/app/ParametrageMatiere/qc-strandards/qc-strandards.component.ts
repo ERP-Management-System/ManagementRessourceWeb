@@ -691,8 +691,8 @@ export class QcStrandardsComponent {
   dataMatiere = new Array<Matiere>();
   listMatierePushed = new Array<any>();
   listMatiereRslt = new Array<any>();
-  GelMatiereActifVisible() {
-    this.param_achat_service.GetMatiere().pipe(
+  GelMatiereActive() {
+    this.param_achat_service.GetMatiereActive().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {

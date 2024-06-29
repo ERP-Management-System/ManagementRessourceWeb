@@ -99,7 +99,7 @@ tr.mat-footer-row {
   margin-right: 5px;
   display: flex;
   height: 30px;
-  width: 110px;
+  width: 105px;
   padding: 3px 6px 0px;
   margin-bottom: 3px;
 }
@@ -321,7 +321,7 @@ tr.mat-footer-row {
   color: #343a40;
   border: 1px solid #dee2e6;
   border-width: 1px 0 1px 0;
-  padding: 3rem 1rem !important;
+  padding: 3rem 0rem !important;
   font-weight: 700;
 }
 
@@ -352,6 +352,8 @@ label:hover input[type=radio].radiobox:checked+span:before {
   border-color: #888;
   color: #66665e;
 }
+
+
 
 input[type=number] {
   text-align: left;
@@ -1153,13 +1155,26 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   /* width: 1300px; */
   font-family: auto;
   overflow-y: auto;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   width: 95% !important;
   height: 90% !important;
   top: 5% !important;
   left: 0% !important;
 }
 
+
+
+:host ::ng-deep .ModalPassword {
+  border-radius: 6px;
+  /* width: 1300px; */
+  font-family: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 30% !important;
+  height: 50% !important;
+  top: 5% !important;
+  left: 0% !important;
+}
 :host ::ng-deep .ng-trigger.ng-trigger-overlayAnimation.ng-tns-c3832276034-6.p-dropdown-panel.p-component.ng-star-inserted {
   top: 0px !important;
 }
@@ -1338,7 +1353,9 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   white-space: nowrap;
   position: relative;
   overflow: hidden;
-  font-size: 13px;
+  font-size: 13px; 
+  display: flex;
+  height: 40px;
 
 }
 
@@ -1415,8 +1432,8 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   flex: none !important;
 }
 
-:host ::ng-deep .p-inputtext  {
- 
+:host ::ng-deep .p-inputtext {
+
   font-size: 13px;
 }
 
@@ -1436,6 +1453,13 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   width: 150px;
 }
 
+.DropChoisieEtat {
+  border: 1px solid #e2e2e2;
+  margin: 0px -6px 2px -5px !important;
+  padding: 0px 0px 0px 0px;
+  height: 25px;
+  width: 50px;
+}
 
 .DropChoisie:disabled {
   border: 1px solid #ff0000;
@@ -1475,7 +1499,7 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
 
 
 
-.dropbtn{
+.dropbtn {
   font-size: 14px;
   font-weight: 600;
 }
@@ -1525,10 +1549,10 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
 }
 
 
-:host ::ng-deep .p-datatable .p-datatable-tfoot > tr > td {
+:host ::ng-deep .p-datatable .p-datatable-tfoot>tr>td {
   text-align: left;
   padding: 5px;
-  border: 1px solid #dee2e6; 
+  border: 1px solid #dee2e6;
   font-weight: 400;
   color: #343a40;
   background: #f8f9fa;
@@ -1536,7 +1560,7 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   width: 150px !important;
 }
 
-:host ::ng-deep  .p-radiobutton .p-radiobutton-box.p-highlight {
+:host ::ng-deep .p-radiobutton .p-radiobutton-box.p-highlight {
   border-color: #ffffff;
   /* background: #963bf6; */
   background: cadetblue;
@@ -1554,3 +1578,21 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   visibility: visible;
   background: cadetblue;
 }
+
+:host ::ng-deep .p-contextmenu.p-component {
+  width: 170px;
+}
+
+:host ::ng-deep span.p-menuitem-text.ng-star-inserted {
+  font-size: 13px;
+}
+
+#sect1 {
+  height: 650px;
+  color: #fff;
+  background-image: url("src/assets/assets/images/etat_RCPPartiel.png");
+  background-size: 100%;
+  background-size: cover;
+}
+
+/* "url('assets/assets/images/etat_RCPPartiel.png')"; */

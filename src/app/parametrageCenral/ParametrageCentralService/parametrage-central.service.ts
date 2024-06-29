@@ -17,7 +17,10 @@ export class ParametrageCentralService {
 
 
 
+  GetcompteurCodeSaisie(compteur:string) {
 
+    return this.http.get(`${environment.API_BASE_URL}compteur/`+compteur);
+  }
 
 
   ///////////////
@@ -147,6 +150,10 @@ export class ParametrageCentralService {
   }
 
 
+  GetMatiereActive() {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}matiere/codeStatuMatiere?codeStatuMatiere=1`);
+  }
   GetMatiere() {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}matiere/all`);
@@ -196,7 +203,10 @@ export class ParametrageCentralService {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_appel_offre/` + code);
   }
 
+  GetAppelOffreByEtatApprouved(codeEtatApprouverOrdreAchat : number) {
 
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/EtatApprouverOrdreAchat/`+codeEtatApprouverOrdreAchat);
+  }
 
 
   getAppelOffreEdition(code: number) {
@@ -353,8 +363,20 @@ export class ParametrageCentralService {
   }
 
 
+  GetDemandeAchatByEtatApprouved(codeEtatApprouver : number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/EtatApprouver/`+codeEtatApprouver);
+  }
+
 
   ///// depotttt
+
+
+  
+  GetDepot() {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}depot/all`);
+  }
 
 
   GetDepotPrincipal() {
@@ -387,6 +409,78 @@ export class ParametrageCentralService {
 
   PostDepot(body: any) {
     return this.http.post(`${environment.API_BASE_URL_ACHAT}depot`, body);
+  }
+
+
+
+////categorie depot 
+
+
+GetCategorieDepot() {
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/all`);
+} 
+GetCategorieDepotByCode(code: number) {
+
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/` + code);
+}
+
+
+getCategorieDepotEdition(code: number) {
+  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/edition/` + code, { responseType: "blob" });
+}
+
+
+UpdateCategorieDepot(body: any) {
+
+  return this.http.put(`${environment.API_BASE_URL_ACHAT}categorie_depot/update`, body);
+}
+
+
+DeleteCategorieDepot(code: number) {
+  return this.http.delete(`${environment.API_BASE_URL_ACHAT}categorie_depot/delete/` + code);
+}
+
+
+PostCategorieDepot(body: any) {
+  return this.http.post(`${environment.API_BASE_URL_ACHAT}categorie_depot`, body);
+}
+
+
+
+  //departement 
+
+  
+  GetDepartement() {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/all`);
+  }
+
+
+  GetDepartementByCode(code: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/` + code);
+  }
+
+
+  getDepartementEdition(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/edition/` + code, { responseType: "blob" });
+  }
+
+
+  UpdateDepartemenet(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}departement/update`, body);
+  }
+
+
+  DeleteDepartement(code: number) {
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}departement/delete/` + code);
+  }
+
+
+  PostDepartemenet(body: any) {
+    return this.http.post(`${environment.API_BASE_URL_ACHAT}departement`, body);
   }
 
 
@@ -472,6 +566,10 @@ export class ParametrageCentralService {
 
   GetMntTimbre() { 
     return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=MntTimbre`); 
+  }
+
+  GetPasswordChangeApprouveAchat() { 
+    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`); 
   }
 
 }

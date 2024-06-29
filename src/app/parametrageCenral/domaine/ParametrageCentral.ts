@@ -320,7 +320,25 @@ export interface Depot{
   codeSaisie: string,
   designationAr: string,
   designationLt: string,
+  
 }
+
+
+export interface CategorieDepot{
+  code: number,
+  codeSaisie: string,
+  designationAr: string,
+  designationLt: string,
+  
+}
+export interface Departement{
+  code: number,
+  codeSaisie: string,
+  designationAr: string,
+  designationLt: string,
+  
+}
+
 
 
 
@@ -383,10 +401,18 @@ export interface TypeTaxe {
    
 }
 
-export interface Param { 
-  code: number,
-  codeParam: number,
-  designation: string, 
-  valeur: string, 
+export class Param { 
+  code!: number;
+  codeParam!: number;
+  description!: string;
+  valeur!: number; 
  
+}
+
+
+export interface Compteur {
+  code: number,
+  compteur: string,
+  prefixe: string,
+  suffixe: string, 
 }

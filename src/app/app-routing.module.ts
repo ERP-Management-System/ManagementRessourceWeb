@@ -23,6 +23,10 @@ import { LoginComponent } from './login/login.component';
 import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
 import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
 import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
+import { DepartementComponent } from './DepotDepartement/departement/departement.component';
+import { MenuDepotDepartementComponent } from './DepotDepartement/menu-depot-departement/menu-depot-departement.component';
+import { DepotComponent } from './DepotDepartement/depot/depot.component';
+import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
  
   
 
@@ -58,6 +62,12 @@ const routes: Routes = [
   { path: 'menu_parametrage_matiere/grille_taille', component: GrilleTailleComponent },
   { path: 'menu_parametrage_matiere/unite', component: UniteComponent },
   { path: 'menu_parametrage_matiere/qc_standards', component: QcStrandardsComponent },
+
+
+  { path: 'menu_depot_departement', component: MenuDepotDepartementComponent }, 
+  { path: 'menu_depot_departement/departement', component: DepartementComponent },
+  { path: 'menu_depot_departement/depot', component: DepotComponent },
+  { path: 'menu_depot_departement/categorie_depot', component: CategorieDepotComponent },
  
   { path: 'menu_achat', component: AchatMenuComponent },
   { path: 'menu_achat/appel_offre', component: AppelOffreComponent },

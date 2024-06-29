@@ -122,8 +122,8 @@ export class MatiereComponent {
   codeSaisie: any;
   designationAr: string = 'NULL';
   designationLt: string = "NULL";
-  qteMinStock: string = "0";
-  qteMaxStock: string = "";
+  qteMinStock: number = 1;
+  qteMaxStock: number= 1000;
   codeTypeCaisse: number = 0;
   codeBanque: string = "NULL";
   actif!: boolean;
@@ -141,9 +141,8 @@ export class MatiereComponent {
     this.selectedTypeMatiere = event.data.typeMatiere;
     this.qteMaxStock = event.data.qteMaxStock;
     this.qteMinStock = event.data.qteMinStock;
-    this.selectedStatuMatiere =  event.data.codeStatuMatiere;
-
-
+    this.selectedStatuMatiere = event.data.codeStatuMatiere; 
+    this.selectedTaxe = event.data.codeTaxe;
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {
@@ -282,6 +281,7 @@ export class MatiereComponent {
     this.designationAr = '';
     this.designationLt = '';
     this.actif = false;
+    this.selectedTaxe = ''
     // this.codeFilialle = [];
   }
   // videtable ():void{
@@ -311,8 +311,8 @@ export class MatiereComponent {
       this.visibleModal = true;
       this.code == undefined;
       this.GelTypeMatiere();
-      
-      this. GelStatuMatiere();
+      this.GelTaxe();
+      this.GelStatuMatiere();
 
     }
     if (mode === 'edit') {
@@ -336,10 +336,11 @@ export class MatiereComponent {
         // this.GetDesignationAdress();
         this.visibleModal = true;
         this.onRowSelect;
-        this.GelAllBanque();
+        // this.GelAllBanque();
         this.GelTypeMatiere();
-        this. GelStatuMatiere();
+        this.GelStatuMatiere();
 
+        this.GelTaxe();
       }
 
       // }
@@ -381,7 +382,7 @@ export class MatiereComponent {
 
 
       button.setAttribute('data-target', '#ModalPrint');
-      this.formHeader = "Imprimer Liste Reglement"
+      this.formHeader = "Imprimer Liste Matiere"
       this.visibleModalPrint = true;
       this.RemplirePrint();
 
@@ -414,7 +415,7 @@ export class MatiereComponent {
   }
   datform = new Date();
   PostMatiere() {
-  
+
 
     if (!this.designationAr || !this.designationLt || !this.selectedStatuMatiere || !this.selectedTypeMatiere || !this.codeSaisie || !this.qteMaxStock || !this.qteMinStock) {
       alertifyjs.set('notifier', 'position', 'top-right');
@@ -530,49 +531,13 @@ export class MatiereComponent {
     this.cars[index] = this.clonedCars[car.code_saisie];
     delete this.clonedCars[car.code_saisie];
   }
-
-
-
-
-
-
-
-
   selectedBanque: any;
   selectedTypeMatiere: any;
   selectedStatuMatiere: any;
+  selectedTaxe: any;
   compteur: number = 0;
   listDesig = new Array<any>();
-  // OnBlur() {
-  //   var exist = false;
-  //   for (var y = 0; y < this.cars.length; y++) {
-  //     if (this.selectedBanque.code != this.cars[y].code) {
-  //       exist = false;
-  //     } else {
-  //       exist = true;
-  //       break;
-  //     }
-  //   }
-  //   if ((this.selectedBanque != undefined) && (this.selectedBanque != "") && (!exist)) {
-  //     this.param_achat_service.GetArticleBycode(this.selectedBanque).subscribe((data: any) => {
-  //       this.cars[this.compteur] = data;
-  //       this.compteur = this.compteur + 1;
-  //       this.listDesig.push(data);
-  //     })
-  //   }
-  // }
-  // clickDropDownUp(dropDownModUp: any) {
-  //   if ((dropDownModUp.documentClickListener !== undefined && dropDownModUp.selectedOption !== null && dropDownModUp.itemClick) || dropDownModUp.itemClick) {
-  //     dropDownModUp.focus();
-  //     if (!dropDownModUp.overlayVisible) {
-  //       dropDownModUp.show();
-  //       event!.preventDefault();
-  //     } else {
-  //       dropDownModUp.hide();
-  //       event!.preventDefault();
-  //     }
-  //   }
-  // }
+
   cars!: Array<Matiere>;
   brands!: SelectItem[];
   clonedCars: { [s: string]: Matiere } = {};
@@ -580,8 +545,6 @@ export class MatiereComponent {
   codeModeReglementDde: {}[] = [];
   dataMatiere = new Array<Matiere>();
   banque: any;
-  // listModeReglementRslt = new Array<any>();
-  // listModeReglementPushed = new Array<any>();
   GelAllMatiere() {
     this.param_achat_service.GetMatiere().pipe(
       catchError((error: HttpErrorResponse) => {
@@ -631,34 +594,34 @@ export class MatiereComponent {
       }
       this.listTypeMatiereRslt = this.listTypeMatierePushed;
     })
- 
-  }
-
-  ListBanqueData = new Array<any>();
-  ListBQPushed = new Array;
-  ListBQRslt = new Array<any>();
-  GelAllBanque() {
-    this.param_achat_service.GetAllBanque().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-
-        }
-        return throwError(errorMessage);
-      })
-
-    ).subscribe((datas: any) => {
-      this.ListBanqueData = datas;
-      this.ListBQPushed = [];
-      for (let i = 0; i < this.ListBanqueData.length; i++) {
-        this.ListBQPushed.push({ label: this.ListBanqueData[i].designationAr, value: this.ListBanqueData[i].code })
-      }
-      this.ListBQRslt = this.ListBQPushed;
-    })
 
   }
+
+  // ListBanqueData = new Array<any>();
+  // ListBQPushed = new Array;
+  // ListBQRslt = new Array<any>();
+  // GelAllBanque() {
+  //   this.param_achat_service.GetAllBanque().pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) { } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+  //       }
+  //       return throwError(errorMessage);
+  //     })
+
+  //   ).subscribe((datas: any) => {
+  //     this.ListBanqueData = datas;
+  //     this.ListBQPushed = [];
+  //     for (let i = 0; i < this.ListBanqueData.length; i++) {
+  //       this.ListBQPushed.push({ label: this.ListBanqueData[i].designationAr, value: this.ListBanqueData[i].code })
+  //     }
+  //     this.ListBQRslt = this.ListBQPushed;
+  //   })
+
+  // }
 
 
 
@@ -685,8 +648,43 @@ export class MatiereComponent {
       }
       this.listStatuMatiereRslt = this.listStatuMatierePushed;
     })
+  }
+
+
+
+  dataTaxeDde = new Array<StatuMatiere>();
+  listTaxePushed = new Array<any>();
+  listTaxeRslt = new Array<any>();
+  GelTaxe() {
+    this.param_achat_service.GetTaxe().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataTaxeDde = data;
+      this.listTaxePushed = [];
+      for (let i = 0; i < this.dataTaxeDde.length; i++) {
+        this.listTaxePushed.push({ label: this.dataTaxeDde[i].designationAr, value: this.dataTaxeDde[i].code })
+      }
+      this.listTaxeRslt = this.listTaxePushed;
+    })
     // })
   }
+
+  getPicActive() {
+    return "url('assets/assets/images/icons8-ok-94.png')";
+  }
+  getPicInActive() {
+    return "url('assets/assets/images/icons8-annuler-94.png')";
+  }
+
 
 }
 

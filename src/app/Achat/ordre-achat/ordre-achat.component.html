@@ -274,10 +274,10 @@
         <div class="flex-row-start flex-12">
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6" disabled="">
+                    <section class="flex-row-start flex-6" >
                         <label class="control-label flex-6">Code</label>
                         <div class="control-input  flex-6">
-                            <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
+                            <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -575,10 +575,11 @@
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Total</td>
-                                                    <input step="0.001" [(ngModel)]="TotalTaxeTmb"
+                                                    <input step="0.001"  [(ngModel)]="totalTaxeTmb"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
                                                         class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
                                                         required minlength="4" maxlength="8" size="10" />
+                                                       
                                                 </tr>
                                             </ng-template>
                                         </p-table>
