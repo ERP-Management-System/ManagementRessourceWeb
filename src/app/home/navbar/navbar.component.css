@@ -7,9 +7,6 @@ html {
 }
 
 
-/* Dash Navbar Top = dnt
-/ -------------------------------------------------- */
-
 .dash-navbar-top {
     margin-bottom: 0;
     min-height: 61px;
@@ -51,8 +48,6 @@ html {
 }
 
 
-/* Dash Navbar Left = nb
-/ -------------------------------------------------- */
 
 .dash-navbar-left {
     position: absolute;
@@ -97,6 +92,7 @@ html {
     .dash-navbar-left.nb-visible {
         left: -250px;
     }
+
     .dash-navbar-left.nb-visible.nb-show {
         left: 0;
     }
@@ -258,8 +254,6 @@ html {
 }
 
 
-/* Content wrap
-/ -------------------------------------------------- */
 
 .content-wrap {
     position: relative;
@@ -276,6 +270,7 @@ html {
         -o-transition: all 300ms;
         transition: all 300ms;
     }
+
     .content-wrap.nb-visible.nb-push {
         -webkit-transform: translate(250px, 0);
         -ms-transform: translate(250px, 0);
@@ -329,9 +324,6 @@ span.links_name {
     transition: 0.4s;
 }
 
-
-
-/* ///// new  side navbar  */
 
 .menu {
     display: block !important;
@@ -393,18 +385,26 @@ span.links_name {
 
 .sidebar .nav-list {
     height: calc(100% - 140px);
+    overflow-x: hidden;
 }
 
-:host ::ng-deep  .sidebar .scroll {
+:host ::ng-deep .sidebar .scroll {
     overflow-y: scroll;
     scrollbar-width: thin;
     padding: 0px 0px 0px 0px;
 
- 
-  scrollbar-color: #5a5555 #ffffff;
+
+    scrollbar-color: #5a5555 #ffffff;
 
 }
-
+ 
+.sidebar.open .mainbox {
+ 
+    background-color: chartreuse;
+    font-size: 44px !important;
+  
+  }  
+ 
 .sidebar .scroll::-webkit-scrollbar {
     width: 8px;
     background: #262440;
@@ -574,8 +574,12 @@ span.links_name {
     transition: all 0.5s ease;
 }
 
-.sidebar.open {
-    width: 250px;
+
+
+.sidebar.open   {
+
+width: 250px;
+
 }
 
 .sidebar.open .logo-details .icon {
@@ -646,6 +650,3 @@ span.links_name {
 
 
 /* ///// newww  */
-
-
-

@@ -572,4 +572,50 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`); 
   }
 
+
+  // userr 
+    
+  GetUser() {
+
+    return this.http.get(`${environment.API_BASE_URL_ACCESS}accessUser/all`);
+  }
+  GetUserWithPassword() {
+
+    return this.http.get(`${environment.API_BASE_URL_ACCESS}accessUser/allWithPass`);
+  }
+
+  
+  // GetAllUser() {
+
+  //   return this.http.get(`${environment.API_BASE_URL_ACHAT}accessUser/all`);
+  // }
+
+
+  // GetDepartementByCode(code: number) {
+
+  //   return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/` + code);
+  // }
+
+
+  // getDepartementEdition(code: number) {
+  //   return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/edition/` + code, { responseType: "blob" });
+  // }
+
+  PostUser(body: any) {
+    return this.http.post(`${environment.API_BASE_URL_ACCESS}accessUser`, body);
+  }
+  UpdateUser(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACCESS}accessUser/update`, body);
+  }
+
+
+  // DeleteDepartement(code: number) {
+  //   return this.http.delete(`${environment.API_BASE_URL_ACHAT}departement/delete/` + code);
+  // }
+
+
+
+
+
 }

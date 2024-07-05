@@ -6,7 +6,7 @@ import { catchError, Subject, throwError, timeout } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, Coloris, Compteur, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, Coloris, Compteur, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { DatePipe } from '@angular/common';
 

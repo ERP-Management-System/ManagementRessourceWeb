@@ -27,6 +27,8 @@ import { DepartementComponent } from './DepotDepartement/departement/departement
 import { MenuDepotDepartementComponent } from './DepotDepartement/menu-depot-departement/menu-depot-departement.component';
 import { DepotComponent } from './DepotDepartement/depot/depot.component';
 import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
+import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
+import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
  
   
 
@@ -73,6 +75,12 @@ const routes: Routes = [
   { path: 'menu_achat/appel_offre', component: AppelOffreComponent },
   { path: 'menu_achat/demande_achat', component: DemandeAchatComponent },
   { path: 'menu_achat/ordre_achat', component: OrdreAchatComponent },
+
+
+  { path: 'menu_access', component: AccessMenuComponent },
+  { path: 'menu_access/signature_user', component: SignatureUserComponent },
+  // { path: 'menu_achat/demande_achat', component: DemandeAchatComponent },
+  // { path: 'menu_achat/ordre_achat', component: OrdreAchatComponent },
   
 ];
 

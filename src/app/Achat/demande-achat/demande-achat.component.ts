@@ -5,9 +5,10 @@ import { ConfirmationService, MenuItem, MessageService, SelectItem } from 'prime
 import { catchError, Subject, throwError } from 'rxjs';
 import { Table } from 'primeng/table';
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, Departement, Depot, DetailsAppelOffre, Matiere, ModeReglement, Param, Taxe, TypeCaisse, TypeTaxe, Unite } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, City, Coloris, Compteur, DemandeAchat, Departement, Depot, DetailsAppelOffre, Matiere, ModeReglement, Param, Taxe, TypeCaisse, TypeTaxe, Unite, User } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { Card } from 'primeng/card';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -28,7 +29,7 @@ export class DemandeAchatComponent {
 
   openModal!: boolean;
   items!: MenuItem[];
-  constructor(private confirmationService: ConfirmationService,
+  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
   }
@@ -116,7 +117,28 @@ export class DemandeAchatComponent {
     this.visbileModalPassword = false;
     this.visibleModalApprove = false;
   }
+  // this.param_achat_service.DeleteDemandeAchat(code).pipe(
+  //   catchError((error: HttpErrorResponse) => {
+  //     let errorMessage = '';
+  //     if (error.error instanceof ErrorEvent) {
+  //     } else {
+  //       alertifyjs.set('notifier', 'position', 'top-right');
+  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  //     }
+  //     return throwError(errorMessage);
+  //   })
 
+  // ).subscribe(
+  //   (res: any) => {
+  //     alertifyjs.set('notifier', 'position', 'top-right');
+  //     alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Deleted");
+
+  //     this.ngOnInit();
+  //     this.check_actif = true;
+  //     this.check_inactif = false;
+
+  //   }
+  // )
   codeDemandeAchat!: number;
   RemplirePrint(codeDemandeAchat: any): void {
     if (this.selectedDemandeAchat == null) {
@@ -124,7 +146,17 @@ export class DemandeAchatComponent {
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Select any row please");
       this.visibleModalPrint = false;
     } else {
-      this.param_achat_service.getDemandeAchatEdition(codeDemandeAchat).subscribe(blob => {
+      this.param_achat_service.getDemandeAchatEdition(codeDemandeAchat).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) {
+          } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          }
+          return throwError(errorMessage);
+        })
+      ).subscribe(blob => {
         const reader = new FileReader();
         const binaryString = reader.readAsDataURL(blob);
         reader.onload = (event: any) => {
@@ -132,6 +164,8 @@ export class DemandeAchatComponent {
           this.isLoading = false;
           if (this.pdfData) {
             this.handleRenderPdf(this.pdfData);
+          }else{
+            
           }
         };
 
@@ -178,11 +212,10 @@ export class DemandeAchatComponent {
 
   closeModalPrint() {
     this.visibleModalPrint = false;
+    this.selectedDemandeAchat = null;
     this.onRowUnselect(event);
     this.clearSelected();
-    this.selectedDemandeAchat = null;
     this.pdfData = new Blob;
-
   }
   check_actif = false;
   check_inactif = false;
@@ -223,9 +256,9 @@ export class DemandeAchatComponent {
     this.selectedDemandeAchat == null;
     this.selectedDepartement = event.data.codeDepartement;
     this.selectedDepot = event.data.codeDepot;
-
+    this.selectedUsers = event.data.userDemander;
     this.selectedValue = event.data.codeEtatApprouver;
-
+    this.dateLivraison = event.data.dateLivraison;
     if (event.data.codeEtatApprouver == 2) {
       this.disBtnModif = true;
       this.disBtnDelete = true;
@@ -256,9 +289,9 @@ export class DemandeAchatComponent {
     this.observation = null;
     this.selectedDemandeAchat = '';
     this.selectedDepot = ''
-    this.selectedDepartement = ''
+    this.selectedDepartement = null
     console.log(" selectedDemandeAchat", this.selectedDemandeAchat)
-
+    this.dateLivraison = ''
   }
 
 
@@ -339,7 +372,7 @@ export class DemandeAchatComponent {
             // this.GelAllModeReglement();
 
             this.GelAllDepotPrincipal();
-            this.GetDepartementDepot();
+            this.GelAllDepartement();
             this.GetColorisActifVisible();
             this.GelUniteActifVisible();
             this.GetDemandeAchatByCode(this.selectedDemandeAchat);
@@ -385,7 +418,7 @@ export class DemandeAchatComponent {
       // this.GelAllModeReglement();
 
       this.GelAllDepotPrincipal();
-      this.GetDepartementDepot();
+      this.GelAllDepartement();
       this.GetColorisActifVisible();
       this.GelUniteActifVisible();
       this.GetDemandeAchatByCode(this.selectedDemandeAchat);
@@ -426,7 +459,8 @@ export class DemandeAchatComponent {
         // this.RemplireDropTaxe();
         // this.GetTypeTaxe();
         this.GetCodeSaisie();
-        this.GetDepartementDepot();
+        this.GelAllDepartement();
+        this.Getusers();
       } catch {
         alertifyjs.set('notifier', 'position', 'top-right');
         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Error Loading Data");
@@ -451,20 +485,14 @@ export class DemandeAchatComponent {
 
           button.setAttribute('data-target', '#NewModal');
           this.formHeader = "Edit Demande Achat"
-
           this.GelMatiereActive();
-
-
+          this.Getusers();
           this.onRowSelect;
-          // this.GelAllModeReglement();
-
           this.GelAllDepotPrincipal();
           this.GetColorisActifVisible();
           this.GelUniteActifVisible();
           this.GetDemandeAchatByCode(this.selectedDemandeAchat);
-          this.GetDepartementDepot();
-
-          // this.GetTypeTaxe();
+          this.GelAllDepartement();
           this.visibleNewModal = true;
           this.visDelete = false;
           this.visibleModalPrint = false;
@@ -556,7 +584,11 @@ export class DemandeAchatComponent {
         // mntTotalTaxe:this.TotalTaxeTmb,
         // codeAppelOffre : this.selectedAppelOffre
 
+        codeDepartement: this.selectedDepartement,
+        dateLivraison: this.dateLivraison,
         codeEtatApprouver: this.selectedValue,
+        userDemander: this.selectedUsers,
+        codeDepot: this.selectedDepot
       }
 
 
@@ -569,6 +601,7 @@ export class DemandeAchatComponent {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) {
             } else {
+              this.final = new Array<any>();
               alertifyjs.set('notifier', 'position', 'top-right');
               alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
@@ -592,8 +625,6 @@ export class DemandeAchatComponent {
             this.visDelete = false;
             this.codeDemandeAchat = this.selectedDemandeAchat.code
             this.visibleModalPrint = false;
-
-            this.onRowUnselect(event);
             this.clearSelected();
             this.visibleNewModal = false;
             this.visibleModalApprove = false;
@@ -653,6 +684,153 @@ export class DemandeAchatComponent {
 
 
   }
+
+
+
+  //aprouve methode
+
+  ApprouveDemandeAchat() {
+    if (!this.codeSaisie || this.listDataDAWithDetails.length == 0 || !this.observation) {
+      alertifyjs.set('notifier', 'position', 'top-right');
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
+
+    } else {
+
+      for (let y = 0; y < this.listDataDAWithDetails.length; y++) {
+
+        this.GetDataFromTableEditor = {
+
+
+          codematiere: { code: this.listDataDAWithDetails[y].codeMatieres },
+          codeUnite: { code: this.listDataDAWithDetails[y].codeUnites },
+          codeColoris: { code: this.listDataDAWithDetails[y].codeColoriss },
+          qteDemander: this.listDataDAWithDetails[y].qteDemander, userCreate: this.userCreate,
+        }
+        this.final.push(this.GetDataFromTableEditor);
+
+
+
+
+      }
+      let body = {
+        codeSaisie: this.codeSaisie,
+        designationAr: this.designationAr,
+        designationLt: this.designationLt,
+        // codeModeReglement: this.selectedModeReglement,
+        userCreate: "soufien approuve",
+        codeFournisseur: null,
+        code: this.code,
+        actif: this.actif,
+        visible: this.visible,
+        detailsDemandeAchatDTOs: this.final,
+        observation: this.observation,
+        codeEtatReception: "2",
+        // mntTotalTTC : this.prixTotalTTC,
+        // mntTotalHT:this.TotalHTValue,
+        // mntTotalTaxe:this.TotalTaxeTmb,
+        // codeAppelOffre : this.selectedAppelOffre
+
+        codeDepartement: this.selectedDepartement,
+        dateLivraison: this.dateLivraison,
+        codeEtatApprouver: this.selectedValue,
+        userDemander: this.selectedUsers,
+        codeDepot: this.selectedDepot
+      }
+
+
+
+      if (this.code != null) {
+        body['code'] = this.code;
+        console.log("Body to Update", body)
+        this.param_achat_service.UpdateDemandeAchat(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) {
+            } else {
+              this.final = new Array<any>();
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+            }
+            return throwError(errorMessage);
+          })
+
+        ).subscribe(
+
+          (res: any) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+
+            this.clearForm();
+            this.ngOnInit();
+            this.check_actif = true;
+            this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
+            this.visibleNewModal = false;
+            this.visDelete = false;
+            this.codeDemandeAchat = this.selectedDemandeAchat.code
+            this.visibleModalPrint = false;
+            this.clearSelected();
+            this.visibleNewModal = false;
+            this.visibleModalApprove = false;
+            this.visbileModalPassword = false;
+            this.visibleModalPrint = false;
+            this.disBtnDelete = false;
+
+            this.disBtnModif = false;
+          }
+        );
+      }
+      else {
+        console.log("Body to Post", body)
+
+        this.param_achat_service.PostDemandeAchatWithDetails(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              this.final = new Array<any>();
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+            }
+            return throwError(errorMessage);
+          })
+        ).subscribe(
+          (res: any) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
+            this.visibleNewModal = false;
+            this.visDelete = false;
+            this.visibleModalPrint = true;
+            this.clearForm();
+            this.ngOnInit();
+            this.code;
+            this.final;
+            this.check_actif = true;
+            this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
+            body: { };
+            this.visibleModalPrint = true;
+            console.log("res", res);
+            this.codeDemandeAchat = res.code;
+            this.RemplirePrint(this.codeDemandeAchat);
+
+
+          }
+        )
+
+
+
+      }
+    }
+
+
+
+
+
+  }
+
   // codeAo: any;
   // NewCodeAO = new Array<AppelOffre>;
 
@@ -1276,32 +1454,34 @@ export class DemandeAchatComponent {
       this.listTypeTaxeRslt = this.listTypeTaxePushed;
     })
   }
-  DataDepartementDepots = new Array<Departement>();
-  listDepartementDepotsPushed = new Array<any>();
-  listDepartementDepotsRslt = new Array<any>();
-  selectedDepartement: any;
-  GetDepartementDepot() {
 
+
+  DataDepartement = new Array<Departement>();
+  ListDepartementPushed = new Array;
+  RsltDepartement = new Array<any>();
+  selectedDepartement: any
+  GelAllDepartement() {
     this.param_achat_service.GetDepartement().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
         }
         return throwError(errorMessage);
       })
-    ).subscribe((data: any) => {
-      this.DataDepartementDepots = data;
-      this.listDepartementDepotsPushed = [];
-      for (let i = 0; i < this.DataDepartementDepots.length; i++) {
-        this.listDepartementDepotsPushed.push({ label: this.DataDepartementDepots[i].designationAr, value: this.DataDepartementDepots[i].code })
-      }
-      this.listDepartementDepotsRslt = this.listDepartementDepotsPushed;
-      // this.departement = data.departmenetDTO.designationAr;
-    })
-  }
 
+    ).subscribe((data: any) => {
+      this.DataDepartement = data;
+      this.ListDepartementPushed = [];
+      for (let i = 0; i < this.DataDepartement.length; i++) {
+        this.ListDepartementPushed.push({ label: this.DataDepartement[i].designationAr, value: this.DataDepartement[i].code })
+      }
+      this.RsltDepartement = this.ListDepartementPushed;
+    })
+
+  }
 
   EtatApprouve!: any[];
   EtatDde!: any[];
@@ -1346,6 +1526,54 @@ export class DemandeAchatComponent {
   disBtnModif: boolean = false;
   disBtnDelete: boolean = false;
   disBtnValider: boolean = false;
+  dateLivraison: any;
+  transformDateFormat() {
+    this.dateLivraison = this.datePipe.transform(this.dateLivraison, "yyyy-MM-dd")
+
+    console.log("  transformDateFormat  this.dateLivraison", this.dateLivraison)
+  };
+
+  // users =new Array<City>(); 
+  // selectedUsers: any;
+
+  users!: City[];
+
+  var!: any;
+  // selectedUsers: any;
+  selectedUsers!: any;
+  // arsenal: City = { code: '', name: '' };
+
+
+  onchangedSelected() {
+
+    console.log(this.var = JSON.stringify(this.selectedUsers)); // this.selectedUsers);
+
+
+  }
+  DataUser = new Array<User>();
+  listUserPushed = new Array<any>();
+  listUserRslt = new Array<any>();
+  Getusers() {
+    this.param_achat_service.GetUser().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+        }
+        return throwError(errorMessage);
+      })
+    ).subscribe((data: any) => {
+      this.DataUser = data;
+      this.listUserPushed = [];
+      for (let i = 0; i < this.DataUser.length; i++) {
+        this.listUserPushed.push({ label: this.DataUser[i].nomCompletUser, value: this.DataUser[i].userName })
+      }
+      this.listUserRslt = this.listUserPushed;
+    })
+
+
+  }
 }
 
 

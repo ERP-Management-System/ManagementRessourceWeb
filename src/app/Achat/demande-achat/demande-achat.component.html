@@ -16,10 +16,11 @@
                 <p-toast></p-toast>
 
                 <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal"
-                data-target="#ModalPassword"  ></p-contextMenu>
+                    data-target="#ModalPassword"></p-contextMenu>
 
 
-                <p-table #dt1 [contextMenu]="cm" [(contextMenuSelection)]="selectedDemandeAchat" [value]="dataDemandeAchat" [globalFilterFields]="['designationAr', 'designationLt']"
+                <p-table #dt1 [contextMenu]="cm" [(contextMenuSelection)]="selectedDemandeAchat"
+                    [value]="dataDemandeAchat" [globalFilterFields]="['designationAr', 'designationLt']"
                     selectionMode="single" [(selection)]="selectedDemandeAchat" (onRowSelect)="onRowSelect($event)"
                     (onRowUnselect)="onRowUnselect($event)" dataKey="code"
                     [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
@@ -34,34 +35,29 @@
 
                         <div class="recherche col-md-6">
                             <div style="width: 140px;">
-                                <p-dropdown  (onChange)="GetCodeEtatApprouver()"  
-                                (onClear)="ngOnInit()"
-                                [options]="EtatApprouve" 
-                                [(ngModel)]="selectedEtatApprouve" [style]="{'width':'120px '}"
-                                optionLabel="name"
-                                [showClear]="true"
-                                placeholder="Etat Valid."
-                                
-                                >
+                                <p-dropdown (onChange)="GetCodeEtatApprouver()" (onClear)="ngOnInit()"
+                                    [options]="EtatApprouve" [(ngModel)]="selectedEtatApprouve"
+                                    [style]="{'width':'120px '}" optionLabel="name" [showClear]="true"
+                                    placeholder="Etat Valid.">
                                     <ng-template pTemplate="selectedItem">
-                                        <div class="flex align-items-center gap-2" *ngIf="selectedEtatApprouve" style="width: 150px !important; display: flex;">
-                                            <img 
-                                                src={{selectedEtatApprouve.url}}
+                                        <div class="flex align-items-center gap-2" *ngIf="selectedEtatApprouve"
+                                            style="width: 150px !important; display: flex;">
+                                            <img src={{selectedEtatApprouve.url}}
                                                 [class]="'flag flag-' + selectedEtatApprouve.code.toLowerCase()"
-                                                style="width: 18px" /> 
+                                                style="width: 18px" />
                                         </div>
                                     </ng-template>
                                     <ng-template let-EtatApprouve pTemplate="item">
-                                        <div class="flex align-items-center gap-2" style="width: 150px !important; display: flex; align-items: center;">
-                                            <img  
-                                                src={{EtatApprouve.url}}
-                                                [class]="'flag flag-' + EtatApprouve.code.toLowerCase()" 
+                                        <div class="flex align-items-center gap-2"
+                                            style="width: 150px !important; display: flex; align-items: center;">
+                                            <img src={{EtatApprouve.url}}
+                                                [class]="'flag flag-' + EtatApprouve.code.toLowerCase()"
                                                 style="width: 18px" />
-                                            <div style="padding-left: 20px;"  >    {{ EtatApprouve.name }}</div>
+                                            <div style="padding-left: 20px;"> {{ EtatApprouve.name }}</div>
                                         </div>
                                     </ng-template>
-                            </p-dropdown>
-                              </div>
+                                </p-dropdown>
+                            </div>
                             <mat-label class="label-recherche"> Designation : </mat-label>
                             <span class="p-input-icon-left ml-auto">
                                 <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
@@ -89,29 +85,30 @@
                                 <div class="bouton_style-2">Ajouter</div>
                                 <mat-icon class="add-icon">add</mat-icon>
                             </button>
-                            <button [disabled]="disBtnModif" data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
-                                data-original-title="edit" data-toggle="modal" data-target="#NewModal"
-                                (click)="onOpenModal('edit')">
+                            <button [disabled]="disBtnModif" data-backdrop="false" type="button"
+                                class="Bouton-add-new1 btn  btn-default " data-original-title="edit" data-toggle="modal"
+                                data-target="#NewModal" (click)="onOpenModal('edit')">
                                 <!-- <button  type="button" class="Bouton-add-new1 btn btn-labeled btn-default " data-original-title="Edit" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('edit')"> -->
 
                                 <div class="bouton_style-2">Modifier</div>
                                 <mat-icon class="modif-icon">create</mat-icon>
                             </button>
-                            <button *ngIf="VisBtnDeleteDA" [disabled]="disBtnDelete" type="button" class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
+                            <button *ngIf="VisBtnDeleteDA" [disabled]="disBtnDelete" type="button"
+                                class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
                                 data-toggle="modal" data-target="#ModalDelete" (click)="onOpenModal('Delete')">
                                 <div class="bouton_style-2">Supprimer</div>
                                 <mat-icon class="delete-icon">delete</mat-icon>
                             </button>
-                            <button *ngIf="VisBtnPrintDA"  data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
-                                data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
-                                (click)="onOpenModal('Print')">
+                            <button *ngIf="VisBtnPrintDA" data-backdrop="false" type="button"
+                                class="Bouton-add-new2 btn btn-default " data-original-title="Print" data-toggle="modal"
+                                data-target="#ModalPrint" (click)="onOpenModal('Print')">
                                 <div class="bouton_style-2">Imprimer</div>
                                 <mat-icon class="print-icon"> local_printshop</mat-icon>
                             </button>
 
-                            <button [disabled]="disBtnValider" data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
-                                data-original-title="ModalApprove" data-toggle="modal" data-target="#ModalApprove"
-                                (click)="approveDA('ApproveModal')">
+                            <button [disabled]="disBtnValider" data-backdrop="false" type="button"
+                                class="Bouton-add-new2 btn btn-default " data-original-title="ModalApprove"
+                                data-toggle="modal" data-target="#ModalApprove" (click)="approveDA('ApproveModal')">
                                 <div class="bouton_style-2">Valider</div>
                                 <mat-icon class="modif-icon"> save</mat-icon>
 
@@ -124,7 +121,8 @@
 
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
-                            <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.</th>
+                            <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.
+                            </th>
                             <th style="width: 100px;">code Saisie</th>
                             <!-- <th>Designation Arabic</th>
                             <th>Designation Latin</th> -->
@@ -135,7 +133,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
-                        <tr [pSelectableRow]="fl"  [pContextMenuRow]="fl">
+                        <tr [pSelectableRow]="fl" [pContextMenuRow]="fl">
                             <td style="font-size: 15px !important; width: 50px; " class="warning"
                                 [ngStyle]="{'background-image': (fl.codeEtatApprouver == 2) ? (getPicValider()) : ((fl.codeEtatApprouver == 1) ? (getPicNonEncore()) : (getPicRefuser())) }"
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
@@ -313,7 +311,7 @@
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepotRslt"
                                 [(ngModel)]="selectedDepot" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
-                                placeholder="&nbsp;" [required]="true" [lazy]="true"  >
+                                placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -324,14 +322,16 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-4">Departement</label>
                         <div class="dop control-input flex-6">
-                            <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepartementDepotsRslt"
-                                [(ngModel)]="selectedDepartement" [filter]="true" [showClear]="true"
-                                [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
-                                placeholder="&nbsp;" [required]="true" [lazy]="true" >
+                            <p-dropdown name="ModeReglementDde"   class="dropdown"
+                                [options]="RsltDepartement" [(ngModel)]="selectedDepartement" 
+                                [showClear]="true" [style]="{'width':'100%'}"  
+                                  placeholder="&nbsp;" [required]="true" [lazy]="true"
+                                #ModeReglementDde="ngModel">
                             </p-dropdown>
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
+
                 </div>
             </fieldset>
 
@@ -363,6 +363,43 @@
                         </div>
                     </section>
                 </div>
+
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-12">
+                        <label class="control-label flex-3">Demandeur</label>
+                        <div class="dop control-input flex-6">
+                            <!-- <p-multiSelect [style]="{'width':'100%'}" display="chip" optionValue="code"
+                                [maxSelectedLabels]="5" [options]="users"   [(ngModel)]="selectedUsers"
+                                optionLabel="name"></p-multiSelect> -->
+
+
+
+                                <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listUserRslt"
+                                [(ngModel)]="selectedUsers" [filter]="true" [showClear]="true"
+                                [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
+                                placeholder="&nbsp;" [required]="true" [lazy]="true">
+                            </p-dropdown>
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-12">
+                        <label class="control-label flex-3">Date Souhaitée</label>
+                        <div class="control-input flex-6">
+                            <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
+                                dateFormat="yy-mm-dd" />
+                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 5px;right: 183px;"></i>
+                        </div>
+
+
+                    </section>
+                </div>
+
+
+
             </fieldset>
         </div>
         <div class="flex-row-start flex-12">
@@ -662,7 +699,7 @@
                 <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
 
                 <div class="flex-10">
-                    <button class="  btn btn-default save-add-ModalLarge" (click)="PostDemandeAchat()"> <i
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="ApprouveDemandeAchat()"> <i
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Save
                     </button>
@@ -748,21 +785,22 @@
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepotRslt"
                                 [(ngModel)]="selectedDepot" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
-                                placeholder="&nbsp;" [required]="true" [lazy]="true"  >
+                                placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
-                     
+
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-4">Departement</label>
                         <div class="dop control-input flex-6">
-                            <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepartementDepotsRslt"
-                                [(ngModel)]="selectedDepartement" [filter]="true" [showClear]="true"
-                                [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
-                                placeholder="&nbsp;" [required]="true" [lazy]="true" >
+                            <p-dropdown name="RsltDepartement"   class="dropdown"
+                                [options]="RsltDepartement" [(ngModel)]="selectedDepartement" 
+                                [showClear]="true" [style]="{'width':'100%'}"  
+                                  placeholder="&nbsp;" [required]="true" [lazy]="true"
+                                >
                             </p-dropdown>
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -796,6 +834,39 @@
                                     </textarea>
                             <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 50px;"></i>
                         </div>
+                    </section>
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-12">
+                        <label class="control-label flex-3">Demandeur</label>
+                        <div class="dop control-input flex-6">
+                            <!-- <p-multiSelect [style]="{'width':'100%'}" display="chip" optionValue="code"
+                                [maxSelectedLabels]="5" [options]="users"   [(ngModel)]="selectedUsers"
+                                optionLabel="name"></p-multiSelect> -->
+
+
+
+                                <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listUserRslt"
+                                [(ngModel)]="selectedUsers" [filter]="true" [showClear]="true"
+                                [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
+                                placeholder="&nbsp;" [required]="true" [lazy]="true">
+                            </p-dropdown>
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-12">
+                        <label class="control-label flex-3">Date Souhaitée</label>
+                        <div class="control-input flex-6">
+                            <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
+                                dateFormat="yy-mm-dd" />
+                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 5px;right: 183px;"></i>
+                        </div>
+
+
                     </section>
                 </div>
             </fieldset>
@@ -1095,8 +1166,8 @@
             <div class="flex-row-start flex-12">
                 <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
                 <div class="flex-10">
-                    <button class="  btn btn-default save-add-ModalLarge" (click)="approveDemandeAchat('ApproveModal')"> <i
-                            class="fa-lg fa-fw fa fa-check icon-save"></i>
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="approveDemandeAchat('ApproveModal')">
+                        <i class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Ouvrire
                     </button>
                     <button class=" btn btn-default cancel-add-ModalLarge" :closable="true" data-dismiss="modal"> <i
@@ -1116,8 +1187,8 @@
                         <!-- <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i> -->
                         <div class="dop control-input flex-8">
                             <input type="password" id="password" maxlength="200" name="password"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
-                            [required]="true">
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
+                                [required]="true">
 
                         </div>
                     </section>
@@ -1126,7 +1197,7 @@
             </div>
         </fieldset>
 
-          
+
 
 
     </div>

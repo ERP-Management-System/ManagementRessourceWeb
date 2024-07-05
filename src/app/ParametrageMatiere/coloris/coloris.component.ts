@@ -6,7 +6,7 @@ import { catchError, throwError  } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'  
-import { Coloris, Matiere, ModeReglement, TypeCaisse } from 'src/app/parametrageCenral/domaine/ParametrageCentral';
+import { Coloris, Matiere, ModeReglement, TypeCaisse } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 
 

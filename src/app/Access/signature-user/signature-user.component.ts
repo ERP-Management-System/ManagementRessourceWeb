@@ -1,30 +1,28 @@
 
-
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { catchError, throwError, timeout, of } from 'rxjs';
 import { Table } from 'primeng/table';
-
+import { DomSanitizer } from '@angular/platform-browser';
 import * as alertifyjs from 'alertifyjs'
-import { CategorieDepot, Departement, Depot } from 'src/app/domaine/ParametrageCentral';
+import { Departement, User } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 
 declare const PDFObject: any;
-
 @Component({
-  selector: 'app-depot',
-  templateUrl: './depot.component.html',
-  styleUrl: './depot.component.css', providers: [ConfirmationService, MessageService]
+  selector: 'app-signature-user',
+  templateUrl: './signature-user.component.html',
+  styleUrl: './signature-user.component.css', providers: [ConfirmationService, MessageService]
 })
-export class DepotComponent {
+export class SignatureUserComponent {
 
 
   openModal!: boolean;
 
 
-  constructor(private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private _sanitizer: DomSanitizer,private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
 
   }
@@ -32,7 +30,7 @@ export class DepotComponent {
   isLoading = false;
   ngOnInit(): void {
 
-    this.GelAllDepot();
+    this.GelAllUser();
     this.Voids();
 
 
@@ -75,10 +73,10 @@ export class DepotComponent {
 
   clearForm() {
     this.code == undefined;
-    this.designationAr = '';
-    this.designationLt = '';
+    this.userName = '';
+    this.password = '';
     this.actif = false;
-    this.codeSaisie = '';
+    this.nomCompletUser = '';
     this.onRowUnselect(event);
 
   }
@@ -90,24 +88,26 @@ export class DepotComponent {
   visibleModal: boolean = false;
   visibleModalPrint: boolean = false;
   visDelete: boolean = false;
-  code!: number | null;
-  codeSaisie: any;
-  designationAr: string = 'NULL';
-  designationLt: string = "NULL";
-  actif!: boolean;
-  isPrincipal!: boolean;
-  selectedDepot!: Depot;
 
+  code!: number | null;
+  userName: any;
+  password!: string ;
+  actif!: boolean;
+  nomCompletUser!: string;
+  signature!: any;
+
+  selectedUser : any;
 
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
-    this.isPrincipal = event.data.principal;
-    this.codeSaisie = event.data.codeSaisie;
-    this.designationAr = event.data.designationAr;
-    this.designationLt = event.data.designationLt;
-    this.selectedCategorieDepot = event.data.codeCategorieDepot;
-    this.selectedDepartement = event.data.codeDepartement;
+    this.userName = event.data.userName;
+    this.password = event.data.password;
+    this.nomCompletUser = event.data.nomCompletUser;
+    this.signature = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' 
+      + event.data.signature);
+
+    // this.signature = event.data.sig;
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {
@@ -117,8 +117,8 @@ export class DepotComponent {
 
 
 
-  DeleteDepot(code: any) {
-    this.param_achat_service.DeleteDepot(code).pipe(
+  DeleteDepartement(code: any) {
+    this.param_achat_service.DeleteDepartement(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -143,13 +143,11 @@ export class DepotComponent {
   }
   clearSelected(): void {
     this.code == undefined;
-    this.codeSaisie = '';
-    this.designationAr = '';
-    this.designationLt = '';
+    this.userName = '';
+    this.password = '';
+    this.nomCompletUser = '';
+    this.signature = '';
     this.actif = false;
-    this.isPrincipal = false;
-    this.selectedCategorieDepot='';
-    this.selectedDepartement=''
   }
 
   dis: boolean = false;
@@ -164,13 +162,11 @@ export class DepotComponent {
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
       button.setAttribute('data-target', '#Modal');
-      this.formHeader = "Nouveau Depot"
+      this.formHeader = "Nouveau Departement"
       this.onRowUnselect(event);
       this.clearSelected();
-      this.GelAllCategorieDepot();
-      this.GelAllDepartement();
+
       this.actif = false;
-      this.isPrincipal = false;
       this.visibleModal = true;
       this.code == undefined;
       this.dis = false;
@@ -191,10 +187,8 @@ export class DepotComponent {
       } else {
 
         button.setAttribute('data-target', '#Modal');
-        this.formHeader = "Edit Depot"
+        this.formHeader = "Edit Departement"
 
-        this.GelAllDepartement();
-        this.GelAllCategorieDepot();
         this.dis = true;
         this.visibleModal = true;
         this.onRowSelect;
@@ -215,7 +209,7 @@ export class DepotComponent {
 
         {
           button.setAttribute('data-target', '#ModalDelete');
-          this.formHeader = "Delete Depot"
+          this.formHeader = "Delete Departement"
           this.visDelete = true;
 
         }
@@ -238,33 +232,45 @@ export class DepotComponent {
 
 
   userCreate = "soufien";
+  fileReaderRst!: string;
+  PostDepartemenet(event: any) {
 
-  PostDepot() {
-
-    if (!this.designationAr || !this.designationLt || !this.codeSaisie || !this.selectedCategorieDepot) {
+    if (!this.userName || !this.password || !this.nomCompletUser) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
     } else {
 
+      // let file = event.target.files[0];
+      // let fileReader = new FileReader();
+
+      // fileReader.onloadend = () => {
+      //   const base64String = fileReader.result as string;
+      //   // console.log("base64String", base64String);
+      //   this.fileReaderRst = base64String;
+      // }
+      // if (file) {
+      //   fileReader.readAsDataURL(file);
+
+      // }
 
       let body = {
-        codeSaisie: this.codeSaisie,
-        designationAr: this.designationAr,
-        designationLt: this.designationLt,
+        userName: this.userName,
+        password: this.password,
+        actif: this.actif,
         userCreate: this.userCreate,
+        nomCompletUser: this.nomCompletUser,
         dateCreate: new Date().toISOString(), //
         code: this.code,
-        actif: this.actif,
-        principal: this.isPrincipal,
-        codeCategorieDepot: this.selectedCategorieDepot,
-        codeDepartement: this.selectedDepartement
+        sig: this.fileReaderRst,
+
 
       }
+      // console.log("body to update", body);
       if (this.code != null) {
         body['code'] = this.code;
 
-        this.param_achat_service.UpdateDepot(body).pipe(
+        this.param_achat_service.UpdateUser(body).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) {
@@ -295,7 +301,8 @@ export class DepotComponent {
 
       }
       else {
-        this.param_achat_service.PostDepot(body).pipe(
+        // console.log("body to post", body);
+        this.param_achat_service.PostUser(body).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
@@ -327,9 +334,9 @@ export class DepotComponent {
 
   }
 
-  Depots!: Array<Depot>;
+  departements!: Array<Departement>;
   Voids(): void {
-    this.Depots = [
+    this.departements = [
 
     ].sort((car1, car2) => {
       return 0;
@@ -345,10 +352,10 @@ export class DepotComponent {
   compteur: number = 0;
   listDesig = new Array<any>();
 
-  dataDepot = new Array<Depot>();
+  dataUser = new Array<User>();
   banque: any;
-  GelAllDepot() {
-    this.param_achat_service.GetDepot().pipe(
+  GelAllUser() {
+    this.param_achat_service.GetUserWithPassword().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -363,69 +370,156 @@ export class DepotComponent {
 
 
 
-      this.dataDepot = data;
+      this.dataUser = data;
       this.onRowUnselect(event);
 
     })
   }
 
+  FileUploaded!: any;
+  uploadedFiles: any[] = [];
+  //   onUpload(event:any) {
+  //     for(let file of event.files) {
+  //         this.uploadedFiles.push(file);
+  //         console.log("file base64", this.uploadedFiles)
+  //     }
+  //     console.log("file dddddddd", this.uploadedFiles)
+  //     this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
+  // }
+  fil64: any;
+  click(event: any) {
+    //  for(let file of event.files) {
+    // this.uploadedFiles.push(this.getBase64(file));
+    // console.log("file base6xxx4", this.uploadedFiles.name)
+
+  }
+
+  onUpload(event: any) {
+    let fileReader = new FileReader();
+    for (let file of event.files) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function () {
+        // Will print the base64 here.
+        console.log(fileReader.result);
+      };
+    }
+  }
+
+  postmethodeSig(event: any) {
+    let fileReader = new FileReader();
+    for (let file of event.files) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function () {
+        // Will print the base64 here.
+        console.log(fileReader.result);
+      };
+    }
+
+  }
+  // this.fil64 =  this.getBase64(this.FileUploaded );
+
+  //   for(let file of event.files) {
+  //     this.uploadedFiles.push(this.getBase64(file));
+  //     console.log("file base6xxx4", this.uploadedFiles)
+  // }
+  // console.log("file basesssss64", this.uploadedFiles)
+  // }
 
 
-  DataCategorieDepot = new Array<CategorieDepot>();
-  ListCategorieDepotPushed = new Array;
-  RsltCategorieDepot = new Array<any>();
-  selectedCategorieDepot: any
-  GelAllCategorieDepot() {
-    this.param_achat_service.GetCategorieDepot().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-
-        }
-        return throwError(errorMessage);
-      })
-
-    ).subscribe((datas: any) => {
-      this.DataCategorieDepot = datas;
-      this.ListCategorieDepotPushed = [];
-      for (let i = 0; i < this.DataCategorieDepot.length; i++) {
-        this.ListCategorieDepotPushed.push({ label: this.DataCategorieDepot[i].designationAr, value: this.DataCategorieDepot[i].code })
+  getBase64(file: File) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        reject('file object is null');
       }
-      this.RsltCategorieDepot = this.ListCategorieDepotPushed;
-    })
 
+      var reader = new FileReader();
+
+      reader.onloadend = function () {
+        resolve({ res: reader.result, name: file.name });
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
 
 
 
-  DataDepartement = new Array<Departement>();
-  ListDepartementPushed = new Array;
-  RsltDepartement = new Array<any>();
-  selectedDepartement: any
-  GelAllDepartement() {
-    this.param_achat_service.GetDepartement().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  selectedFile2!: File;
+  retrievedImage2: any;
+  base64Data2: any;
+  retrieveResonse2: any;
+  message2!: string;
+  imageName2: any;
+  //Gets called when the user selects an image
+  imagePreview!: string;
+  public onFileChanged(event: any) {
+    //Select File
+    this.selectedFile2 = event.target.files[0];
+    let file = event.target.files[0];
+    let fileReader = new FileReader();
 
-        }
-        return throwError(errorMessage);
-      })
+    fileReader.onloadend = () => {
+      const base64String = fileReader.result as string;
+      console.log("base64String", base64String);
+      this.fileReaderRst = base64String;
+      console.log("fileReaderRst", this.fileReaderRst);
 
-    ).subscribe((datas: any) => {
-      this.DataDepartement = datas;
-      this.ListDepartementPushed = [];
-      for (let i = 0; i < this.DataDepartement.length; i++) {
-        this.ListDepartementPushed.push({ label: this.DataDepartement[i].designationAr, value: this.DataDepartement[i].code })
-      }
-      this.RsltDepartement = this.ListDepartementPushed;
-    })
+    }
+    if (file) {
+      fileReader.readAsDataURL(file);
+
+    }
+    // 
+    // for (let file of event.files) {
+    //   fileReader.readAsDataURL(file);
+    //   fileReader.onload = function () {
+    //       // Will print the base64 here.
+    //       // this.selectedFileToSig = fileReader.result as string;
+
+    //     
+
+    //   };
+    // }
+
 
   }
+  //Gets called when the user clicks on submit to upload the image
+  // onUpload2() {
+
+  //   this.getBase64(this.selectedFile2);
+  //   console.log("v1", this.selectedFile2);
+  //   //FormData API provides methods and properties to allow us easily prepare form data to be sent with POST HTTP requests.
+  //   const uploadImageData = new FormData();
+  //   uploadImageData.append('imageFile', this.selectedFile2, this.selectedFile2.name);
+  //   console.log("v2", this.selectedFile2);
+  //   //Make a call to the Spring Boot Application to save the image
+  //   // this.httpClient.post('http://localhost:8080/image/upload', uploadImageData, { observe: 'response' })
+  //   //   .subscribe((response:any) => {
+  //   //     if (response.status === 200) {
+  //   //       this.message2 = 'Image uploaded successfully';
+  //   //     } else {
+  //   //       this.message2 = 'Image not uploaded successfully';
+  //   //     }
+  //   //   }
+  //   //   );
+
+
+
+  // }
+  //Gets called when the user clicks on retieve image button to get the image from back end
+  // getImage() {
+  //   //Make a call to Sprinf Boot to get the Image Bytes.
+  //   // this.httpClient.get('http://localhost:8080/image/get/' + this.imageName2)
+  //   //   .subscribe(
+  //   //     res => {
+  //   //       this.retrieveResonse2 = res;
+  //   //       this.base64Data2 = this.retrieveResonse2.picByte;
+  //   //       this.retrievedImage2 = 'data:image/jpeg;base64,' + this.base64Data2;
+  //   //     }
+  //   //   );
+  // }
+
 }
+
+
 

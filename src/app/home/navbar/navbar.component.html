@@ -1,10 +1,10 @@
-<nav class="sidebar open">
+<nav id="sibdebarnav"class="sidebar">
      
 
     <div class="logo-details">
         <i class="bx bxl-c-plus-plus icon"></i>
-        <div class="logo_name">ManagmentRessource</div>
-        <i class="bx bx-menu-alt-right" id="btn"></i>
+        <div class="logo_name" >ManagmentRessource</div>
+       <i class="bx bx-menu-alt-right" id="btn" onclick="myFunction2()"  ></i> <!--  // -->
     </div>
 
     <ul class="nav-list scroll">
@@ -13,10 +13,10 @@
             <input type="text" placeholder="Search...">
             <span class="tooltip">Search</span>
         </li>
-        <li>
+        <li id="ver1">
             <a [routerLink]="['']">
                 <i class="bx bx-menu-alt-right"></i>
-                <span class="links_name">Home</span>
+                <span  class="links_name v23">Home</span>
             </a>
             <span class="tooltip">Home</span>
         </li>
@@ -185,9 +185,184 @@
             </div>
             <i class="bx bx-log-out" id="log_out"></i>
         </li>
+        <li>
+          <a [routerLink]="['/menu_access']">
+              <i class="fa-solid fa-fingerprint"></i>
+              <span class="links_name">Access</span>
+          </a> 
+      </li>
     </ul>
 
 
 </nav>
  
  
+
+<script>
+    let arrow = document.querySelectorAll(".arrow");
+
+arrow.forEach((btnArrow) => {
+  btnArrow.addEventListener("click", () => {
+    let arrowParent = btnArrow.parentElement.parentElement;
+    arrowParent.classList.toggle("show-menu");
+  });
+});
+
+let sidebar = document.querySelector(".sidebar");
+let bxMenu = document.querySelector(".bx-menu");
+console.log(bxMenu);
+
+bxMenu.addEventListener("click", () => {
+  sidebar.classList.toggle("close");
+});
+
+</script>
+<!-- 
+<div class="sidebar">
+    <div class="logo-details">
+      <i class="bx bxs-component bx-spin"></i>
+      <span class="logo-name">Side Bar</span>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-grid-alt"></i>
+          <span class="link-name">Dashbord</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Dashbord</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <div class="icon-link">
+          <a href="#">
+            <i class="bx bx-collection"></i>
+            <span class="link-name">Category</span>
+          </a>
+          <i class="bx bxs-chevron-down arrow"></i>
+        </div>
+        <ul class="sub-menu">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Category</a>
+          </li>
+          <li class="inner-nav-list"><a href="#">HTML &amp; CSS</a></li>
+          <li class="inner-nav-list"><a href="#">JavaScript</a></li>
+          <li class="inner-nav-list"><a href="#">PHP &amp; MySQL</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <div class="icon-link">
+          <a href="#">
+            <i class="bx bx-book-alt"></i>
+            <span class="link-name">Posts</span>
+          </a>
+          <i class="bx bxs-chevron-down arrow"></i>
+        </div>
+        <ul class="sub-menu">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Posts</a>
+          </li>
+          <li class="inner-nav-list"><a href="#">Web Design</a></li>
+          <li class="inner-nav-list"><a href="#">Login Form</a></li>
+          <li class="inner-nav-list"><a href="#">Card Design</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-pie-chart-alt-2"></i>
+          <span class="link-name">Analytics</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Analytics</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-line-chart"></i>
+          <span class="link-name">Chart</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Chart</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <div class="icon-link">
+          <a href="#">
+            <i class="bx bx-plug"></i>
+            <span class="link-name">Plugins</span>
+          </a>
+          <i class="bx bxs-chevron-down arrow"></i>
+        </div>
+        <ul class="sub-menu">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Plugins</a>
+          </li>
+          <li class="inner-nav-list"><a href="#">UI Face</a></li>
+          <li class="inner-nav-list"><a href="#">Bracket Colorizer</a></li>
+          <li class="inner-nav-list"><a href="#">Icons</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-compass"></i>
+          <span class="link-name">Explore</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Explore</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-history"></i>
+          <span class="link-name">History</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">History</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <a href="#">
+          <i class="bx bx-cog"></i>
+          <span class="link-name">Settings</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li class="inner-nav-list">
+            <a class="link-name" href="#">Settings</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-list">
+        <div class="profile-details">
+          <div class="profile-content">
+            <img src="https://images.unsplash.com/photo-1503249023995-51b0f3778ccf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=311&amp;q=80" alt="prof-image">
+          </div>
+
+          <div class="profile-person">
+            <div class="profile-name">Archabek Nurbek uulu</div>
+            <div class="profile-job">Freelancer</div>
+          </div>
+          <i class="bx bx-exit"></i>
+        </div>
+      </li>
+    </ul>
+  </div> -->

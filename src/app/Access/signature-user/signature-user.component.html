@@ -1,0 +1,309 @@
+<body translate="no" class="tt">
+    <!-- Note: This example only works with Windows Insider Preview Builds 16237+. -->
+
+    <header>
+        <label class="header_name">Sginature User</label>
+    </header>
+    <aside>
+        <div class="Groupe-Bouton">
+
+        </div>
+    </aside>
+    <section id="main-container">
+
+        <div class="material-table">
+            <div class="card">
+                <p-toast></p-toast>
+                <p-table #dt1 [value]="dataUser" [globalFilterFields]="['userName', 'Nom']" selectionMode="single"
+                    [metaKeySelection]="false" [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)"
+                    (onRowUnselect)="onRowUnselect($event)" dataKey="code"
+                    [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
+
+                    <ng-template pTemplate="caption" class="col-md-12">
+
+                        <mat-radio-group aria-label="Select an option" class="radio-actif-inactif">
+
+                            <!-- <mat-radio-button value="actif" [checked]="check_actif === true" (click)="GetModeReglementActif()" (click)="clear(dt1)">متدوال</mat-radio-button>
+                          <mat-radio-button value="InActif" [checked]="check_inactif === true" (click)="GetModeReglementInactif()" (click)="clear(dt1)">غير متداول</mat-radio-button> -->
+                        </mat-radio-group>
+
+                        <div class="recherche col-md-6">
+                            <mat-label class="label-recherche"> User Name : </mat-label>
+                            <span class="p-input-icon-left ml-auto">
+                                <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
+                                    type="text" (keyup.enter)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                                    placeholder="Search keyword" />
+                            </span>
+                            <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add"
+                                (click)="dt1.filterGlobal($any($event.target).value, 'contains')">
+                                <div class="bouton_style-2">Recherche</div>
+                                <mat-icon class="search-icon">search</mat-icon>
+                            </button>
+                            <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add"
+                                (click)="clear(dt1)" (click)="GelAllUser()">
+                                <div class="bouton_style-2">Actualiser</div>
+                                <mat-icon class="search-icon">refresh</mat-icon>
+                            </button>
+                        </div>
+
+
+                        <div class="ActionBtn col-md-6">
+                            <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
+                                data-original-title="Add" data-toggle="modal" data-target="#Modal"
+                                (click)="onOpenModal('add')">
+                                <div class="bouton_style-2">Ajouter</div>
+                                <mat-icon class="add-icon">add</mat-icon>
+                            </button>
+                            <button data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
+                                data-original-title="Add" data-toggle="modal" data-target="#Modal"
+                                (click)="onOpenModal('edit')">
+                                <div class="bouton_style-2">Modifier</div>
+                                <mat-icon class="modif-icon">create</mat-icon>
+                            </button>
+                            <button type="button" class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
+                                data-toggle="modal" data-target="#ModalDelete" (click)="onOpenModal('Delete')">
+                                <div class="bouton_style-2">Supprimer</div>
+                                <mat-icon class="delete-icon">delete</mat-icon>
+                            </button>
+                            <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
+                                data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
+                                (click)="onOpenModal('Print')">
+                                <div class="bouton_style-2">Imprimer</div>
+                                <mat-icon class="print-icon"> local_printshop</mat-icon>
+                            </button>
+
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr style="font-size: 15px !important;">
+                            <!-- <th>code</th> -->
+                            <th>User</th>
+                            <th>Nom Complet </th>
+                            <th class="act-col">Actif</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-usr>
+                        <tr [pSelectableRow]="usr">
+                            <!-- <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td> -->
+                            <td style="font-size: 15px !important;">{{usr.userName}}</td>
+                            <td style="font-size: 15px !important;">{{usr.nomCompletUser}}</td>
+
+                            <td class="act-col">
+
+                                <p-checkbox [readonly]="true" [(ngModel)]="usr.actif" [binary]="true"
+                                    inputId="binary">{{usr.actif}}</p-checkbox>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                </p-table>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- <aside>aside</aside> -->
+    <footer>footer
+
+        <!-- <div id="pdfContainer"></div>  -->
+    </footer>
+</body>
+
+
+
+
+
+
+<!-- modal primeNG ADD -->
+<p-dialog id="Modal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModal"
+    [draggable]="false" data-backdrop="false" [modal]="true" styleClass="ModalAdd">
+
+
+
+
+    <ng-template pTemplate="header">
+        <h2 class="text-default headerForm"> {{formHeader}}</h2>
+        <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
+            (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+        </button>
+        <button class="btn btn-default save-add-ModalSmall" (click)="PostDepartemenet($event)"> <i
+                class="fa-lg fa-fw fa fa-check icon-save"></i>
+            Save
+        </button>
+        <p-toast key="toast1"></p-toast>
+    </ng-template>
+
+
+    <div class="modal-body">
+        <!-- <form> -->
+        <div class="flex-row-start flex-12">
+            <fieldset class="flex-12">
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">User Name</label>
+                        <div class="control-input  flex-6">
+                            <input id="userName" onclick="tester(this)" [disabled]="dis" maxlength="10" name="userName"
+                                type="text" class="onlyForCentral form-control-dev input-xs" required
+                                [(ngModel)]="userName">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-6">
+                        <p-checkbox styleClass="ChkActif" [binary]="true" name="actif" value="val3" label="Actif"
+                            [(ngModel)]="actif"></p-checkbox>
+                    </section>
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">Nom Complet : </label>
+                        <div class="control-input flex-6">
+                            <input type="text" id="nomCompletUser" maxlength="200" name="nomCompletUser"
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="nomCompletUser"
+                                [required]="true">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6">Mot de passe</label>
+                        <div class="control-input flex-6">
+                            <input type="password" id="password" maxlength="200" name="password"
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
+                                [required]="true">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+
+                </div>
+
+
+
+
+            </fieldset>
+
+        </div>
+        <div class="flex-row-start flex-12">
+            <fieldset class="flex-12">
+                <!-- <p-fileUpload name="demo[]"  (onSelect)="onFileChanged($event)"    (onUpload)="onFileChanged($event)"
+                 accept="image/*" [multiple]="false" [maxFileSize]="1000000">
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li [(ngModel)]="FileUploaded" *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                    </ul>
+                </ng-template>
+        </p-fileUpload> -->
+                <!-- <div class="container row"> -->
+                <div class="flex-row-start flex-12">
+
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6" style=" padding: 5px 0px 4px 0px; ">Sginature File :</label>
+                        <div class="control-input flex-6">
+                            <input type="file" id="browse" onchange="previewFile()" (change)="onFileChanged($event)">
+                        </div>
+                    </section>
+                    <br />
+                    <section class="flex-row-start flex-6">
+                        <label class="control-label flex-6" style=" padding: 5px 0px 4px 0px; ">Preview :</label>
+                        <div class="control-input flex-6">
+                            <img [src]="signature" style="padding:35px" id="preview" height="200" alt="Image preview" />
+                        </div>
+                    </section>
+
+
+
+
+                </div>
+
+
+                <!-- <div class="col-md-6">
+                <input type="button" (click)="onUpload2()" value="upload">
+            </div> -->
+                <!-- </div> -->
+
+            </fieldset>
+
+        </div>
+
+
+
+
+    </div>
+
+
+</p-dialog>
+
+<!-- modal primeNG  Delete-->
+<p-dialog class="modal-delete" id="ModalDelete" data-backdrop="false" header="Header" [(visible)]="visDelete"
+    styleClass="ModalDelete" [modal]="true" [draggable]="false" [resizable]="false">
+    <div class="modal-header">
+        <h3 class="footer-dev">
+            <div class="action">
+                <h2 class="text-center text-default txt-header-modal"> {{formHeader}}</h2>
+            </div>
+        </h3>
+    </div>
+    <div class="modal-body">
+        <form action="" #addForms="ngForm">
+            <fieldset class="deleteForms">
+                <h4 class="text-delete ">Êtes-vous sûr de vouloir supprimer ?
+                    <p-button icon="pi pi-save" data-dismiss="modal" label="supprimer"
+                        styleClass="save-delete p-button-success" (click)="DeleteDepartement(code)"></p-button>
+                    <p-button icon="pi pi-sign-out" label="Fermer" styleClass="btn-cancel-delete p-button-danger"
+                        data-dismiss="modal"> </p-button>
+
+
+                </h4>
+            </fieldset>
+            <br>
+        </form>
+    </div>
+</p-dialog>
+<!-- fin modal primeng  -->
+
+
+
+
+
+
+<!-- modal primeNG Print -->
+<p-dialog id="ModalPrint" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModalPrint"
+    data-backdrop="false" [modal]="true" styleClass="ModalPrint" [draggable]="false" [resizable]="false">
+    <div>
+        <div class="modal-header">
+            <h3 class="footer-dev">
+                <div class="action">
+                    <h2 class="text-default headerForm"> {{formHeader}}</h2>
+
+                    <button class="btn btn-default cancel-add-ModalSmall" :closable="false" data-dismiss="modal"
+                        (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+                    </button>
+
+                    <p-toast key="toast1"></p-toast>
+
+                </div>
+            </h3>
+        </div>
+        <div class="modal-body">
+            <div id="pdfContainer"></div>
+
+
+            <!-- <div id="myContainer">
+                <div id="outerContainer">
+////sidebarContainer
+                    <div id="sidebarContainer"> </div>  
+
+
+                 /// /mainContainer 
+                    <div id="mainContainer"> </div> 
+
+
+                /// overlayContainer
+                    <div id="overlayContainer" class="hidden"> </div> 
+
+                </div>  
+            </div> -->
+
+        </div>
+
+    </div>
+</p-dialog>

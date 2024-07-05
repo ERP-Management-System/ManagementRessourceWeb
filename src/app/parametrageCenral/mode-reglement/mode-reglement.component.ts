@@ -8,7 +8,7 @@ import { catchError, throwError, timeout, of } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { Banque, ModeReglement, TypeCaisse } from '../domaine/ParametrageCentral';
+import { Banque, ModeReglement, TypeCaisse } from '../../domaine/ParametrageCentral';
 import { ParametrageCentralService } from '../ParametrageCentralService/parametrage-central.service';
 
 declare const PDFObject: any;

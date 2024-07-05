@@ -136,7 +136,7 @@ import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
 import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
 import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
- 
+  
 
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import { LoginComponent } from './login/login.component';
@@ -148,6 +148,9 @@ import { DepartementComponent } from './DepotDepartement/departement/departement
 import { MenuDepotDepartementComponent } from './DepotDepartement/menu-depot-departement/menu-depot-departement.component';
 import { DepotComponent } from './DepotDepartement/depot/depot.component';
 import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
+import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
+import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
+ 
  
 
  
@@ -156,7 +159,7 @@ import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/cate
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent
+  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,
@@ -177,8 +180,8 @@ import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/cate
     ButtonModule,
     CalendarModule,
     CarouselModule,
-    CascadeSelectModule,
-    CheckboxModule,
+    CascadeSelectModule,CardModule,
+    CheckboxModule,MultiSelectModule,
     ChipsModule,
     ChipModule,
     ColorPickerModule,

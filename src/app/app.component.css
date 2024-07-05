@@ -1,35 +1,57 @@
-#page {
+/* .mainbox {
     display: grid;
     width: 100%;
     height: 250px;
     grid-template-areas: "head head" "sidebar  main" "sidebar  foot";
     grid-template-rows: 50px 1fr 30px;
-    grid-template-columns: 250px 1fr 0px;
+    grid-template-columns: 250px 1fr 0px ;
     grid-gap: 5px;
     height: 100vh;
     margin: 0px;
     font-size: 15px;
     overflow-y: scroll !important;
-}
+} */
 
-#page>header {
+.mainbox    {
+ 
+    display: grid;
+    width: 100%;
+    height: 250px;
+    grid-template-areas: "head head" "sidebar  main" "sidebar  foot";
+    grid-template-rows: 50px 1fr 30px;
+    grid-template-columns: 250px 1fr 0px ;
+    grid-gap: 5px;
+    height: 100vh;
+    margin: 0px;
+    font-size: 15px;
+    overflow-y: scroll !important;
+
+}
+ 
+
+.mainbox>header {
     grid-area: head;
     background-color: #1d1b31;
     color: white;
     padding: 15px 0px 0px 258px
 }
 
-#page>nav {
-    grid-area: nav;
+.mainbox>nav {
+    grid-area: app-navbar;
     /* background-color: #ffa08c; */
 }
-
-#page>main {
+.sidebar.open .mainbox {
+ 
+    background-color: chartreuse;
+    font-size: 44px !important;
+  
+  }  
+.mainbox>main {
     grid-area: main;
     background: #e0e0e09c;
 }
 
-#page>footer {
+.mainbox>footer {
     grid-area: foot;
     background-color: #8cffa0;
 }

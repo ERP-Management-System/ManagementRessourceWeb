@@ -12,5 +12,12 @@
       "logLevel": "debug",
       "changeOrigin": true,
       "timeout": 360000
+  },
+  "/access": {
+      "target": "http://localhost:9000/api",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true,
+      "timeout": 360000
   }
 }

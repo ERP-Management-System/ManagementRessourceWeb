@@ -339,6 +339,14 @@ export interface Departement{
   
 }
 
+export interface User{
+  userName: string,
+  password: string,
+  nomCompletUser: string,
+  actif: boolean,
+  
+}
+
 
 
 
@@ -415,4 +423,9 @@ export interface Compteur {
   compteur: string,
   prefixe: string,
   suffixe: string, 
+}
+
+export interface City {
+  name: string,
+  code: string
 }
