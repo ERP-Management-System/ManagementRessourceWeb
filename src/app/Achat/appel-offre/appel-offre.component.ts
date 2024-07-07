@@ -6,7 +6,7 @@ import { catchError, Subject, throwError, timeout } from 'rxjs';
 import { Table } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, Coloris, Compteur, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { DatePipe } from '@angular/common';
 
@@ -275,6 +275,7 @@ export class AppelOffreComponent {
   //   return datePipe.transform(date, format);
   // }
   selectedModeReglement: any;
+  selectedDdeAchat: any;
   VisBtnPrintAO: boolean = false;
   VisBtnDeleteAO: boolean = true;
   onRowSelect(event: any) {
@@ -289,7 +290,7 @@ export class AppelOffreComponent {
     this.dateLivraison = event.data.dateLivraison;
     this.adressLivraison = event.data.adressLivraison;
     this.selectedValue = event.data.codeEtatApprouverOrdreAchat;
-
+this.selectedDdeAchat =  event.data.codeDemandeAchat;
     console.log('vtData : ', event, 'selected AO code : ', this.selectedAppelOffre, "date",);
 
     if (event.data.codeEtatApprouverOrdreAchat == 2) {
@@ -327,6 +328,7 @@ export class AppelOffreComponent {
     this.disBtnModif = false;
     this.disBtnDelete = false;
     this.selectedValue = null
+    this.selectedDdeAchat = '';
   }
 
 
@@ -415,6 +417,7 @@ export class AppelOffreComponent {
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
       this.GetCodeSaisie();
+      this.GelDemandeAchatApprouved() ;
 
     } else
       if (mode === 'edit') {
@@ -441,6 +444,7 @@ export class AppelOffreComponent {
           this.GelMatiereActive();
 
 
+          this.GelDemandeAchatApprouved() ;
           this.onRowSelect;
           this.GelAllModeReglement();
 
@@ -636,7 +640,7 @@ export class AppelOffreComponent {
   };
 
   PostAppelOffre() {
-    if (!this.designationAr || !this.designationLt || !this.selectedModeReglement || !this.codeSaisie || this.listDataAOWithDetails.length == 0 || !this.adressLivraison) {
+    if ( !this.selectedDdeAchat || !this.selectedModeReglement || !this.codeSaisie || this.listDataAOWithDetails.length == 0 || !this.adressLivraison) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
     } else {
@@ -665,7 +669,7 @@ export class AppelOffreComponent {
         observation: this.observation,
         codeEtatReception: "2",
         codeEtatApprouverOrdreAchat: this.selectedValue,
-
+        codeDemandeAchat: this.selectedDdeAchat,
         dateLivraison: this.dateLivraison,
         adressLivraison: this.adressLivraison
       }
@@ -1010,14 +1014,11 @@ export class AppelOffreComponent {
 
 
     if ((this.selectedMatiereToAdd != undefined) && (this.selectedMatiereToAdd != "") && (!exist)) {
-      this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => {
-        // this.ListMatiere[this.Newcompteur] = Newdata;
+      this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => { 
         this.Newcompteur = this.Newcompteur + 1;
 
         this.listDataAOWithDetails.push(Newdata);
-        console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails);
-
-        // console.log(" PushTableData articles", this.ListMatiere);
+        console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails); 
         this.disp = true;
       })
     }
@@ -1030,7 +1031,7 @@ export class AppelOffreComponent {
 
   GetAppelOffreByCode(code: number) {
 
-    this.param_achat_service.GetAppelOffreByCode(this.code).pipe(
+    this.param_achat_service.GetDetailsAppelOffreByCode(this.code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -1096,13 +1097,63 @@ export class AppelOffreComponent {
 
       })
 
+    } 
+    // console.log("selectedCountry" , this.selectedCountry.code)
+  }
+
+  
+  dataDemandeAchat = new Array<DemandeAchat>();
+  listDdeAchatPushed = new Array<any>();
+  listDdeAchatRslt = new Array<any>();
+  GelDemandeAchatApprouved() {
+    this.param_achat_service.GetDemandeAchatByEtatApprouved(2).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataDemandeAchat = data;
+      this.listDdeAchatPushed = [];
+      for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+        this.listDdeAchatPushed.push({ label: (this.dataDemandeAchat[i].codeSaisie   ), value: this.dataDemandeAchat[i].code })
+      }
+      this.listDdeAchatRslt = this.listDdeAchatPushed;
+    })
+  }
+
+  
+  GetDemandeAchatByCode(code: number) {
+
+    if (this.selectedDdeAchat == null) {
+      this.listDataAOWithDetails = new Array<any>();
+    } else {
+
+      this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDdeAchat).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  
+          }
+          return throwError(errorMessage);
+        })
+      ).subscribe((data: any) => {
+        this.listDataAOWithDetails = new Array<any>();
+        this.listDataAOWithDetails = data; 
+
+      })
     }
 
 
-
-
-    // console.log("selectedCountry" , this.selectedCountry.code)
   }
+
 }
 
 

@@ -41,13 +41,14 @@ export class DemandeAchatComponent {
   isLoading = false;
   ngOnInit(): void {
     this.items = [
-      { label: 'Validation', icon: 'pi pi-fw pi-check-square', command: () => this.OpenPasswordModal('PasswordModal') },
-      { label: 'Annuler Validation', icon: 'pi pi-fw pi-history', command: () => this.OpenPasswordModal('PasswordModal') },
+      { label: 'Validation', icon: 'pi pi-fw pi-check-square', command: () => this.OpenPasswordModal('PasswordModal',this.selectedDemandeAchat) },
+      { label: 'Annuler Validation', icon: 'pi pi-fw pi-history', command: () => this.OpenPasswordModal('PasswordModal',this.selectedDemandeAchat) },
     ];
 
     this.GelAllDemandeAchat();
     this.VoidsNew();
     this.getValued();
+    this.valDate();
     this.v2 = [
       { field: 'codeSaisie', header: 'Code Saisie' },
       { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
@@ -95,50 +96,41 @@ export class DemandeAchatComponent {
 
 
   password: any;
-  OpenPasswordModal(mode: string) {
+  OpenPasswordModal(mode: string,event:any) {
 
-    const container = document.getElementById('main-container');
-    const contextMenu = document.createElement('button');
-    contextMenu.type = 'button';
-    contextMenu.style.display = 'none';
-    contextMenu.setAttribute('data-toggle', 'modal');
-    if (mode === 'PasswordModal') {
-      contextMenu.setAttribute('data-target', '#ModalPassword');
-      this.formHeader = "Password";
-      this.visibleModalApprove = false;
-      this.visDelete = false;
-      this.visibleNewModal = false;
-      this.visibleModalPrint = false;
-      this.visbileModalPassword = true;
+
+    if(this.selectedValue == 1){
+      alertifyjs.set('notifier', 'position', 'top-right');
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Demande d'Achat Non Encore Approuver");
+      
+    }else{
+
+
+      const container = document.getElementById('main-container');
+      const contextMenu = document.createElement('button');
+      contextMenu.type = 'button';
+      contextMenu.style.display = 'none';
+      contextMenu.setAttribute('data-toggle', 'modal');
+      if (mode === 'PasswordModal') {
+        contextMenu.setAttribute('data-target', '#ModalPassword');
+        this.formHeader = "Password";
+        this.visibleModalApprove = false;
+        this.visDelete = false;
+        this.visibleNewModal = false;
+        this.visibleModalPrint = false;
+        this.visbileModalPassword = true;
+      }
+
     }
+
+
   }
 
   CloseModal() {
     this.visbileModalPassword = false;
     this.visibleModalApprove = false;
   }
-  // this.param_achat_service.DeleteDemandeAchat(code).pipe(
-  //   catchError((error: HttpErrorResponse) => {
-  //     let errorMessage = '';
-  //     if (error.error instanceof ErrorEvent) {
-  //     } else {
-  //       alertifyjs.set('notifier', 'position', 'top-right');
-  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-  //     }
-  //     return throwError(errorMessage);
-  //   })
-
-  // ).subscribe(
-  //   (res: any) => {
-  //     alertifyjs.set('notifier', 'position', 'top-right');
-  //     alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Deleted");
-
-  //     this.ngOnInit();
-  //     this.check_actif = true;
-  //     this.check_inactif = false;
-
-  //   }
-  // )
+  
   codeDemandeAchat!: number;
   RemplirePrint(codeDemandeAchat: any): void {
     if (this.selectedDemandeAchat == null) {
@@ -164,8 +156,8 @@ export class DemandeAchatComponent {
           this.isLoading = false;
           if (this.pdfData) {
             this.handleRenderPdf(this.pdfData);
-          }else{
-            
+          } else {
+
           }
         };
 
@@ -208,6 +200,8 @@ export class DemandeAchatComponent {
     this.selectedDemandeAchat = '';
     this.selectedDepot = '';
     this.selectedAppelOffre = '';
+    this.visibleModalApprove = false;
+    this.password = ''
   }
 
   closeModalPrint() {
@@ -238,11 +232,48 @@ export class DemandeAchatComponent {
   codeBanque: string = "NULL";
   actif!: boolean;
   visible!: boolean;
-
   selectedDemandeAchat!: any;
-
-
   selectedModeReglement: any;
+
+  minDate!: Date;
+
+  maxDate!: Date;
+  es: any;
+
+  invalidDates!: Array<Date>
+  valDate() {
+    this.es = {
+      firstDayOfWeek: 1,
+      dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
+      dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+      dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+      monthNames: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+      monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+      today: 'Hoy',
+      clear: 'Borrar'
+    }
+
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let prevMonth = (month === 0) ? 11 : month - 1;
+    let prevYear = (prevMonth === 11) ? year - 1 : year;
+    let nextMonth = (month === 11) ? 0 : month + 1;
+    let nextYear = (nextMonth === 0) ? year + 1 : year;
+    this.minDate = new Date();
+    this.minDate.setMonth(prevMonth);
+    this.minDate.setFullYear(prevYear);
+    this.maxDate = new Date();
+    this.maxDate.setMonth(nextMonth);
+    this.maxDate.setFullYear(nextYear);
+
+    let invalidDate = new Date();
+    invalidDate.setDate(today.getDate() - 1);
+    this.invalidDates = [today, invalidDate];
+  }
+
+
+
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
@@ -379,6 +410,25 @@ export class DemandeAchatComponent {
             // this.RemplireDropTaxe();
 
             // this.GetTypeTaxe();
+
+          } else if (mode === 'CancelApproveModal') {
+            contextMenu.setAttribute('data-target', '#ModalApprove');
+            this.formHeader = "Modification Validation Appel Offre";
+            this.visibleModalApprove = true;
+            this.visDelete = false;
+            this.visibleNewModal = false;
+            this.visibleModalPrint = false;
+            this.GelMatiereActive();
+
+
+            this.onRowSelect;
+            // this.GelAllModeReglement();
+
+            this.GelAllDepotPrincipal();
+            this.GelAllDepartement();
+            this.GetColorisActifVisible();
+            this.GelUniteActifVisible();
+            this.GetDemandeAchatByCode(this.selectedDemandeAchat);
 
           }
 
@@ -712,117 +762,172 @@ export class DemandeAchatComponent {
 
 
       }
-      let body = {
-        codeSaisie: this.codeSaisie,
-        designationAr: this.designationAr,
-        designationLt: this.designationLt,
-        // codeModeReglement: this.selectedModeReglement,
-        userCreate: "soufien approuve",
-        codeFournisseur: null,
-        code: this.code,
-        actif: this.actif,
-        visible: this.visible,
-        detailsDemandeAchatDTOs: this.final,
-        observation: this.observation,
-        codeEtatReception: "2",
-        // mntTotalTTC : this.prixTotalTTC,
-        // mntTotalHT:this.TotalHTValue,
-        // mntTotalTaxe:this.TotalTaxeTmb,
-        // codeAppelOffre : this.selectedAppelOffre
-
-        codeDepartement: this.selectedDepartement,
-        dateLivraison: this.dateLivraison,
-        codeEtatApprouver: this.selectedValue,
-        userDemander: this.selectedUsers,
-        codeDepot: this.selectedDepot
-      }
-
-
-
-      if (this.code != null) {
-        body['code'] = this.code;
-        console.log("Body to Update", body)
-        this.param_achat_service.UpdateDemandeAchat(body).pipe(
-          catchError((error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) {
-            } else {
-              this.final = new Array<any>();
+      if (this.selectedValue == 1) {
+        let body = {
+          codeSaisie: this.codeSaisie,  
+          codeFournisseur: null,
+          code: this.code,  
+          codeEtatReception: "2", 
+          codeUserApprouver: null, 
+          codeEtatApprouver: this.selectedValue, 
+          dateApprouve: null
+        }
+  
+  
+  
+        if (this.code != null) {
+          body['code'] = this.code;
+          console.log("Body to Update", body)
+          this.param_achat_service.CancelApprouveDemandeAchat(body).pipe(
+            catchError((error: HttpErrorResponse) => {
+              let errorMessage = '';
+              if (error.error instanceof ErrorEvent) {
+              } else {
+                this.final = new Array<any>();
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  
+              }
+              return throwError(errorMessage);
+            })
+  
+          ).subscribe(
+  
+            (res: any) => {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-
+              alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+  
+              this.clearForm();
+              this.ngOnInit();
+              this.check_actif = true;
+              this.check_inactif = false;
+              this.onRowUnselect(event);
+              this.clearSelected();
+              this.visibleNewModal = false;
+              this.visDelete = false;
+              this.codeDemandeAchat = this.selectedDemandeAchat.code
+              this.visibleModalPrint = false;
+              this.clearSelected();
+              this.visibleNewModal = false;
+              this.visibleModalApprove = false;
+              this.visbileModalPassword = false;
+              this.visibleModalPrint = false;
+              this.disBtnDelete = false;
+  
+              this.disBtnModif = false;
             }
-            return throwError(errorMessage);
-          })
+          );
+        }
+      } else {
+        let body = {
+          codeSaisie: this.codeSaisie,
+          designationAr: this.designationAr,
+          designationLt: this.designationLt, 
+          userCreate: this.userCreate,
+          codeFournisseur: null,
+          code: this.code,
+          actif: this.actif,
+          visible: this.visible,
+          detailsDemandeAchatDTOs: this.final,
+          observation: this.observation,
+          codeEtatReception: "2", 
+          codeUserApprouver: "20",
+          codeDepartement: this.selectedDepartement,
+          dateLivraison: this.dateLivraison,
+          codeEtatApprouver: this.selectedValue,
+          userDemander: this.selectedUsers,
+          codeDepot: this.selectedDepot
+        }
 
-        ).subscribe(
 
-          (res: any) => {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
 
-            this.clearForm();
-            this.ngOnInit();
-            this.check_actif = true;
-            this.check_inactif = false;
-            this.onRowUnselect(event);
-            this.clearSelected();
-            this.visibleNewModal = false;
-            this.visDelete = false;
-            this.codeDemandeAchat = this.selectedDemandeAchat.code
-            this.visibleModalPrint = false;
-            this.clearSelected();
-            this.visibleNewModal = false;
-            this.visibleModalApprove = false;
-            this.visbileModalPassword = false;
-            this.visibleModalPrint = false;
-            this.disBtnDelete = false;
+        if (this.code != null) {
+          body['code'] = this.code;
+          console.log("Body to Update", body)
+          this.param_achat_service.ApprouveDemandeAchat(body).pipe(
+            catchError((error: HttpErrorResponse) => {
+              let errorMessage = '';
+              if (error.error instanceof ErrorEvent) {
+              } else {
+                this.final = new Array<any>();
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-            this.disBtnModif = false;
-          }
-        );
-      }
-      else {
-        console.log("Body to Post", body)
+              }
+              return throwError(errorMessage);
+            })
 
-        this.param_achat_service.PostDemandeAchatWithDetails(body).pipe(
-          catchError((error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) { } else {
-              this.final = new Array<any>();
+          ).subscribe(
+
+            (res: any) => {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+
+              this.clearForm();
+              this.ngOnInit();
+              this.check_actif = true;
+              this.check_inactif = false;
+              this.onRowUnselect(event);
+              this.clearSelected();
+              this.visibleNewModal = false;
+              this.visDelete = false;
+              this.codeDemandeAchat = this.selectedDemandeAchat.code
+              this.visibleModalPrint = false;
+              this.clearSelected();
+              this.visibleNewModal = false;
+              this.visibleModalApprove = false;
+              this.visbileModalPassword = false;
+              this.visibleModalPrint = false;
+              this.disBtnDelete = false;
+
+              this.disBtnModif = false;
             }
-            return throwError(errorMessage);
-          })
-        ).subscribe(
-          (res: any) => {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
-            this.visibleNewModal = false;
-            this.visDelete = false;
-            this.visibleModalPrint = true;
-            this.clearForm();
-            this.ngOnInit();
-            this.code;
-            this.final;
-            this.check_actif = true;
-            this.check_inactif = false;
-            this.onRowUnselect(event);
-            this.clearSelected();
-            body: { };
-            this.visibleModalPrint = true;
-            console.log("res", res);
-            this.codeDemandeAchat = res.code;
-            this.RemplirePrint(this.codeDemandeAchat);
-
-
-          }
-        )
-
-
-
+          );
+        }
       }
+
+
+      // else {
+      //   console.log("Body to Post", body)
+
+      //   this.param_achat_service.PostDemandeAchatWithDetails(body).pipe(
+      //     catchError((error: HttpErrorResponse) => {
+      //       let errorMessage = '';
+      //       if (error.error instanceof ErrorEvent) { } else {
+      //         this.final = new Array<any>();
+      //         alertifyjs.set('notifier', 'position', 'top-right');
+      //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+      //       }
+      //       return throwError(errorMessage);
+      //     })
+      //   ).subscribe(
+      //     (res: any) => {
+      //       alertifyjs.set('notifier', 'position', 'top-right');
+      //       alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
+      //       this.visibleNewModal = false;
+      //       this.visDelete = false;
+      //       this.visibleModalPrint = true;
+      //       this.clearForm();
+      //       this.ngOnInit();
+      //       this.code;
+      //       this.final;
+      //       this.check_actif = true;
+      //       this.check_inactif = false;
+      //       this.onRowUnselect(event);
+      //       this.clearSelected();
+      //       body: { };
+      //       this.visibleModalPrint = true;
+      //       console.log("res", res);
+      //       this.codeDemandeAchat = res.code;
+      //       this.RemplirePrint(this.codeDemandeAchat);
+
+
+      //     }
+      //   )
+
+
+
+      // }
     }
 
 
@@ -856,7 +961,7 @@ export class DemandeAchatComponent {
     } else {
 
 
-      this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre).pipe(
+      this.param_achat_service.GetDetailsAppelOffreByCode(this.selectedAppelOffre).pipe(
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
@@ -950,6 +1055,7 @@ export class DemandeAchatComponent {
         let valuetx19 = mnttotalHT19;
         this.totalTax19 = valuetx19.toFixed(6)
         this.tott19 = this.totalTax19;
+        this.tott7 = this.totalTax7;
       }
       if (sale.codeTaxe == 7) {
         mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
@@ -957,6 +1063,7 @@ export class DemandeAchatComponent {
         let valuetx7 = mnttotalHT7;
         this.totalTax7 = valuetx7.toFixed(6)
         this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
       }
       if (sale.codeTaxe == 0) {
         this.tott19 = this.totalTax19;
@@ -1332,7 +1439,7 @@ export class DemandeAchatComponent {
   // hethi 
   GetDemandeAchatByCode(code: number) {
 
-    this.param_achat_service.GetDemandeAchatByCode(this.code).pipe(
+    this.param_achat_service.GetDetailsDemandeAchatByCode(this.code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {

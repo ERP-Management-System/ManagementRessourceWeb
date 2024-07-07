@@ -11,7 +11,7 @@
     font-size: 15px;
     overflow-y: scroll !important;
 } */
-
+ 
 .mainbox    {
  
     display: grid;
@@ -19,7 +19,7 @@
     height: 250px;
     grid-template-areas: "head head" "sidebar  main" "sidebar  foot";
     grid-template-rows: 50px 1fr 30px;
-    grid-template-columns: 250px 1fr 0px ;
+    grid-template-columns: 80px 1fr 0px ;
     grid-gap: 5px;
     height: 100vh;
     margin: 0px;
@@ -60,7 +60,7 @@
     position: fixed;
     left: 0;
     top: 0px;
-    height: 100%;
+    height: 65%;
     width: 78px;
     background: #11101d;
     padding: 4px 4px;
@@ -116,7 +116,7 @@
 
 :host ::ng-deep  .sidebar .scroll {
     overflow-y: scroll;
-    scrollbar-width: thin;
+    scrollbar-width: none;
     padding: 0px 0px 0px 0px;
 
  

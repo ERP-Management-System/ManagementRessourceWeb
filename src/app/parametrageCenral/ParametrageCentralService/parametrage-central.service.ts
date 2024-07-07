@@ -198,9 +198,15 @@ export class ParametrageCentralService {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/all`);
   }
 
-  GetAppelOffreByCode(code: number) {
+  GetDetailsAppelOffreByCode(code: number) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_appel_offre/` + code);
+  }
+
+  
+  GetAppelOffreByCode(code: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/` + code);
   }
 
   GetAppelOffreByEtatApprouved(codeEtatApprouverOrdreAchat : number) {
@@ -336,9 +342,14 @@ export class ParametrageCentralService {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/all`);
   }
 
-  GetDemandeAchatByCode(code: number) {
+  GetDetailsDemandeAchatByCode(code: number) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_demande_achat/` + code);
+  }
+
+  GetDemandeAchatByCodeIn(code: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/` + code);
   }
 
 
@@ -352,6 +363,17 @@ export class ParametrageCentralService {
     return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/update`, body);
   }
 
+  
+  ApprouveDemandeAchat(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/approuver`, body);
+  }
+  CancelApprouveDemandeAchat(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/cancel_approuver`, body);
+  }
+  
+  
 
   DeleteDemandeAchat(code: number) {
     return this.http.delete(`${environment.API_BASE_URL_ACHAT}demande_achat/delete/` + code);
@@ -610,9 +632,9 @@ PostCategorieDepot(body: any) {
   }
 
 
-  // DeleteDepartement(code: number) {
-  //   return this.http.delete(`${environment.API_BASE_URL_ACHAT}departement/delete/` + code);
-  // }
+  DeleteUser(code: number) {
+    return this.http.delete(`${environment.API_BASE_URL_ACCESS}accessUser/delete/` + code);
+  }
 
 
 

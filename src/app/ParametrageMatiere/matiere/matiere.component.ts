@@ -123,12 +123,13 @@ export class MatiereComponent {
   designationAr: string = 'NULL';
   designationLt: string = "NULL";
   qteMinStock: number = 1;
+
   qteMaxStock: number= 1000;
   codeTypeCaisse: number = 0;
   codeBanque: string = "NULL";
   actif!: boolean;
   visible!: boolean;
-
+  prixAchat: number = 1;
   selectedModeReglement!: ModeReglement;
   // selectedCar!: string;
   onRowSelect(event: any) {
@@ -143,6 +144,7 @@ export class MatiereComponent {
     this.qteMinStock = event.data.qteMinStock;
     this.selectedStatuMatiere = event.data.codeStatuMatiere; 
     this.selectedTaxe = event.data.codeTaxe;
+    this.prixAchat = event.data.prixAchat;
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {
@@ -282,6 +284,7 @@ export class MatiereComponent {
     this.designationLt = '';
     this.actif = false;
     this.selectedTaxe = ''
+    this.prixAchat = 0.01;
     // this.codeFilialle = [];
   }
   // videtable ():void{
@@ -437,6 +440,8 @@ export class MatiereComponent {
         code: this.code,
         actif: this.actif,
         visible: this.visible,
+        codeTaxe:this.selectedTaxe,
+        prixAchat:this.prixAchat,
 
       }
       if (this.code != null) {

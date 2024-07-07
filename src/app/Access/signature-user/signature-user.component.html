@@ -127,7 +127,7 @@
         <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
             (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
         </button>
-        <button class="btn btn-default save-add-ModalSmall" (click)="PostDepartemenet($event)"> <i
+        <button class="btn btn-default save-add-ModalSmall" (click)="PostUser($event)"> <i
                 class="fa-lg fa-fw fa fa-check icon-save"></i>
             Save
         </button>
@@ -143,7 +143,7 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">User Name</label>
                         <div class="control-input  flex-6">
-                            <input id="userName" onclick="tester(this)" [disabled]="dis" maxlength="10" name="userName"
+                            <input id="userName" (blur)="removeWhitespaceUsingReplaceMethod()"     [disabled]="dis" maxlength="10" name="userName"
                                 type="text" class="onlyForCentral form-control-dev input-xs" required
                                 [(ngModel)]="userName">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
@@ -247,7 +247,7 @@
             <fieldset class="deleteForms">
                 <h4 class="text-delete ">Êtes-vous sûr de vouloir supprimer ?
                     <p-button icon="pi pi-save" data-dismiss="modal" label="supprimer"
-                        styleClass="save-delete p-button-success" (click)="DeleteDepartement(code)"></p-button>
+                        styleClass="save-delete p-button-success" (click)="DeleteUser(code)"></p-button>
                     <p-button icon="pi pi-sign-out" label="Fermer" styleClass="btn-cancel-delete p-button-danger"
                         data-dismiss="modal"> </p-button>
 

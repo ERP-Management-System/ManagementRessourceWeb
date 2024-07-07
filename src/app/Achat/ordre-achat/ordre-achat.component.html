@@ -203,7 +203,7 @@
 
 
 <!-- modal primeNG Print -->
-<p-dialog id="ModalPrint" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModalPrint"
+<p-dialog id="ModalPrint" header="Header"  [closeOnEscape]="true" [(visible)]="visibleModalPrint"
     data-backdrop="false" [modal]="true" styleClass="ModalPrint" [draggable]="false" [resizable]="false">
 
 
@@ -242,7 +242,7 @@
 
 <!--New modal primeNG  ADD -->
 <p-dialog id="NewModal" header="Header" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
-    [scrollLeft]="true" [(visible)]="visibleNewModal" data-backdrop="false" [modal]="true"
+     [(visible)]="visibleNewModal" data-backdrop="false" [modal]="true"
     styleClass="NewModalAddOrderNew" [draggable]="false" [resizable]="false">
     <!-- <div> -->
     <ng-template pTemplate="header">
@@ -288,7 +288,7 @@
                             <p-dropdown   [resetFilterOnHide]=true class="dropdown"
                                 [options]="listAppelOffreRslt"  
                                 [(ngModel)]="selectedAppelOffre" [filter]="true" [showClear]="true"
-                                [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
+                                [style]="{'width':'100%'}" (onChange)="GetDemandeAchatWhereCodeIn()" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true" >
                             </p-dropdown>
 
@@ -535,7 +535,7 @@
                             
                             <br>
                             <!-- ///// table tva et TTC  -->
-                            <div class="flex-row-start flex-12">
+                             <div class="flex-row-start flex-12">
                                 <section class="flex-row-start flex-8">
 
                                     <fieldset class="flex-row-start flex-5">
@@ -547,16 +547,16 @@
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Totals Taxe 19</td>
-                                                    <input disabled="" step='0.01' [(ngModel)]="totalTax19"
+                                                    <input disabled="" step='0.01' [(ngModel)]="tott19 "
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" id="totalTax19" name="totalTax19" required />
+                                                        class="InputQte" id="totalTax19" name="totalTax19" required  />
                                                 </tr>
 
 
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Totals Taxe 7</td>
-                                                    <input disabled="" step="0.001" [(ngModel)]="TotalTax7"
+                                                    <input disabled="" step="0.001" [(ngModel)]="tott7"
                                                         style="border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
                                                         class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
                                                         required minlength="4" maxlength="8" size="10" />
@@ -566,20 +566,18 @@
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Timbre</td>
-                                                    <input disabled="" step="0.001" [(ngModel)]="mntTimbre"
+                                                    <input disabled=""  [(ngModel)]="mntTimbre"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
-                                                        required minlength="4" maxlength="8" size="10" />
+                                                        class="InputQte" type="number"  />
                                                 </tr>
 
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Total</td>
-                                                    <input step="0.001"  [(ngModel)]="totalTaxeTmb"
+                                                    <input step="0.001"   [(ngModel)]="TotalTaxeTmb"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        class="InputQte" type="number" id="TotalTaxeTmb" name="TotalTaxeTmb"
                                                         required minlength="4" maxlength="8" size="10" />
-                                                       
                                                 </tr>
                                             </ng-template>
                                         </p-table>
@@ -595,8 +593,8 @@
                                             <ng-template pTemplate="footer" style="font-weight: 400 !important;">
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Totals</td>
-                                                    <input step='0.01' [(ngModel)]="TotalTTCValue"
+                                                    <td colspan="3" class="text-right">Prix Total HT</td>
+                                                    <input step='0.01' [(ngModel)]="TotalHTValue"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
                                                         class="InputQte" id="valeurTVA" name="valeurTVA" required />
                                                  </tr>
@@ -615,7 +613,15 @@
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
                                                     <td colspan="3" class="text-right">Remise En %</td>
-                                                    <input step="0.001" [(ngModel)]="remiseEnPourcent"
+                                                    <input step="0.001" (change)="valueRemiseChanged()" [(ngModel)]="remiseEnPourcent"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Monatant Net</td>
+                                                    <input step="0.001" [(ngModel)]="mntNet"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
                                                         class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
                                                         required minlength="4" maxlength="8" size="10" />
@@ -650,7 +656,7 @@
 
 <!--modal Demande Direct  ADD -->
 <p-dialog id="NewaddOrdreDirect" header="Header" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
-    [scrollLeft]="true" [(visible)]="visibleModalDdeDirect" data-backdrop="false" [modal]="true"
+     [(visible)]="visibleModalDdeDirect" data-backdrop="false" [modal]="true"
     styleClass="NewModalAddOrderNew" [draggable]="false" [resizable]="false">
     <!-- <div> -->
     <ng-template pTemplate="header">

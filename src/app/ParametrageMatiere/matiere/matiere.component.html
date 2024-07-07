@@ -249,7 +249,28 @@ styleClass="ModalAdd" [draggable]="false" [resizable]="false">
                 </section>
 
             </div>
+            <div class="flex-row-space">
+                <section class="flex-row-space flex-12">
+                    <label class="control-label flex-6">Derniere Prix Achat </label>
+                    <div class="control-input flex-6">
+                        <input type="number" id="qteMinStock" maxlength="200" name="qteMinStock"
+                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="prixAchat"
+                            [required]="true">
+                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                    </div>
+                </section>
+                <section class="flex-row-space flex-12">
+                    <label class="control-label flex-6">Text</label>
+                    <div class="control-input flex-6">
+                        <input type="number" id="qteMaxStock" maxlength="200" name="qteMaxStock"
+                            class="onlyForCentral form-control-dev input-xs"  
+                            [required]="true">
+                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                    </div>
+                </section>
+                
 
+            </div>
 
 
 

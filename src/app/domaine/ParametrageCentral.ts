@@ -282,8 +282,9 @@ export interface DemandeAchat {
   designationAr: string,
   designationLt: string,
   actif: boolean,
-  visible: boolean
-  ,
+  visible: boolean,
+  dateCreate:Date,
+  
   typeCircuitAchatDTO: {
     code: number,
     codeSaisie: string,

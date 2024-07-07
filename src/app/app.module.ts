@@ -140,7 +140,6 @@ import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import { LoginComponent } from './login/login.component';
-import { TableComponent } from './Achat/demande-achat/table-component';
 import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
 import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
 import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
@@ -159,7 +158,7 @@ import { SignatureUserComponent } from './Access/signature-user/signature-user.c
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent,TableComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent
+  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,

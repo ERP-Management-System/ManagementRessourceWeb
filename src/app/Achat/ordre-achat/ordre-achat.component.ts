@@ -28,35 +28,35 @@ export class OrdreAchatComponent {
 
   constructor(private confirmationService: ConfirmationService,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
- 
+
   }
- 
 
-  
-  
-DataCodeSaisie = new Array<Compteur>(); 
-GetCodeSaisie(){
-  this.param_achat_service.GetcompteurCodeSaisie("codeSaisieOA").pipe(
-    catchError((error: HttpErrorResponse) => {
-      let errorMessage = '';
-      if (error.error instanceof ErrorEvent) { } else {
-        alertifyjs.set('notifier', 'position', 'top-right');
-        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-      }
-      return throwError(errorMessage);
+
+
+  DataCodeSaisie = new Array<Compteur>();
+  GetCodeSaisie() {
+    this.param_achat_service.GetcompteurCodeSaisie("codeSaisieOA").pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.DataCodeSaisie = data;
+      this.codeSaisie = data.prefixe + data.suffixe;
+
+
     })
-
-  ).subscribe((data: any) => {
-    this.DataCodeSaisie = data;
-    this.codeSaisie = data.prefixe + data.suffixe;
-     
- 
-  })
-}
+  }
 
   selectedMatiere: any;
- 
+
 
   pdfData!: Blob;
   isLoading = false;
@@ -71,36 +71,36 @@ GetCodeSaisie(){
       { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
       { field: 'unite', header: 'Unite' },
       { field: 'coloris', header: 'Coloris' },
-      { field: 'quantite', header: 'Quantite' },  
+      { field: 'quantite', header: 'Quantite' },
     ];
 
 
   }
-  codeDemandeAchat!:number;
-  RemplirePrint(codeDemandeAchat:any): void {
-    if(this.selectedOrdreAchat == null){
+  codeDemandeAchat!: number;
+  RemplirePrint(codeDemandeAchat: any): void {
+    if (this.selectedOrdreAchat == null) {
       alertifyjs.set('notifier', 'position', 'top-right');
-      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>'  + "Select any row please");
-    this.visibleModalPrint = false;
-    }else{ 
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Select any row please");
+      this.visibleModalPrint = false;
+    } else {
       this.param_achat_service.getDemandeAchatEdition(codeDemandeAchat).subscribe(blob => {
         const reader = new FileReader();
         const binaryString = reader.readAsDataURL(blob);
-        reader.onload = (event: any) => { 
+        reader.onload = (event: any) => {
           this.pdfData = event.target.result;
           this.isLoading = false;
           if (this.pdfData) {
             this.handleRenderPdf(this.pdfData);
           }
         };
-  
+
         reader.onerror = (event: any) => {
           console.log("File could not be read: " + event.target.error.code);
         };
       });
     }
 
-    
+
 
   }
 
@@ -112,7 +112,7 @@ GetCodeSaisie(){
     const pdfObject = PDFObject.embed(data, '#pdfContainer', options);
   }
 
- 
+
   clear(table: Table) {
     table.clear();
     this.searchTerm = '';
@@ -126,7 +126,7 @@ GetCodeSaisie(){
     this.visible = false;
     this.codeSaisie = '';
     this.selectedModeReglement = '';
-    this.selectedMatiereToAdd = ''; 
+    this.selectedMatiereToAdd = '';
     this.onRowUnselect(event);
     this.listDataOAWithDetails = new Array<any>();
     this.final = new Array<any>();
@@ -136,16 +136,16 @@ GetCodeSaisie(){
   closeModalPrint() {
     this.visibleModalPrint = false;
     this.onRowUnselect(event);
-    this.clearSelected(); 
-    this.selectedOrdreAchat =null ; 
-    this.pdfData = new  Blob; 
- 
+    this.clearSelected();
+    this.selectedOrdreAchat = null;
+    this.pdfData = new Blob;
+
   }
   check_actif = false;
   check_inactif = false;
 
   formHeader = ".....";
-  searchTerm = ''; 
+  searchTerm = '';
   visibleNewModal: boolean = false;
   visibleModalPrint: boolean = false;
   visibleModalDdeDirect: boolean = false;
@@ -158,14 +158,14 @@ GetCodeSaisie(){
   codeBanque: string = "NULL";
   actif!: boolean;
   visible!: boolean;
- 
- 
-  selectedAppelOffre!:any;
+
+
+  selectedAppelOffre!: any;
   selectedOrdreAchat!: any;
   selectedDemandeAchat!: any;
-  selectedDepot:any;
- 
-  selectedModeReglement: any; 
+  selectedDepot: any;
+
+  selectedModeReglement: any;
   onRowSelect(event: any) {
     this.code = event.data.code;
     this.actif = event.data.actif;
@@ -176,8 +176,8 @@ GetCodeSaisie(){
     this.selectedModeReglement = event.data.codeModeReglement;
     this.observation = event.data.observation;
     this.selectedDemandeAchat = event.data.codeDemandeAchat;
-    this.selectedAppelOffre =  event.data.codeAppelOffre  
-    console.log('vtData : ', event ,  'selected AO code : ' ,this.selectedOrdreAchat);
+    this.selectedAppelOffre = event.data.codeAppelOffre
+    console.log('vtData : ', event, 'selected AO code : ', this.selectedOrdreAchat);
     // 
 
   }
@@ -189,14 +189,14 @@ GetCodeSaisie(){
     this.selectedMatiereToAdd = null;
     this.observation = null;
     this.selectedOrdreAchat = '';
-    this.selectedDemandeAchat='';
-    this.selectedAppelOffre='';
+    this.selectedDemandeAchat = '';
+    this.selectedAppelOffre = '';
     // console.log(" selectedDemandeAchat", this.selectedOrdreAchat)
-     
+
   }
 
 
- 
+
 
   DeleteOrdreAchat(code: any) {
     this.param_achat_service.DeleteOrdreAchat(code).pipe(
@@ -230,14 +230,14 @@ GetCodeSaisie(){
     this.actif = false;
     this.visible = false;
     this.listDataOAWithDetails = new Array<any>();
- 
+
 
   }
- 
+
 
 
   public onOpenModal(mode: string) {
- 
+
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
@@ -245,7 +245,7 @@ GetCodeSaisie(){
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'Newadd') {
       button.setAttribute('data-target', '#NewModal');
-      this.formHeader = "Nouveau Ordre Achat"; 
+      this.formHeader = "Nouveau Ordre Achat";
 
       this.listDataOAWithDetails = new Array<any>();
       this.onRowUnselect(event);
@@ -259,21 +259,21 @@ GetCodeSaisie(){
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
       this.GelAllAppelOffre();
-      this.GetDemandeAchat();
+      // this.GetDemandeAchatWhereCodeIn();
       this.GetCodeSaisie();
 
     } else
       if (mode === 'edit') {
- 
-        if (this.code == undefined) { 
 
-          this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
+        if (this.code == undefined) {
+
+          this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
           this.clearForm();
           this.onRowUnselect(event);
           alertifyjs.set('notifier', 'position', 'top-right');
 
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Choise A row Please");
- 
+
 
         } else {
 
@@ -283,7 +283,7 @@ GetCodeSaisie(){
           this.GelMatiereActifVisible();
 
 
-          this.GetDemandeAchat();
+          // this.GetDemandeAchatWhereCodeIn();
           this.onRowSelect;
           this.GelAllModeReglement();
 
@@ -292,7 +292,7 @@ GetCodeSaisie(){
           this.GetOrdreAchatByCode(this.selectedOrdreAchat);
           this.visibleNewModal = true;
           this.visDelete = false;
-          this.visibleModalPrint=false;
+          this.visibleModalPrint = false;
         }
 
       } else
@@ -300,21 +300,21 @@ GetCodeSaisie(){
         if (mode === 'Delete') {
 
           if (this.code == undefined) {
-            this.visDelete = false; this.visibleNewModal = false ;this.visibleModalPrint=false;
+            this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
             this.onRowUnselect;
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error("Choise A row Please"); 
+            alertifyjs.error("Choise A row Please");
           } else {
 
             {
               button.setAttribute('data-target', '#ModalDelete');
               this.formHeader = "Delete Ordre Achat"
- 
-              this.visDelete = true; 
+
+              this.visDelete = true;
             }
           }
 
-        } 
+        }
     if (mode === 'Print') {
 
 
@@ -329,9 +329,9 @@ GetCodeSaisie(){
   }
 
 
-  
+
   public onOpenModalOrderDirect(mode: string) {
- 
+
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
@@ -339,7 +339,7 @@ GetCodeSaisie(){
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'NewaddOrdreDirect') {
       button.setAttribute('data-target', '#NewModalDdeDirect');
-      this.formHeader = "Nouveau Ordre Achat Direct"; 
+      this.formHeader = "Nouveau Ordre Achat Direct";
 
       this.listDataOAWithDetails = new Array<any>();
       this.onRowUnselect(event);
@@ -355,19 +355,19 @@ GetCodeSaisie(){
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
 
-    }  
+    }
 
   }
 
   userCreate = "soufien";
-  
+
   GetDataFromTableEditor: any;
   final = new Array<any>();
   codeColoris: any;
   qteOrdre: any;
   codeSaisieMaitere: any;
   codeUnite: any;
-  observation: any;  
+  observation: any;
   PostDemandeAchat() {
 
 
@@ -446,7 +446,7 @@ GetCodeSaisie(){
             this.visibleNewModal = false;
             this.visDelete = false;
             this.codeDemandeAchat = this.selectedOrdreAchat.code
-            this.visibleModalPrint = false; 
+            this.visibleModalPrint = false;
           }
         );
       }
@@ -478,12 +478,12 @@ GetCodeSaisie(){
             this.check_inactif = false;
             this.onRowUnselect(event);
             this.clearSelected();
-            body : {};
-            this.visibleModalPrint = true; 
-            console.log("res",res);
+            body: { };
+            this.visibleModalPrint = true;
+            console.log("res", res);
             this.codeDemandeAchat = res.code;
-            this.RemplirePrint(this.codeDemandeAchat); 
-         
+            this.RemplirePrint(this.codeDemandeAchat);
+
 
           }
         )
@@ -611,7 +611,7 @@ GetCodeSaisie(){
   }
 
 
- 
+
   dataAppelOffre = new Array<AppelOffre>();
   listAppelOffrePushed = new Array<any>();
   listAppelOffreRslt = new Array<any>();
@@ -631,7 +631,7 @@ GetCodeSaisie(){
       this.dataAppelOffre = data;
       this.listAppelOffrePushed = [];
       for (let i = 0; i < this.dataAppelOffre.length; i++) {
-        this.listAppelOffrePushed.push({ label: this.dataAppelOffre[i].designationAr, value: this.dataAppelOffre[i].code })
+        this.listAppelOffrePushed.push({ label: this.dataAppelOffre[i].codeSaisie, value: this.dataAppelOffre[i].code })
       }
       this.listAppelOffreRslt = this.listAppelOffrePushed;
     })
@@ -689,7 +689,7 @@ GetCodeSaisie(){
       this.listUniteRslt = this.listUnitePushed;
     })
   }
- 
+
   DataColoris = new Array<Coloris>();
   listColorisPushed = new Array<any>();
   listColorisRslt = new Array<any>();
@@ -742,16 +742,16 @@ GetCodeSaisie(){
     var exist = false;
 
     for (var y = 0; y < this.listDataOAWithDetails.length; y++) {
-      if (this.selectedMatiereToAdd != this.listDataOAWithDetails[y].code) {
+      if (this.selectedMatiereToAdd != this.listDataOAWithDetails[y].codeMatieres) {
         exist = false;
       } else {
         exist = true;
-
-        alertifyjs.set('notifier', 'position', 'top-left');
-        alertifyjs.error('Item Used');
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>'  + " Matiere Deja Existe");
+ 
         break;
       }
-    
+
 
     }
     // control remplire codeUnite + codeColoris + qte 
@@ -807,9 +807,9 @@ GetCodeSaisie(){
   getIconCirInDirect() {
     return "url('assets/assets/images/cir_indirect.png')";
   }
- 
 
-  
+
+
   dataDepot = new Array<Depot>();
   listDepotPushed = new Array<any>();
   listDepotRslt = new Array<any>();
@@ -835,89 +835,182 @@ GetCodeSaisie(){
     })
   }
 
-  
-  
+
+
   dataDemandeAchat = new Array<DemandeAchat>();
   listDemandeAchatPushed = new Array<any>();
   listDemandeAchatRslt = new Array<any>();
-  GetDemandeAchat() {
-    this.param_achat_service.GetDemandeAchat().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  // GetDemandeAchat() {
+  //   this.param_achat_service.GetDemandeAchat().pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       let errorMessage = '';
+  //       if (error.error instanceof ErrorEvent) { } else {
+  //         alertifyjs.set('notifier', 'position', 'top-right');
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-        }
-        return throwError(errorMessage);
-      })
+  //       }
+  //       return throwError(errorMessage);
+  //     })
 
-    ).subscribe((data: any) => {
-      this.dataDemandeAchat = data;
-      this.listDemandeAchatPushed = [];
-      for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-        this.listDemandeAchatPushed.push({ label: this.dataDemandeAchat[i].codeSaisie, value: this.dataDemandeAchat[i].code })
-      }
-      this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-    }
-    )
-  }
+  //   ).subscribe((data: any) => {
+  //     this.dataDemandeAchat = data;
+  //     this.listDemandeAchatPushed = [];
+  //     for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+  //       this.listDemandeAchatPushed.push({ label: this.dataDemandeAchat[i].codeSaisie, value: this.dataDemandeAchat[i].code })
+  //     }
+  //     this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+  //   }
+  //   )
+  // }
 
 
 
-  valeurTVA: any;
-  remiseEnPourcent: any;
-  prixTotalTTC: any;
-  TotalTTCValue: any;
-  totalTax19: any;
-  TotalTax7: any;
-  mntTimbre: any;
- totalTaxeTmb!: number;
+  // valeurTVA: any;
+  // remiseEnPourcent: any;
+  // prixTotalTTC: any;
+  // mntNet: any;
+  // TotalHTValue: any;
+  // totalTax19: any;
+  // TotalTax7: any;
+  // mntTimbre: any;
+  // TotalTaxeTmb: any;
+  // TOTHT!: any;
+  // TOTTTC!: any;
+  // calculateThisYearTotal() {
+  //   let totalHT = 0.000000;
+  //   let totalTTC = 0.000000;
+  //   let mnttotalHT19 = 0.000000;
+  //   let mnttotalHT0 = 0.000000;
+  //   let mnttotalHT7 = 0.000000;
+  //   for (let sale of this.listDataOAWithDetails) {
+  //     totalHT += +sale.prixTotalHT;
+  //     totalTTC += +sale.prixTotTTC;
+  //     let mnttaxe = sale.codeTaxe / 100;
+  //     if (sale.codeTaxe == 19) {
+
+  //       mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
+  //       this.totalTax19 = mnttotalHT19;
+  //       let valuetx19 = this.totalTax19;
+  //       this.totalTax19 = valuetx19.toFixed(6);
+
+  //     }
+  //     if (sale.codeTaxe == 7) {
+  //       mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+  //       this.TotalTax7 = mnttotalHT7;
+  //       let valuetx7 = this.TotalTax7;
+  //       this.TotalTax7 = valuetx7.toFixed(6);
+  //     } if (sale.codeTaxe == 0) {
+  //       this.TotalTax7 = this.TotalTax7;
+  //       this.totalTax19 = this.totalTax19;
+  //     }
+
+
+  //   }
+  //   console.log("total", totalHT)
+  //   this.TOTHT = totalHT;
+  //   let value2 = this.TOTHT;
+  //   this.TOTHT = value2.toFixed(6); 
+  //   this.TotalHTValue = this.TOTHT;
+
+
+  //   this.TOTTTC = totalTTC;
+  //   let value22 = this.TOTTTC;
+  //   this.TOTTTC = value22.toFixed(6); 
+  //   this.prixTotalTTC = this.TOTTTC;
+
+  //   this.CalculeTaxeTimbre();
+
+  // }
+
+  
   thisYearTotal!: any;
+  valeurTVA: any;
+  remiseEnPourcent: any = 0.0000;
+  mntNet: any;
+  prixTotalTTC: any = 0.000000;
+  TotalHTValue: any = 0.000000;
+  totalTax19: any = 0.000000;
+  totalTax7: any = 0.000000;
+  mntTimbre: any;
+  TotalTaxeTmb: any;
+  tott19!: number;
+  tott7!: number;
   calculateThisYearTotal() {
     let total = 0.000000;
     let mnttotalHT19 = 0.000000;
-    let mnttotalHT0 = 0.000000;
     let mnttotalHT7 = 0.000000;
+    let pxTotTTc = 0.00000;
     for (let sale of this.listDataOAWithDetails) {
-      total += +sale.prixTotTTC;
+      total += +sale.prixTotalHT;
       let mnttaxe = sale.codeTaxe / 100;
       if (sale.codeTaxe == 19) {
 
         mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
-        this.totalTax19 = mnttotalHT19;
-        let valuetx19 = this.totalTax19;
-        this.totalTax19 = valuetx19.toFixed(6);
-
+        let valuetx19 = mnttotalHT19;
+        this.totalTax19 = valuetx19.toFixed(6)
+        this.tott19 = this.totalTax19;
+        this.tott7 = this.totalTax7;
       }
       if (sale.codeTaxe == 7) {
         mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
-        this.TotalTax7 = mnttotalHT7;
-        let valuetx7 = this.TotalTax7;
-        this.TotalTax7 = valuetx7.toFixed(6);
-      }if(sale.codeTaxe == 0){
-        this.TotalTax7=mnttotalHT7;
-        this.totalTax19=mnttotalHT19;
-      }
 
+        let valuetx7 = mnttotalHT7;
+        this.totalTax7 = valuetx7.toFixed(6)
+        this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
+      }
+      if (sale.codeTaxe == 0) {
+        this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
+      } if( sale.codeTaxe == 0 && sale.codeTaxe == 7){
+        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+
+        let valuetx7 = mnttotalHT7;
+        this.totalTax7 = valuetx7.toFixed(6)
+        this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
+      }if( sale.codeTaxe == 0 && sale.codeTaxe == 19){
+        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
+        let valuetx19 = mnttotalHT19;
+        this.totalTax19 = valuetx19.toFixed(6)
+        this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
+      }if( sale.codeTaxe == 0 && sale.codeTaxe == 19 && sale.codeTaxe == 7){
+        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
+        let valuetx19 = mnttotalHT19;
+        this.totalTax19 = valuetx19.toFixed(6);
+        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+
+        let valuetx7 = mnttotalHT7;
+        this.totalTax7 = valuetx7.toFixed(6)
+
+        this.tott7 = this.totalTax7;
+        this.tott19 = this.totalTax19;
+      }
+       
 
     }
-    console.log("total", total)
+
+
+
     this.thisYearTotal = total;
     let value2 = this.thisYearTotal;
     this.thisYearTotal = value2.toFixed(6);
 
-    this.TotalTTCValue = this.thisYearTotal;
-  
+    this.TotalHTValue = this.thisYearTotal;
+
 
     this.CalculeTaxeTimbre();
-    
+
+    //pxTotTTc.toFixed(6);
+
   }
-  
+
   codeTaxeA: any;
   DataTimbre = new Array<Param>;
-  DataTimbrePushed = new Array<any>;
-  DataTimbreReslt = new Array<any>;
+  DataTimbrePushed = new Array<any>();
+  DataTimbreReslt = new Array<any>();
+
   CalculeTaxeTimbre() {
 
 
@@ -934,12 +1027,27 @@ GetCodeSaisie(){
 
     ).subscribe((data: any) => {
       this.DataTimbre = data;
-      this.mntTimbre = data.valeur
+      // let dttimbre = data.valeur.toFixed(6)
+      this.mntTimbre = data.valeur;
 
+      let totTaxTimb = +this.mntTimbre + +this.tott7 + +this.tott19;
+      this.TotalTaxeTmb = totTaxTimb.toFixed(6);
+      let pxTotTTc = +this.TotalHTValue + +this.TotalTaxeTmb;
+
+      this.prixTotalTTC = pxTotTTc.toFixed(6);
+      this.valueRemiseChanged();
     })
-    
 
- 
+
+
+  }
+
+  valueRemiseChanged() {
+    let poucentRemise = this.remiseEnPourcent / 100;
+    let mntRemise = +poucentRemise * this.prixTotalTTC;
+    let mntNetpayee = +this.prixTotalTTC - mntRemise;
+    this.mntNet = mntNetpayee.toFixed(6);
+
   }
 
 
@@ -983,13 +1091,13 @@ GetCodeSaisie(){
       this.listDataOAWithDetails = new Array<any>();
     } else {
 
-      this.param_achat_service.GetDemandeAchatByCode(this.selectedDemandeAchat).pipe(
+      this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDemandeAchat).pipe(
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
-  
+
           }
           return throwError(errorMessage);
         })
@@ -1034,7 +1142,7 @@ GetCodeSaisie(){
           this.listDataOAWithDetails[y].prixTotalHT = value2.toFixed(6);
 
           console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
-           
+
 
 
         }
@@ -1045,6 +1153,63 @@ GetCodeSaisie(){
 
       })
     }
+
+
+  }
+
+  codeDemandeAchats: any;
+  GetDemandeAchatWhereCodeIn() {
+    this.listDemandeAchatRslt = []
+    this.listDataOAWithDetails = new Array<any>(); 
+
+    if (this.selectedAppelOffre == null) {
+
+    } else {
+
+
+
+      this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe((data1: any) => {
+        this.dataAppelOffre = data1;
+        this.codeDemandeAchats = data1.codeDemandeAchat 
+        this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+            }
+            return throwError(errorMessage);
+          })
+
+        ).subscribe((data2: any) => {
+          this.dataDemandeAchat = data2;
+          // console.log("data length", data2);
+          this.listDemandeAchatPushed = [];
+          // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
+          // }
+          // console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
+          this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+        }
+        )
+
+
+      })
+
+    }
+
 
 
   }

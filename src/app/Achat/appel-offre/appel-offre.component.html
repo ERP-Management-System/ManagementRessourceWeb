@@ -15,7 +15,7 @@
             <div class="card">
                 <p-toast></p-toast>
                 <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal"
-                    data-target="#ModalPassword"  ></p-contextMenu>
+                    data-target="#ModalPassword"></p-contextMenu>
 
                 <p-table #dt1 [contextMenu]="cm" [(contextMenuSelection)]="selectedAppelOffre" [value]="dataAppelOffre"
                     [globalFilterFields]="['designationAr', 'designationLt']" selectionMode="single"
@@ -25,8 +25,8 @@
 
                     <ng-template pTemplate="caption" class="col-md-12">
 
-                     
-                            
+
+
                         <mat-radio-group aria-label="Select an option" class="radio-actif-inactif">
 
                             <!-- <mat-radio-button value="actif" [checked]="check_actif === true" (click)="GetModeReglementActif()" (click)="clear(dt1)">متدوال</mat-radio-button>
@@ -34,7 +34,7 @@
                         </mat-radio-group>
 
                         <div class="recherche col-md-6">
-                            <div style="width: 140px;">
+                            <!-- <div style="width: 140px;">
                                 <p-dropdown  (onChange)="GetCodeEtatApprouver()"  
                                 (onClear)="ngOnInit()"
                                 [options]="countries" 
@@ -61,8 +61,8 @@
                                             <div style="padding-left: 20px;"  >    {{ country.name }}</div>
                                         </div>
                                     </ng-template>
-                            </p-dropdown>
-                              </div>
+                            </p-dropdown> -->
+                            <!-- </div> -->
                             <mat-label class="label-recherche"> Designation : </mat-label>
                             <span class="p-input-icon-left ml-auto">
                                 <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
@@ -95,28 +95,30 @@
                                 <div class="bouton_style-2">Ajouter</div>
                                 <mat-icon class="add-icon">add</mat-icon>
                             </button>
-                            <button [disabled]="disBtnModif" data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
-                                data-original-title="edit" data-toggle="modal" data-target="#NewModal"
-                                (click)="onOpenModal('edit')">
+                            <button [disabled]="disBtnModif" data-backdrop="false" type="button"
+                                class="Bouton-add-new1 btn  btn-default " data-original-title="edit" data-toggle="modal"
+                                data-target="#NewModal" (click)="onOpenModal('edit')">
                                 <!-- <button  type="button" class="Bouton-add-new1 btn btn-labeled btn-default " data-original-title="Edit" data-toggle="modal" data-target="#Modal" (click)="onOpenModal('edit')"> -->
 
                                 <div class="bouton_style-2">Modifier</div>
                                 <mat-icon class="modif-icon">create</mat-icon>
                             </button>
-                            <button *ngIf="VisBtnDeleteAO" [disabled]="disBtnDelete" type="button" class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
+                            <button *ngIf="VisBtnDeleteAO" [disabled]="disBtnDelete" type="button"
+                                class="Bouton-add-new2 btn  btn-default " data-original-title="Delete"
                                 data-toggle="modal" data-target="#ModalDelete" (click)="onOpenModal('Delete')">
                                 <div class="bouton_style-2">Supprimer</div>
                                 <mat-icon class="delete-icon">delete</mat-icon>
                             </button>
-                            <button *ngIf="VisBtnPrintAO"  data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
+                            <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
                                 data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
                                 (click)="onOpenModal('Print')">
                                 <div class="bouton_style-2">Imprimer</div>
                                 <mat-icon class="print-icon"> local_printshop</mat-icon>
                             </button>
 
-                            <button [disabled]="disBtnValider" data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
-                                data-original-title="ModalApprove" data-toggle="modal" data-target="#ModalApprove"
+                            <button [disabled]="disBtnValider" data-backdrop="false" type="button"
+                                class="Bouton-add-new2 btn btn-default " data-original-title="ModalApprove"
+                                data-toggle="modal" data-target="#ModalApprove"
                                 (click)="ApproveAppelOffre('ApproveModal')">
                                 <div class="bouton_style-2">Valider</div>
                                 <mat-icon class="modif-icon"> save</mat-icon>
@@ -128,27 +130,30 @@
 
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
-                            <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.</th>
+                            <!-- <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.</th> -->
                             <th style="width: 120px;">code Saisie</th>
-                            <th>Designation Arabic</th>
-                            <th>Designation Latin</th> 
+                            <th>Mode Reglement</th>
+                            <th>Date Creation</th>
+                            <th>Demande Achat</th>
                             <th>Date Livraison</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
                         <tr [pSelectableRow]="fl" [pContextMenuRow]="fl">
-                            <td style="font-size: 15px !important; width: 50px; " class="warning"
+                            <!-- <td style="font-size: 15px !important; width: 50px; " class="warning"
                                 [ngStyle]="{'background-image': (fl.codeEtatApprouverOrdreAchat == 2) ? (getPicValider()) : ((fl.codeEtatApprouverOrdreAchat == 1) ? (getPicNonEncore()) : (getPicRefuser())) }"
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
-                            </td>
+                            </td> -->
 
                             <!-- <td style="font-size: 15px !important; width: 50px; " class="warning"
                                 [ngStyle]="{'background-image': (fl.codeEtatReception < 3) ? (getPicNonReceptionner()) : ((fl.codeEtatReception < 6) ? (getPicReceptionnerPartiell()) : (getPicReceptionnerFinal())) }"
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
                             </td> -->
                             <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td>
-                            <td style="font-size: 15px !important;">{{fl.designationAr}}</td>
-                            <td style="font-size: 15px !important;">{{fl.designationLt}}</td> 
+                            <td style="font-size: 15px !important;">{{fl.modeReglementDTO.designationAr}}</td>
+                            <td style="font-size: 15px !important;"> {{fl.dateCreate | date : "dd/MM/yyyy HH:mm:ss" }}
+                            </td>
+                            <td style="font-size: 15px !important;">{{fl.demandeAchatDTO.codeSaisie}}</td>
                             <td style="font-size: 15px !important;">{{fl.dateLivraison}}</td>
                         </tr>
                     </ng-template>
@@ -257,7 +262,7 @@
 <p-dialog id="NewModal" header="Header" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
     [scrollLeft]="true" [(visible)]="visibleNewModal" data-backdrop="false" [modal]="true"
     styleClass="NewModalAddOrderNew" [draggable]="false" [resizable]="false">
- 
+
     <ng-template pTemplate="header">
 
 
@@ -292,49 +297,48 @@
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Code</label>
+                        <label class="control-label flex-3">Code</label>
                         <div class="control-input  flex-6">
-                            <input   disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
+                            <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
-                    <section class="flex-row-start flex-6">
-                        <p-checkbox styleClass="ChkActif" [binary]="true" name="actif" value="val1" label="Actif"
+                    <!-- <section class="flex-row-start flex-6"> -->
+                    <!-- <p-checkbox styleClass="ChkActif" [binary]="true" name="actif" value="val1" label="Actif"
                             [(ngModel)]="actif"></p-checkbox>
 
                         <p-checkbox [binary]="true" name="visible" value="val2" label="Visible"
                             [(ngModel)]="visible"></p-checkbox>
 
-                    </section>
+                    </section> -->
                 </div>
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Desgiantion Arabic </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="30" name="designation_ar"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div>
-                    </section>
-                    <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Desgiantion Latine </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_lt" maxlength="30" name="designation_lt"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div>
-                    </section>
+                    <div class="flex-row-start flex-12">
+                        <section class="flex-row-start flex-6">
+                            <label class="control-label flex-3">Demande Achat</label>
+                            <div class="dop control-input flex-6">
+                                <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
+                                    [options]="listDdeAchatRslt" [(ngModel)]="selectedDdeAchat" [filter]="true"
+                                    (onChange)="GetDemandeAchatByCode(selectedDdeAchat)" [showClear]="true"
+                                    [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
+                                    placeholder="&nbsp;" [required]="true" [lazy]="true" #ModeReglementDde="ngModel">
+                                </p-dropdown>
+
+
+                                <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            </div>
+                        </section>
+                    </div>
 
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Date Livraison</label>
                         <div class="control-input flex-6">
-                             
-                            <p-calendar [(ngModel)]="dateLivraison"  (onSelect)="transformDateFormat()" (onChange)="transformDateFormat()"  [showButtonBar]="true" [readonlyInput]="true"
+
+                            <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -390,12 +394,9 @@
         <div class="flex-row-start flex-12">
             <fieldset class="flex-6">
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-space flex-5">
+                    <!-- <section class="flex-row-space flex-5">
                         <label class="control-label flex-3">Matiere</label>
-                        <div class="dop control-input flex-10">
-
-
-                            <!-- // for new table  -->
+                        <div class="dop control-input flex-10"> 
 
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listMatiereRslt"
                                 [(ngModel)]="selectedMatiereToAdd" [filter]="true" [disabled]="disp" [showClear]="true"
@@ -409,7 +410,7 @@
                             <br />
                         </div>
 
-                    </section>
+                    </section> -->
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6 tab">
@@ -544,8 +545,8 @@
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Save
                     </button>
-                    <button class=" btn btn-default cancel-add-ModalLarge" (click)="CloseModal()" :closable="true" data-dismiss="modal"> <i
-                            class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+                    <button class=" btn btn-default cancel-add-ModalLarge" (click)="CloseModal()" :closable="true"
+                        data-dismiss="modal"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
                     </button>
                 </div>
             </div>
@@ -560,17 +561,23 @@
                     <div class="control-input  flex-6">
                         <p-radioButton name="groupname" value=2 [(ngModel)]="selectedValue"
                             inputId="Valider"></p-radioButton>
-                        <label for="city1" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Valider</label>
+                        <label for="city1"
+                            style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;">
+                            Valider</label>
                     </div>
                     <div class="control-input  flex-6">
                         <p-radioButton name="groupname" value=3 [(ngModel)]="selectedValue"
                             inputId="Refuser"></p-radioButton>
-                        <label for="city2" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Refuser</label>
+                        <label for="city2"
+                            style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;">
+                            Refuser</label>
                     </div>
                     <div class="control-input  flex-6">
                         <p-radioButton name="groupname" value=1 [(ngModel)]="selectedValue"
                             inputId="Encours"></p-radioButton>
-                        <label for="city2" style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;"> Encours</label>
+                        <label for="city2"
+                            style="padding: 0px 0px 0px 10px;margin: 0px 0px 2px 0px;font-size: 13px;font-weight: 500;">
+                            Encours</label>
                     </div>
                 </section>
 
@@ -588,7 +595,7 @@
 
 
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6" >
+                    <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Code</label>
                         <div class="control-input  flex-6">
                             <input [disabled]="diss" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
@@ -597,7 +604,7 @@
                         </div>
                     </section>
                     <section class="flex-row-start flex-6" disabled="">
-                        
+
                     </section>
 
                 </div>
@@ -626,8 +633,9 @@
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-6">Date Livraison</label>
                         <div class="control-input flex-6">
-                             
-                            <p-calendar [(ngModel)]="dateLivraison"  (onSelect)="transformDateFormat()" (onChange)="transformDateFormat()"  [showButtonBar]="true" [readonlyInput]="true"
+
+                            <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
@@ -855,8 +863,8 @@
                         <!-- <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i> -->
                         <div class="dop control-input flex-8">
                             <input type="password" id="password" maxlength="200" name="password"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
-                            [required]="true">
+                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="password"
+                                [required]="true">
 
                         </div>
                     </section>
@@ -865,7 +873,7 @@
             </div>
         </fieldset>
 
-          
+
 
 
     </div>

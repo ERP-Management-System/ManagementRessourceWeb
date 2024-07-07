@@ -124,12 +124,13 @@
                             <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.
                             </th>
                             <th style="width: 100px;">code Saisie</th>
-                            <!-- <th>Designation Arabic</th>
-                            <th>Designation Latin</th> -->
-
-
-                            <th style="width: 165px;">Date Creation</th>
-                            <th style="width: 115px;">User Creation</th>
+                            
+                            <th style="width: 75px;">Date Livraison</th>
+                            <th style="width: 100px;">Departement</th>
+                            <th style="width: 100px;">Depot</th> 
+                            <th style="width: 70px;">Date Creation</th>
+                            <th style="width: 115px;">User Creation</th> 
+                            <th style="width: 75px;">Date Approuver</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
@@ -139,18 +140,21 @@
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
                             </td>
                             <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td>
-                            <!-- <td style="font-size: 15px !important;">{{fl.typeCircuitAchatDTO}}</td>
-                            <td style="font-size: 15px !important;">{{fl.designationLt}}</td> -->
-
-
                             <td style="font-size: 15px !important;">
 
-                                {{fl.dateCreate | date : "dd/MM/yyyy HH:mm:ss" }}
+                                {{fl.dateLivraison | date : "dd/MM/yyyy" }}
                             </td>
+                            <td style="font-size: 15px !important;">{{fl.departementDTO.designationAr}}</td>
+                            <td style="font-size: 15px !important;">{{fl.depotDTO.designationAr}}</td> 
                             <td style="font-size: 15px !important;">
 
-
+                                {{fl.dateCreate | date : "dd/MM/yyyy" }}
+                            </td>
+                            <td style="font-size: 15px !important;"> 
                                 {{fl.userCreate}}
+                            </td>
+                            <td style="font-size: 15px !important;"> 
+                                {{fl.dateApprouve | date : "dd/MM/yyyy" }}
                             </td>
                         </tr>
                     </ng-template>
@@ -388,8 +392,8 @@
                     <section class="flex-row-start flex-12">
                         <label class="control-label flex-3">Date Souhaitée</label>
                         <div class="control-input flex-6">
-                            <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
-                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
+                            <p-calendar [minDate]="minDate" [maxDate]="maxDate" [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" inputId="min-max" [readonlyInput]="true"
                                 dateFormat="yy-mm-dd" />
                             <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 5px;right: 183px;"></i>
                         </div>
@@ -1166,7 +1170,7 @@
             <div class="flex-row-start flex-12">
                 <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
                 <div class="flex-10">
-                    <button class="  btn btn-default save-add-ModalLarge" (click)="approveDemandeAchat('ApproveModal')">
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="approveDemandeAchat('CancelApproveModal')">
                         <i class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Ouvrire
                     </button>

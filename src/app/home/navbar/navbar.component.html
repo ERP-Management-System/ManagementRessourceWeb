@@ -1,5 +1,7 @@
-<nav id="sibdebarnav"class="sidebar">
-     
+<nav   class="menu" tabindex="0" >
+     <div id="sibdebarnav"class="sidebar">
+
+   
 
     <div class="logo-details">
         <i class="bx bxl-c-plus-plus icon"></i>
@@ -7,32 +9,39 @@
        <i class="bx bx-menu-alt-right" id="btn" onclick="myFunction2()"  ></i> <!--  // -->
     </div>
 
-    <ul class="nav-list scroll">
-        <li>
-            <i class="bx bx-search"></i>
-            <input type="text" placeholder="Search...">
-            <span class="tooltip">Search</span>
-        </li>
-        <li id="ver1">
+    <ul  id="act" class="nav-list scroll"  >
+      <li   class="has-subnav">
+        <i class="bx bx-search"></i>
+        <input type="text" placeholder="Search...">
+        <span class="tooltip">Search</span>
+      </li>
+        <li   class="has-subnav xx" >
             <a [routerLink]="['']">
-                <i class="bx bx-menu-alt-right"></i>
-                <span  class="links_name v23">Home</span>
+                <i class="bx bx-menu-alt-right "></i>
+                <span class="links_name ">Home</span>
             </a>
             <span class="tooltip">Home</span>
         </li>
-        <li>
+        <li  class="has-subnav">
+          <a href="#">
+            <i class='bx bx-grid-alt'></i>
+            <span class="links_name">Dashboard</span>
+          </a>
+          <span class="tooltip">Dashboard</span>
+        </li>
+        <li   class="has-subnav" >
             <a [routerLink]="['/menu_parametrage']">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Paramétrage Central</span>
             </a>
             <span class="tooltip">Paramétrage Central</span>
         </li>
-        <li>
+        <li class="graphs">
             <a [routerLink]="['/menu_achat']">
                 <i class="bx bx-grid-alt"></i>
                 <span class="links_name">Achats</span>
             </a>
-            <span class="tooltip">Achats</span>
+            <span class="tooltip"  >Achats</span>
         </li>
         <li>
             <a href="#">
@@ -193,7 +202,7 @@
       </li>
     </ul>
 
-
+  </div>
 </nav>
  
  

@@ -22,7 +22,7 @@ export class SignatureUserComponent {
   openModal!: boolean;
 
 
-  constructor(private _sanitizer: DomSanitizer,private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private _sanitizer: DomSanitizer, private confirmationService: ConfirmationService, private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
 
   }
@@ -91,12 +91,12 @@ export class SignatureUserComponent {
 
   code!: number | null;
   userName: any;
-  password!: string ;
+  password!: string;
   actif!: boolean;
   nomCompletUser!: string;
   signature!: any;
 
-  selectedUser : any;
+  selectedUser: any;
 
   onRowSelect(event: any) {
     this.code = event.data.code;
@@ -104,7 +104,7 @@ export class SignatureUserComponent {
     this.userName = event.data.userName;
     this.password = event.data.password;
     this.nomCompletUser = event.data.nomCompletUser;
-    this.signature = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' 
+    this.signature = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
       + event.data.signature);
 
     // this.signature = event.data.sig;
@@ -115,10 +115,17 @@ export class SignatureUserComponent {
     this.code = event.data = null;
   }
 
+  removeWhitespaceUsingReplaceMethod() {
+    let inputString: string = this.userName;
+    let outputString: string = inputString
+        .split("")
+        .filter((char) => char !== " ")
+        .join("");  
+    this.userName = outputString; 
+  }
 
-
-  DeleteDepartement(code: any) {
-    this.param_achat_service.DeleteDepartement(code).pipe(
+  DeleteUser(code: any) {
+    this.param_achat_service.DeleteUser(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -162,7 +169,7 @@ export class SignatureUserComponent {
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
       button.setAttribute('data-target', '#Modal');
-      this.formHeader = "Nouveau Departement"
+      this.formHeader = "Nouveau User"
       this.onRowUnselect(event);
       this.clearSelected();
 
@@ -187,7 +194,7 @@ export class SignatureUserComponent {
       } else {
 
         button.setAttribute('data-target', '#Modal');
-        this.formHeader = "Edit Departement"
+        this.formHeader = "Edit User"
 
         this.dis = true;
         this.visibleModal = true;
@@ -209,7 +216,7 @@ export class SignatureUserComponent {
 
         {
           button.setAttribute('data-target', '#ModalDelete');
-          this.formHeader = "Delete Departement"
+          this.formHeader = "Delete User"
           this.visDelete = true;
 
         }
@@ -221,7 +228,7 @@ export class SignatureUserComponent {
 
 
       button.setAttribute('data-target', '#ModalPrint');
-      this.formHeader = "Imprimer Liste Coloris"
+      this.formHeader = "Imprimer List Users"
       this.visibleModalPrint = true;
       this.RemplirePrint();
 
@@ -233,26 +240,19 @@ export class SignatureUserComponent {
 
   userCreate = "soufien";
   fileReaderRst!: string;
-  PostDepartemenet(event: any) {
+  defaultSignature = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+  PostUser(event: any) {
 
     if (!this.userName || !this.password || !this.nomCompletUser) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
     } else {
+      if(this.fileReaderRst == null){
+        this.fileReaderRst = this.defaultSignature
+      }else{
 
-      // let file = event.target.files[0];
-      // let fileReader = new FileReader();
-
-      // fileReader.onloadend = () => {
-      //   const base64String = fileReader.result as string;
-      //   // console.log("base64String", base64String);
-      //   this.fileReaderRst = base64String;
-      // }
-      // if (file) {
-      //   fileReader.readAsDataURL(file);
-
-      // }
+      }
 
       let body = {
         userName: this.userName,
@@ -262,6 +262,7 @@ export class SignatureUserComponent {
         nomCompletUser: this.nomCompletUser,
         dateCreate: new Date().toISOString(), //
         code: this.code,
+        
         sig: this.fileReaderRst,
 
 
