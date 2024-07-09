@@ -14,10 +14,20 @@
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",
+            "i18n": {
+                "sourceLocale": "en-US",
+                "locales": {
+                    "ru": {
+                        "translation": "src/locale/messages.ru.xlf"
+                    }
+                }
+            },
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+                        "localize":true, 
+                        "i18nMissingTranslation": "error",
                         "allowedCommonJsDependencies": [
                             "rxjs-compat",
                             "alertifyjs",
@@ -32,7 +42,7 @@
                         ],
                         "tsConfig": "tsconfig.app.json",
                         "assets": [
-                            "src/favicon.ico",
+                            "src/assets/assets/files/logo1.ico",
                             "src/assets"
                         ],
                         "styles": [
@@ -84,7 +94,7 @@
                     "options": {
                         "browserTarget": "ManageRessourceWeb:build",
                         "port": 4500
-                      },
+                    },
                     "configurations": {
                         "production": {
                             "browserTarget": "ManageRessourceWeb:build:production",
@@ -104,7 +114,9 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "ManageRessourceWeb:build"
+                        "browserTarget": "ManageRessourceWeb:build",
+                        "format": "xlf",
+                        "outputPath": "src/locale"
                     }
                 },
                 "test": {
@@ -116,7 +128,7 @@
                         ],
                         "tsConfig": "tsconfig.spec.json",
                         "assets": [
-                            "src/favicon.ico",
+                            "src/assets/assets/files/logo1.ico",
                             "src/assets"
                         ],
                         "styles": [

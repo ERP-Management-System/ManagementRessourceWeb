@@ -97,7 +97,7 @@ export class TaxeComponent {
   designationLt: string = "NULL";
   actif!: boolean;
   visible!: boolean;
-  ValeurTaxe! : number ;
+  ValeurTaxe : number =0 ;
   selectedTaxe!: Taxe;
 
 
@@ -108,6 +108,7 @@ export class TaxeComponent {
     this.codeSaisie = event.data.codeSaisie;
     this.designationAr = event.data.designationAr;
     this.designationLt = event.data.designationLt;
+    this.ValeurTaxe = event.data.valeurTaxe;
 
     console.log('vtData : ', event);
   }
@@ -240,7 +241,7 @@ export class TaxeComponent {
   
   PostTaxe() {
     
-    if (!this.designationAr || !this.designationLt || !this.codeSaisie || !this.selectedTypeTaxe || !this.ValeurTaxe) {
+    if (!this.designationAr || !this.designationLt || !this.codeSaisie || !this.selectedTypeTaxe ) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 

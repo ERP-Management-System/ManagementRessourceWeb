@@ -1501,9 +1501,7 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   /* background-color: rgb(141, 141, 141); */
   text-decoration: overline !important;
 }
-
-
-
+ 
 
 
 .InputQte {
@@ -1513,7 +1511,17 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   border: 1px solid #e2e2e2;
 }
 
-
+legend {
+  display: block;
+  width: 20% !important;
+  padding: 0px 0px 0px 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: inherit;
+  color: #333;
+  border: 0;
+  border-bottom: 0px !important;
+}
 
 .dropbtn {
   font-size: 14px;
@@ -1632,4 +1640,17 @@ input::file-selector-button {
   border-radius: 3px;
   font-size: 13px;
 }
- 
+:host ::ng-deep  .p-datatable .p-sortable-column:not(.p-highlight):hover .p-sortable-column-icon {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+:host ::ng-deep  .p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: #ffffff;
+  margin-left: 0.5rem;
+  font-size: 12px;
+}
+
+:host ::ng-deep .p-datatable .p-sortable-column.p-highlight:hover .p-sortable-column-icon {
+  color: #ffffff;
+}

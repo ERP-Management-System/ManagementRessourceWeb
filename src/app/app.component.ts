@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
  
 
 
@@ -7,7 +7,18 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'ManageRessourceWeb'; 
- 
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    this.liveClock();
+  }
+  title = 'ManageRessourceWeb';
+  
+  liveDateTime = new Date();
+
+  liveClock() {
+    setInterval(() => {
+      this.liveDateTime = new Date();
+    }, 1000);
+  }
+
 }

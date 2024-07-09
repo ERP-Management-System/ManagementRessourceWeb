@@ -202,6 +202,7 @@ export class DemandeAchatComponent {
     this.selectedAppelOffre = '';
     this.visibleModalApprove = false;
     this.password = ''
+    this.selectedUsers='';
   }
 
   closeModalPrint() {
@@ -221,7 +222,7 @@ export class DemandeAchatComponent {
   visibleModalDdeDirect: boolean = false;
   visibleModalApprove: boolean = false;
   visbileModalPassword: boolean = false;
-  selectedValue!: any;
+  selectedValue: any = 1;
   visDelete: boolean = false;
   code!: any | null;
   codeSaisie: any;
@@ -399,6 +400,7 @@ export class DemandeAchatComponent {
             this.GelMatiereActive();
 
 
+            this.Getusers();
             this.onRowSelect;
             // this.GelAllModeReglement();
 
@@ -420,6 +422,7 @@ export class DemandeAchatComponent {
             this.visibleModalPrint = false;
             this.GelMatiereActive();
 
+            this.Getusers();
 
             this.onRowSelect;
             // this.GelAllModeReglement();
@@ -674,7 +677,7 @@ export class DemandeAchatComponent {
             this.visibleNewModal = false;
             this.visDelete = false;
             this.codeDemandeAchat = this.selectedDemandeAchat.code
-            this.visibleModalPrint = false;
+      
             this.clearSelected();
             this.visibleNewModal = false;
             this.visibleModalApprove = false;
@@ -715,11 +718,11 @@ export class DemandeAchatComponent {
             this.onRowUnselect(event);
             this.clearSelected();
             body: { };
-            this.visibleModalPrint = true;
-            console.log("res", res);
-            this.codeDemandeAchat = res.code;
-            this.RemplirePrint(this.codeDemandeAchat);
-
+            // this.visibleModalPrint = true;
+            // console.log("res", res);
+            // this.codeDemandeAchat = res.code;
+            // this.RemplirePrint(this.codeDemandeAchat);
+            this.visibleModalPrint = false;
 
           }
         )

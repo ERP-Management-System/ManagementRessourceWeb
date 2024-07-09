@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem, SortEvent } from 'primeng/api';
 import { catchError, Subject, throwError } from 'rxjs';
-import { Table } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
+import { DatePipe } from '@angular/common';
 
 
 declare const PDFObject: any;
@@ -26,7 +27,7 @@ export class OrdreAchatComponent {
 
   openModal!: boolean;
 
-  constructor(private confirmationService: ConfirmationService,
+  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
   }
@@ -65,7 +66,7 @@ export class OrdreAchatComponent {
 
     this.GelAllOrdreAchat();
     this.VoidsNew();
-
+    this.getValued();
     this.v2 = [
       { field: 'codeSaisie', header: 'Code Saisie' },
       { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
@@ -83,7 +84,7 @@ export class OrdreAchatComponent {
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Select any row please");
       this.visibleModalPrint = false;
     } else {
-      this.param_achat_service.getDemandeAchatEdition(codeDemandeAchat).subscribe(blob => {
+      this.param_achat_service.getOrdreAchatEdition(codeDemandeAchat).subscribe(blob => {
         const reader = new FileReader();
         const binaryString = reader.readAsDataURL(blob);
         reader.onload = (event: any) => {
@@ -130,6 +131,15 @@ export class OrdreAchatComponent {
     this.onRowUnselect(event);
     this.listDataOAWithDetails = new Array<any>();
     this.final = new Array<any>();
+    this.prixTotalTTC = 0.000000;
+    this.TotalHTValue = 0.000000;
+    this.remiseEnPourcent = 0;
+    this.mntNet = 0
+    this.tott19 = 0;
+    this.tott7 = 0;
+    this.TotalTaxeTmb = 0;
+    this.mntTimbre = 0;
+
 
   }
 
@@ -152,6 +162,8 @@ export class OrdreAchatComponent {
   visDelete: boolean = false;
   code!: any | null;
   codeSaisie: any;
+  Instructions: any;
+  lieuOA: any;
   designationAr: any;
   designationLt: string = "NULL";
   codeTypeCaisse: number = 0;
@@ -159,6 +171,7 @@ export class OrdreAchatComponent {
   actif!: boolean;
   visible!: boolean;
 
+  mntTotalTTC: any;
 
   selectedAppelOffre!: any;
   selectedOrdreAchat!: any;
@@ -175,8 +188,18 @@ export class OrdreAchatComponent {
     this.designationLt = event.data.designationLt;
     this.selectedModeReglement = event.data.codeModeReglement;
     this.observation = event.data.observation;
-    this.selectedDemandeAchat = event.data.codeDemandeAchat;
-    this.selectedAppelOffre = event.data.codeAppelOffre
+    this.selectedDemandeAchat = event.data.demandeAchatDTO.code;
+    this.selectedAppelOffre = event.data.codeAppelOffre;
+    this.qteDemander = event.data.qteDemander; 
+    this.prixTotalTTC = event.data.mntTotalTTC;
+    this.TotalHTValue = event.data.mntTotalHT; 
+    this.remiseEnPourcent = event.data.mntRemise;
+    this.mntTimbre = event.data.mntTimbre;
+    this.TotalTaxeTimbre = event.data.mntTotalTaxe;
+    this.totaltaxeMnt = event.data.mntTotalTaxe - -event.data.mntTimbre;
+    this.mntNet = event.data.mntNet;
+    this.dateLivraison = event.data.dateLivraison;
+
     console.log('vtData : ', event, 'selected AO code : ', this.selectedOrdreAchat);
     // 
 
@@ -205,7 +228,7 @@ export class OrdreAchatComponent {
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` );
         }
         return throwError(errorMessage);
       })
@@ -283,16 +306,21 @@ export class OrdreAchatComponent {
           this.GelMatiereActifVisible();
 
 
-          // this.GetDemandeAchatWhereCodeIn();
-          this.onRowSelect;
-          this.GelAllModeReglement();
 
+          this.onRowSelect;
+          // this.GetDemandeAchatWhereCodeIn();
+          this.GelAllModeReglement();
+          this.GelAllAppelOffre();
           this.GetColorisActifVisible();
           this.GelUniteActifVisible();
           this.GetOrdreAchatByCode(this.selectedOrdreAchat);
           this.visibleNewModal = true;
           this.visDelete = false;
           this.visibleModalPrint = false;
+          // this.CalculeTaxeTimbre();
+          // this.calculateTaxe();
+          // this.GetDemandeAchat();
+          this.GelAllDA();
         }
 
       } else
@@ -364,11 +392,11 @@ export class OrdreAchatComponent {
   GetDataFromTableEditor: any;
   final = new Array<any>();
   codeColoris: any;
-  qteOrdre: any;
+  qteDemander: any = 1;
   codeSaisieMaitere: any;
   codeUnite: any;
   observation: any;
-  PostDemandeAchat() {
+  PostOrdreAchat() {
 
 
 
@@ -377,7 +405,7 @@ export class OrdreAchatComponent {
 
 
 
-    if (!this.designationAr || !this.designationLt || !this.selectedModeReglement || !this.codeSaisie || this.listDataOAWithDetails.length == 0) {
+    if (!this.codeSaisie || this.listDataOAWithDetails.length == 0) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
@@ -391,7 +419,13 @@ export class OrdreAchatComponent {
           codematiere: { code: this.listDataOAWithDetails[y].codeMatieres },
           codeUnite: { code: this.listDataOAWithDetails[y].codeUnites },
           codeColoris: { code: this.listDataOAWithDetails[y].codeColoriss },
-          qteOrdre: this.listDataOAWithDetails[y].qteOrdre, userCreate: this.userCreate,
+          valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe,
+          qteDemander: this.listDataOAWithDetails[y].qteDemander,
+          userCreate: this.userCreate,
+          prixAchat: this.listDataOAWithDetails[y].prixAchat,
+          mntTotalTTC: this.listDataOAWithDetails[y].mntTotalTTC,
+          mntTotalHT: this.listDataOAWithDetails[y].mntTotalHT,
+          mntTotalTaxe: this.listDataOAWithDetails[y].mntTotalTTC - -this.listDataOAWithDetails[y].mntTotalHT,
         }
         this.final.push(this.GetDataFromTableEditor);
 
@@ -409,9 +443,21 @@ export class OrdreAchatComponent {
         code: this.code,
         actif: this.actif,
         visible: this.visible,
-        detailsDemandeAchatDTOs: this.final,
+        detailsOrdreAchatDTOs: this.final,
         observation: this.observation,
-        codeEtatReception: "2"
+        codeEtatReception: "2",
+        codeDemandeAchat: this.selectedDemandeAchat,
+        codeAppelOffre: this.selectedAppelOffre,
+        mntTotalTTC: this.prixTotalTTC,
+        mntTotalHT: this.TotalHTValue,
+        mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
+        mntRemise: this.remiseEnPourcent,
+        mntTimbre: this.mntTimbre,
+        dateLivraison: this.dateLivraison,
+        lieu: this.lieuOA,
+        instruction: this.Instructions,
+        codeTypeCircuitAchat:2,
+        mntNet: this.mntNet,
       }
 
 
@@ -579,7 +625,7 @@ export class OrdreAchatComponent {
 
 
       this.dataOrdreAchat = data;
-      // this.onRowUnselect(event);
+      // this.onRowUnselect(event); 
 
     })
   }
@@ -738,6 +784,12 @@ export class OrdreAchatComponent {
   Newcompteur: number = 0;
   codeMatieres: any;
   disp: boolean = false;
+
+  transformDateFormat() {
+    this.dateLivraison = this.datePipe.transform(this.dateLivraison, "dd/MM/yyyy")
+    console.log("  transformDateFormat  this.dateLivraison", this.dateLivraison)
+  };
+  dateLivraison: any;
   PushTableData() {
     var exist = false;
 
@@ -747,8 +799,8 @@ export class OrdreAchatComponent {
       } else {
         exist = true;
         alertifyjs.set('notifier', 'position', 'top-right');
-        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>'  + " Matiere Deja Existe");
- 
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Matiere Deja Existe");
+
         break;
       }
 
@@ -840,28 +892,62 @@ export class OrdreAchatComponent {
   dataDemandeAchat = new Array<DemandeAchat>();
   listDemandeAchatPushed = new Array<any>();
   listDemandeAchatRslt = new Array<any>();
-  // GetDemandeAchat() {
-  //   this.param_achat_service.GetDemandeAchat().pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       let errorMessage = '';
-  //       if (error.error instanceof ErrorEvent) { } else {
-  //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  GetDemandeAchat() {
+    this.param_achat_service.GetDemandeAchat().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
 
-  //       }
-  //       return throwError(errorMessage);
-  //     })
+        }
+        return throwError(errorMessage);
+      })
 
-  //   ).subscribe((data: any) => {
-  //     this.dataDemandeAchat = data;
-  //     this.listDemandeAchatPushed = [];
-  //     for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-  //       this.listDemandeAchatPushed.push({ label: this.dataDemandeAchat[i].codeSaisie, value: this.dataDemandeAchat[i].code })
-  //     }
-  //     this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-  //   }
-  //   )
-  // }
+    ).subscribe((data: any) => {
+      this.dataDemandeAchat = data;
+      this.listDemandeAchatPushed = [];
+      for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+        this.listDemandeAchatPushed.push({ label: this.dataDemandeAchat[i].codeSaisie, value: this.dataDemandeAchat[i].code })
+      }
+      console.log("data listDemandeAchatRslt", this.listDemandeAchatRslt);
+      this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+    }
+    )
+    // this.param_achat_service.GetDemandeAchatByCodeIn(this.selectedOrdreAchat.codeDemandeAchat).pipe(
+    //   catchError((error: HttpErrorResponse) => {
+    //     let errorMessage = '';
+    //     if (error.error instanceof ErrorEvent) { } else {
+    //       alertifyjs.set('notifier', 'position', 'top-right');
+    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+    //     }
+    //     return throwError(errorMessage);
+    //   })
+
+    // ).subscribe((data2: any) => {
+    //   this.dataDemandeAchat = data2;
+    //   // console.log("data length", data2);
+    //   this.listDemandeAchatPushed = [];
+    //   // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+    //   this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
+    //   // }
+    //   console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
+    //   this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+    //   // this.prixTotalTTC = 0.000000;
+    //   // this.TotalHTValue = 0.000000;
+    //   // this.remiseEnPourcent = 0.000000;
+    //   // this.mntNet = 0.000000;
+    //   // this.tott19 = 0.000000;
+    //   // this.tott7 = 0.000000;
+    //   // this.TotalTaxeTmb = 0.000000;
+    //   // this.mntTimbre = 0.000000;
+    //   // this.dateLivraison = null
+    //   // this.Instructions = '';
+    //   // this.lieuOA = '';
+    // }
+    // )
+  }
 
 
 
@@ -922,7 +1008,42 @@ export class OrdreAchatComponent {
 
   // }
 
-  
+  totaltaxeMnt: number = 0.00000;
+  TotalTaxeTimbre: any = 0.00000;
+  totalTax: any = 0.00000;
+  calculateTaxe() {
+    let total = 0.000000;
+    let mntTotalTaxe = 0.000000;
+    for (let det of this.listDataOAWithDetails) {
+      total += +det.mntTotalHT;
+      let mnttaxe = det.valeurTaxe / 100;
+      mntTotalTaxe += +det.mntTotalHT * mnttaxe;
+      let valuetx = mntTotalTaxe;
+      this.totalTax = valuetx.toFixed(6)
+      this.totaltaxeMnt = this.totalTax;
+    }
+    this.thisYearTotal = total;
+    let value2 = this.thisYearTotal;
+    this.thisYearTotal = value2.toFixed(6);
+
+    this.TotalHTValue = this.thisYearTotal;
+
+
+    if (this.formHeader == "Edit Ordre Achat") {
+      let totTaxTimb = +this.mntTimbre + +this.totaltaxeMnt;
+      // this.TotalTaxeTmb = totTaxTimb.toFixed(6);
+      this.TotalTaxeTimbre = totTaxTimb.toFixed(6);
+      let pxTotTTc = +this.TotalHTValue + +this.TotalTaxeTimbre;
+
+      this.prixTotalTTC = pxTotTTc.toFixed(6);
+      this.valueRemiseChanged();
+      this.mntTimbre = this.mntTimbre;
+    } else {
+      this.CalculeTaxeTimbre();
+    }
+
+
+  }
   thisYearTotal!: any;
   valeurTVA: any;
   remiseEnPourcent: any = 0.0000;
@@ -931,80 +1052,81 @@ export class OrdreAchatComponent {
   TotalHTValue: any = 0.000000;
   totalTax19: any = 0.000000;
   totalTax7: any = 0.000000;
-  mntTimbre: any;
+  mntTimbre: any = 0.000000;
   TotalTaxeTmb: any;
   tott19!: number;
   tott7!: number;
-  calculateThisYearTotal() {
-    let total = 0.000000;
-    let mnttotalHT19 = 0.000000;
-    let mnttotalHT7 = 0.000000;
-    let pxTotTTc = 0.00000;
-    for (let sale of this.listDataOAWithDetails) {
-      total += +sale.prixTotalHT;
-      let mnttaxe = sale.codeTaxe / 100;
-      if (sale.codeTaxe == 19) {
+  // calculateThisYearTotal() {
 
-        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
-        let valuetx19 = mnttotalHT19;
-        this.totalTax19 = valuetx19.toFixed(6)
-        this.tott19 = this.totalTax19;
-        this.tott7 = this.totalTax7;
-      }
-      if (sale.codeTaxe == 7) {
-        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+  //   let total = 0.000000;
+  //   let mnttotalHT19 = 0.000000;
+  //   let mnttotalHT7 = 0.000000;
+  //   let pxTotTTc = 0.00000;
+  //   for (let sale of this.listDataOAWithDetails) {
+  //     total += +sale.mntTotalHT;
+  //     let mnttaxe = sale.valeurTaxe / 100;
+  //     if (sale.valeurTaxe == 19) {
 
-        let valuetx7 = mnttotalHT7;
-        this.totalTax7 = valuetx7.toFixed(6)
-        this.tott7 = this.totalTax7;
-        this.tott19 = this.totalTax19;
-      }
-      if (sale.codeTaxe == 0) {
-        this.tott7 = this.totalTax7;
-        this.tott19 = this.totalTax19;
-      } if( sale.codeTaxe == 0 && sale.codeTaxe == 7){
-        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
+  //       let valuetx19 = mnttotalHT19;
+  //       this.totalTax19 = valuetx19.toFixed(6)
+  //       this.tott19 = this.totalTax19;
+  //       this.tott7 = this.totalTax7;
+  //     }
+  //     if (sale.valeurTaxe == 7) {
+  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
 
-        let valuetx7 = mnttotalHT7;
-        this.totalTax7 = valuetx7.toFixed(6)
-        this.tott7 = this.totalTax7;
-        this.tott19 = this.totalTax19;
-      }if( sale.codeTaxe == 0 && sale.codeTaxe == 19){
-        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
-        let valuetx19 = mnttotalHT19;
-        this.totalTax19 = valuetx19.toFixed(6)
-        this.tott7 = this.totalTax7;
-        this.tott19 = this.totalTax19;
-      }if( sale.codeTaxe == 0 && sale.codeTaxe == 19 && sale.codeTaxe == 7){
-        mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
-        let valuetx19 = mnttotalHT19;
-        this.totalTax19 = valuetx19.toFixed(6);
-        mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
+  //       let valuetx7 = mnttotalHT7;
+  //       this.totalTax7 = valuetx7.toFixed(6)
+  //       this.tott7 = this.totalTax7;
+  //       this.tott19 = this.totalTax19;
+  //     }
+  //     if (sale.valeurTaxe == 0) {
+  //       this.tott7 = this.totalTax7;
+  //       this.tott19 = this.totalTax19;
+  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 7) {
+  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
 
-        let valuetx7 = mnttotalHT7;
-        this.totalTax7 = valuetx7.toFixed(6)
+  //       let valuetx7 = mnttotalHT7;
+  //       this.totalTax7 = valuetx7.toFixed(6)
+  //       this.tott7 = this.totalTax7;
+  //       this.tott19 = this.totalTax19;
+  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 19) {
+  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
+  //       let valuetx19 = mnttotalHT19;
+  //       this.totalTax19 = valuetx19.toFixed(6)
+  //       this.tott7 = this.totalTax7;
+  //       this.tott19 = this.totalTax19;
+  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 19 && sale.valeurTaxe == 7) {
+  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
+  //       let valuetx19 = mnttotalHT19;
+  //       this.totalTax19 = valuetx19.toFixed(6);
+  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
 
-        this.tott7 = this.totalTax7;
-        this.tott19 = this.totalTax19;
-      }
-       
+  //       let valuetx7 = mnttotalHT7;
+  //       this.totalTax7 = valuetx7.toFixed(6)
 
-    }
+  //       this.tott7 = this.totalTax7;
+  //       this.tott19 = this.totalTax19;
+  //     }
 
 
-
-    this.thisYearTotal = total;
-    let value2 = this.thisYearTotal;
-    this.thisYearTotal = value2.toFixed(6);
-
-    this.TotalHTValue = this.thisYearTotal;
+  //   }
 
 
-    this.CalculeTaxeTimbre();
 
-    //pxTotTTc.toFixed(6);
+  //   this.thisYearTotal = total;
+  //   let value2 = this.thisYearTotal;
+  //   this.thisYearTotal = value2.toFixed(6);
 
-  }
+  //   this.TotalHTValue = this.thisYearTotal;
+
+
+  //   this.CalculeTaxeTimbre();
+
+  //   //pxTotTTc.toFixed(6);
+
+  // }
 
   codeTaxeA: any;
   DataTimbre = new Array<Param>;
@@ -1027,12 +1149,11 @@ export class OrdreAchatComponent {
 
     ).subscribe((data: any) => {
       this.DataTimbre = data;
-      // let dttimbre = data.valeur.toFixed(6)
       this.mntTimbre = data.valeur;
-
-      let totTaxTimb = +this.mntTimbre + +this.tott7 + +this.tott19;
-      this.TotalTaxeTmb = totTaxTimb.toFixed(6);
-      let pxTotTTc = +this.TotalHTValue + +this.TotalTaxeTmb;
+      let totTaxTimb = +this.mntTimbre + +this.totaltaxeMnt;
+      // this.TotalTaxeTmb = totTaxTimb.toFixed(6);
+      this.TotalTaxeTimbre = totTaxTimb.toFixed(6);
+      let pxTotTTc = +this.TotalHTValue + +this.TotalTaxeTimbre;
 
       this.prixTotalTTC = pxTotTTc.toFixed(6);
       this.valueRemiseChanged();
@@ -1057,39 +1178,55 @@ export class OrdreAchatComponent {
       this.GetDataFromTableEditor = {
         qteDemander: this.listDataOAWithDetails[y].qteDemander,
         prixAchat: this.listDataOAWithDetails[y].prixAchat,
-        codeTaxe: this.listDataOAWithDetails[y].codeTaxe
+        valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe
 
       }
       this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
       this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
-      this.listDataOAWithDetails[y].codeTaxe = this.GetDataFromTableEditor.codeTaxe;
-      this.listDataOAWithDetails[y].prixTotalHT = this.GetDataFromTableEditor.prixTotalHT;
+      this.listDataOAWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
+      this.listDataOAWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
 
       let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
       let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
-      let valeurtaxe = this.GetDataFromTableEditor.codeTaxe / 100;
+      let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
 
       let pxtotal = qteDemander1 * prixUniAchat1;
       let valeurTaxe1 = valeurtaxe * pxtotal;
       let valeurTotalTTC = pxtotal + +valeurTaxe1
-      this.listDataOAWithDetails[y].prixTotTTC = valeurTotalTTC;
-      let value = this.listDataOAWithDetails[y].prixTotTTC;
-      this.listDataOAWithDetails[y].prixTotTTC = value.toFixed(6);
+      this.listDataOAWithDetails[y].mntTotalTTC = valeurTotalTTC;
+      let value = this.listDataOAWithDetails[y].mntTotalTTC;
+      this.listDataOAWithDetails[y].mntTotalTTC = value.toFixed(6);
 
 
-      this.listDataOAWithDetails[y].prixTotalHT = pxtotal;
-      let value2 = this.listDataOAWithDetails[y].prixTotalHT;
-      this.listDataOAWithDetails[y].prixTotalHT = value2.toFixed(6);
+      this.listDataOAWithDetails[y].mntTotalHT = pxtotal;
+      let value2 = this.listDataOAWithDetails[y].mntTotalHT;
+      this.listDataOAWithDetails[y].mntTotalHT = value2.toFixed(6);
 
     }
-    this.calculateThisYearTotal();
+    // this.calculateThisYearTotal();
+    this.calculateTaxe();
   }
 
   GetDemandeAchatByCode(code: number) {
 
     if (this.selectedDemandeAchat == null) {
       this.listDataOAWithDetails = new Array<any>();
+      this.prixTotalTTC = 0.000000;
+      this.TotalHTValue = 0.000000;
+      this.remiseEnPourcent = 0.000000;
+      this.mntNet = 0.000000;
+      this.tott19 = 0.000000;
+      this.tott7 = 0.000000;
+      this.TotalTaxeTmb = 0.000000;
+      this.mntTimbre = 0.000000;
+
+      this.dateLivraison = null
+      this.Instructions = '';
+      this.lieuOA = '';
     } else {
+
+
+
 
       this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDemandeAchat).pipe(
         catchError((error: HttpErrorResponse) => {
@@ -1104,19 +1241,25 @@ export class OrdreAchatComponent {
       ).subscribe((data: any) => {
         this.listDataOAWithDetails = new Array<any>();
         this.listDataOAWithDetails = data;
+        //  get first row in data
+        let x = this.listDataOAWithDetails;
+        this.dateLivraison = x[0].dateLivraison;
+        // this.dateLivraison =  data.dateLivraison[0] ;
+        console.log("this.dateLivraison", this.dateLivraison,)
+        // this.dateLivraison = this.datePipe.transform(x[0].dateLivraison, "yy-mm-dd")
         console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataOAWithDetails);
         for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
 
           this.GetDataFromTableEditor = {
             qteDemander: this.listDataOAWithDetails[y].qteDemander,
             prixAchat: this.listDataOAWithDetails[y].prixAchat,
-            codeTaxe: this.listDataOAWithDetails[y].codeTaxe
+            valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe
 
           }
           this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
           this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
-          this.listDataOAWithDetails[y].codeTaxe = this.GetDataFromTableEditor.codeTaxe;
-          this.listDataOAWithDetails[y].prixTotalHT = this.GetDataFromTableEditor.prixTotalHT;
+          this.listDataOAWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
+          this.listDataOAWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
 
           let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
           let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
@@ -1126,20 +1269,20 @@ export class OrdreAchatComponent {
           this.listDataOAWithDetails[y].prixAchat = value3.toFixed(6);
 
 
-          let valeurtaxe = this.GetDataFromTableEditor.codeTaxe / 100;
+          let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
 
           let pxtotal = qteDemander1 * prixUniAchat1;
           let valeurTaxe1 = valeurtaxe * pxtotal;
           let valeurTotalTTC = pxtotal + +valeurTaxe1;
 
-          this.listDataOAWithDetails[y].prixTotTTC = valeurTotalTTC;
-          let value = this.listDataOAWithDetails[y].prixTotTTC;
-          this.listDataOAWithDetails[y].prixTotTTC = value.toFixed(6);
+          this.listDataOAWithDetails[y].mntTotalTTC = valeurTotalTTC;
+          let value = this.listDataOAWithDetails[y].mntTotalTTC;
+          this.listDataOAWithDetails[y].mntTotalTTC = value.toFixed(6);
 
 
-          this.listDataOAWithDetails[y].prixTotalHT = pxtotal;
-          let value2 = this.listDataOAWithDetails[y].prixTotalHT;
-          this.listDataOAWithDetails[y].prixTotalHT = value2.toFixed(6);
+          this.listDataOAWithDetails[y].mntTotalHT = pxtotal;
+          let value2 = this.listDataOAWithDetails[y].mntTotalHT;
+          this.listDataOAWithDetails[y].mntTotalHT = value2.toFixed(6);
 
           console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
 
@@ -1147,7 +1290,8 @@ export class OrdreAchatComponent {
 
         }
 
-        this.calculateThisYearTotal();
+        // this.calculateThisYearTotal();
+        this.calculateTaxe();
         console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataOAWithDetails);
 
 
@@ -1160,7 +1304,7 @@ export class OrdreAchatComponent {
   codeDemandeAchats: any;
   GetDemandeAchatWhereCodeIn() {
     this.listDemandeAchatRslt = []
-    this.listDataOAWithDetails = new Array<any>(); 
+    this.listDataOAWithDetails = new Array<any>();
 
     if (this.selectedAppelOffre == null) {
 
@@ -1181,7 +1325,7 @@ export class OrdreAchatComponent {
 
       ).subscribe((data1: any) => {
         this.dataAppelOffre = data1;
-        this.codeDemandeAchats = data1.codeDemandeAchat 
+        this.codeDemandeAchats = data1.codeDemandeAchat
         this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
@@ -1200,8 +1344,19 @@ export class OrdreAchatComponent {
           // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
           this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
           // }
-          // console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
+          console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
           this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+          // this.prixTotalTTC = 0.000000;
+          // this.TotalHTValue = 0.000000;
+          // this.remiseEnPourcent = 0.000000;
+          // this.mntNet = 0.000000;
+          // this.tott19 = 0.000000;
+          // this.tott7 = 0.000000;
+          // this.TotalTaxeTmb = 0.000000;
+          // this.mntTimbre = 0.000000;
+          // this.dateLivraison = null
+          // this.Instructions = '';
+          // this.lieuOA = '';
         }
         )
 
@@ -1213,6 +1368,85 @@ export class OrdreAchatComponent {
 
 
   }
+
+
+
+  GetCodeEtatReception() {
+    if (this.selectedEtatReception == undefined) {
+
+    } else {
+      this.param_achat_service.GetOrdreAchatByEtatRecepetion(this.selectedEtatReception.code).pipe(
+        catchError((error: HttpErrorResponse) => {
+
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe((data: any) => {
+
+
+
+        this.dataOrdreAchat = data;
+
+      })
+
+    }
+  }
+
+  EtatReception!: any[];
+  EtatDde!: any[];
+  selectedEtatReception: any;
+  getValued() {
+    this.EtatReception = [
+      { name: 'Non Receptionner', code: '2', url: 'assets/assets/images/encours.png' },
+      { name: 'Recp. Partiel', code: '5', url: 'assets/assets/images/recived_partiel.png' },
+      { name: 'Recp. Total', code: '7', url: 'assets/assets/images/recived.png' },
+    ];
+  }
+
+  getPicReceptionPART() {
+    return "url('assets/assets/images/recived_partiel.png')";
+  }
+
+  getPicReceptionTotal() {
+    return "url('assets/assets/images/recived.png')";
+  }
+
+  getPicNonRCP() {
+    return "url('assets/assets/images/encours.png')";
+  }
+
+
+  dataDA= new Array<DemandeAchat>();
+  listDAPushed = new Array<any>();
+  // listModeReglementRslt = new Array<any>();
+  GelAllDA() {
+    this.param_achat_service.GetDemandeAchat().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.dataDA = data;
+      this.listDAPushed = [];
+      for (let i = 0; i < this.dataDA.length; i++) {
+        this.listDAPushed.push({ label: this.dataDA[i].codeSaisie, value: this.dataDA[i].code })
+      }
+      this.listDemandeAchatRslt = this.listDAPushed;
+    })
+  }
+
 }
 
 

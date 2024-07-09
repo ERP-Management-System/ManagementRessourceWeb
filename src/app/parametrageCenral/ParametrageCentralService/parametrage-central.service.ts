@@ -58,21 +58,21 @@ export class ParametrageCentralService {
   }
   ////////////////////////////////////////////////////////////////////////////////////
   // DDE AHCAT 
-  GetDdeAchatByCode(code: number) {
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}dde_achat/` + code);
-  }
-  GetAllDdeAchat() {
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}dde_achat/all`);
-  }
-  PostDdeAchat(body: any) {
-    return this.http.post(`${environment.API_BASE_URL_ACHAT}dde_achat`, body);
-  }
-  PutDdeAchat(body: any) {
-    return this.http.put(`${environment.API_BASE_URL_ACHAT}dde_achat/update`, body);
-  }
-  DeleteDdeAchat(code: number) {
-    return this.http.delete(`${environment.API_BASE_URL_ACHAT}dde_achat/delete/` + code);
-  }
+  // GetDdeAchatByCode(code: number) {
+  //   return this.http.get(`${environment.API_BASE_URL_ACHAT}dde_achat/` + code);
+  // }
+  // GetAllDdeAchat() {
+  //   return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/all`);
+  // }
+  // PostDdeAchat(body: any) {
+  //   return this.http.post(`${environment.API_BASE_URL_ACHAT}dde_achat`, body);
+  // }
+  // PutDdeAchat(body: any) {
+  //   return this.http.put(`${environment.API_BASE_URL_ACHAT}dde_achat/update`, body);
+  // }
+  // DeleteDdeAchat(code: number) {
+  //   return this.http.delete(`${environment.API_BASE_URL_ACHAT}dde_achat/delete/` + code);
+  // }
 
   /////////////////////////////////////////////////////////////////////////////
   //  DDE TRANSFERT 
@@ -539,6 +539,15 @@ PostCategorieDepot(body: any) {
 
   PostOrdreAchatWithDetails(body: any) {
     return this.http.post(`${environment.API_BASE_URL_ACHAT}ordre_achat`, body);
+  }
+
+  getOrdreAchatEdition(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/edition/` + code, { responseType: "blob" });
+  }
+
+  GetOrdreAchatByEtatRecepetion(codeEtatReception : number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception/`+codeEtatReception);
   }
 
 

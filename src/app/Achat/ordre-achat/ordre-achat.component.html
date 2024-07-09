@@ -14,8 +14,8 @@
         <div class="material-table">
             <div class="card">
                 <p-toast></p-toast>
-                <p-table #dt1 [value]="dataOrdreAchat" [globalFilterFields]="['designationAr', 'designationLt']"
-                    selectionMode="single" [(selection)]="selectedOrdreAchat" (onRowSelect)="onRowSelect($event)"
+                <p-table #dt [value]="dataOrdreAchat" [globalFilterFields]="['designationAr', 'designationLt']"
+                    selectionMode="single"    [(selection)]="selectedOrdreAchat" [sortField]="dateLivraison" (onRowSelect)="onRowSelect($event)"
                     (onRowUnselect)="onRowUnselect($event)" dataKey="code"
                     [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
@@ -28,19 +28,43 @@
                         </mat-radio-group>
 
                         <div class="recherche col-md-6">
+                            <div style="width: 140px;">
+                                <p-dropdown (onChange)="GetCodeEtatReception()" (onClear)="ngOnInit()"
+                                    [options]="EtatReception" [(ngModel)]="selectedEtatReception"
+                                    [style]="{'width':'120px '}" optionLabel="name" [showClear]="true"
+                                    placeholder="Etat Valid.">
+                                    <ng-template pTemplate="selectedItem">
+                                        <div class="flex align-items-center gap-2" *ngIf="selectedEtatReception"
+                                            style="width: 150px !important; display: flex;">
+                                            <img src={{selectedEtatReception.url}}
+                                                [class]="'flag flag-' + selectedEtatReception.code.toLowerCase()"
+                                                style="width: 18px" />
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-EtatReception pTemplate="item">
+                                        <div class="flex align-items-center gap-2"
+                                            style="width: 150px !important; display: flex; align-items: center;">
+                                            <img src={{EtatReception.url}}
+                                                [class]="'flag flag-' + EtatReception.code.toLowerCase()"
+                                                style="width: 18px" />
+                                            <div style="padding-left: 20px;"> {{ EtatReception.name }}</div>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
                             <mat-label class="label-recherche"> Designation : </mat-label>
                             <span class="p-input-icon-left ml-auto">
                                 <input pInputText class="recherche-value" [(ngModel)]="searchTerm" name="zone-recherche"
-                                    type="text" (keyup.enter)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                                    type="text" (keyup.enter)="dt.filterGlobal($any($event.target).value, 'contains')"
                                     placeholder="Search keyword" />
                             </span>
                             <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add"
-                                (click)="dt1.filterGlobal($any($event.target).value, 'contains')">
+                                (click)="dt.filterGlobal($any($event.target).value, 'contains')">
                                 <div class="bouton_style-2">Recherche</div>
                                 <mat-icon class="search-icon">search</mat-icon>
                             </button>
                             <button type="button" class="Bouton-rechercher btn  btn-default " data-original-title="Add"
-                                (click)="clear(dt1)" (click)="GelAllOrdreAchat()">
+                                (click)="clear(dt)" (click)="GelAllOrdreAchat()">
                                 <div class="bouton_style-2">Actualiser</div>
                                 <mat-icon class="search-icon">refresh</mat-icon>
                             </button>
@@ -104,42 +128,59 @@
                                     </button>
                                 </div>
                             </div>
-                            <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
+                            <!-- <button data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-default "
                                 data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
                                 (click)="onOpenModal('Print')">
                                 <div class="bouton_style-2">Valider</div>
                                 <mat-icon class="modif-icon"> save</mat-icon>
 
-                            </button>
+                            </button> -->
 
 
 
                         </div>
                     </ng-template>
 
-                    <ng-template pTemplate="header">
+                    <!-- <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
                             <th style=" width: 40px;padding: 2px 0px 0px 4px !important;">Etat</th>
-                            <th style="width: 100px;">code Saisie</th>
-                            <!-- <th>Designation Arabic</th>
-                            <th>Designation Latin</th> -->
-
-
+                            <th style="width: 100px;">code Saisie</th> 
                             <th style="width: 165px;">Date Creation</th>
                             <th style="width: 115px;">User Creation</th>
+                            <th style="width: 115px;">Montant Total TTC</th>
+                            <th style="width: 115px;">Observation</th>
+                        </tr>
+                    </ng-template> -->
+
+                    <ng-template pTemplate="header">
+                        <tr  style="font-size: 15px !important;">
+                            <th   style=" width: 40px;padding: 2px 0px 0px 4px !important;">
+                                Etat  
+                            </th>
+                            <th pSortableColumn="codeSaisie" style="width:100px">
+                                code Saisie <p-sortIcon field="codeSaisie"  />
+                            </th>
+                            <th pSortableColumn="dateCreate" style="width: 165px;">
+                                Date Creation <p-sortIcon field="dateCreate" />
+                            </th>
+                            <th pSortableColumn="userCreate" style="width: 115px;">
+                                User Creation <p-sortIcon field="userCreate" />
+                            </th>
+                            <th pSortableColumn="mntNet" style="width: 115px;">
+                                Montant Net <p-sortIcon field="mntNet" />
+                            </th>
+                            <th pSortableColumn="observation" style="width: 115px;">
+                                Observation <p-sortIcon field="observation" />
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
                         <tr [pSelectableRow]="fl">
                             <td style="font-size: 15px !important; width: 50px; " class="warning"
-                                [ngStyle]="{'background-image': fl.codeTypeCircuitAchat==1 ? (getIconCirDirect()) : (getIconCirInDirect()) }"
+                                [ngStyle]="{'background-image': (fl.codeEtatReception == 2) ? (getPicNonRCP()) : ((fl.codeEtatReception == 5) ? (getPicReceptionPART()) : (getPicReceptionTotal())) }"
                                 style="background-repeat: no-repeat;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
                             </td>
                             <td style="font-size: 15px !important;">{{fl.codeSaisie}}</td>
-                            <!-- <td style="font-size: 15px !important;">{{fl.typeCircuitAchatDTO}}</td>
-                            <td style="font-size: 15px !important;">{{fl.designationLt}}</td> -->
-
-
                             <td style="font-size: 15px !important;">
 
                                 {{fl.dateCreate | date : "dd/MM/yyyy HH:mm:ss" }}
@@ -148,6 +189,12 @@
 
 
                                 {{fl.userCreate}}
+                            </td>
+                            <td style="font-size: 15px !important;">
+                                {{fl.mntNet}}
+                            </td>
+                            <td style="font-size: 15px !important;">
+                                {{fl.observation}}
                             </td>
                         </tr>
                     </ng-template>
@@ -251,12 +298,12 @@
                 <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
 
                 <div class="flex-10">
-                    <button class="  btn btn-default save-add-ModalLarge" (click)="PostDemandeAchat()"> <i
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="PostOrdreAchat()"> <i
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Save
                     </button>
                     <button class=" btn btn-default cancel-add-ModalLarge" :closable="true" data-dismiss="modal"> <i
-                            class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+                        (click)="clearForm()"   class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
                     </button>
 
                 </div>
@@ -275,14 +322,17 @@
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6" >
-                        <label class="control-label flex-6">Code</label>
+                        <label class="control-label flex-3">Code</label>
                         <div class="control-input  flex-6">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
-                                class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
+                                class=" form-control-dev input-xs" required [(ngModel)]="codeSaisie">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
-                    <section class="flex-row-start flex-8">
+                    
+                </div>
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-6">
                         <label class="control-label flex-3">Appel Offre</label>
                         <div class="dop control-input flex-6">
                             <p-dropdown   [resetFilterOnHide]=true class="dropdown"
@@ -290,36 +340,12 @@
                                 [(ngModel)]="selectedAppelOffre" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" (onChange)="GetDemandeAchatWhereCodeIn()" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true" >
-                            </p-dropdown>
-
-                            
-
-
+                            </p-dropdown> 
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
                 </div>
-                <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6">
-                        <!-- <label class="control-label flex-6">Desgiantion Arabic </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div> -->
-                    </section>
-                    <section class="flex-row-start flex-6">
-                        <!-- <label class="control-label flex-6">Desgiantion Latine </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div> -->
-                    </section>
-
-                </div>
+               
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
                         <label class="control-label flex-3">Demande Achat</label>
@@ -375,6 +401,39 @@
             </fieldset>
         </div>
         <div class="flex-row-start flex-12">
+            <fieldset class="flex-6"  >
+                <legend>Conditions de livraison :</legend> 
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-4"  >
+                        <label class="control-label flex-4">Date Livraison</label>
+                        <div class="control-input flex-5" style="padding-left: 10px; ">
+
+                            <p-calendar [(ngModel)]="dateLivraison"  disabled="" (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
+                                dateFormat="yy-mm-dd" />
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-5">
+                        <label class="control-label flex-3">Instructions</label>
+                        <div class="control-input  flex-6">
+                            <input  id="Instructions" maxlength="200" name="Instructions" type="text"
+                                class="form-control-dev input-xs" required [(ngModel)]="Instructions">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-5" style="padding-left: 10px; ">
+                         <label class="control-label flex-4">Lieu</label>
+                        <div class="control-input  flex-6">
+                            <input  id="lieuOA" maxlength="200" name="lieuOA" type="text"
+                                class=" form-control-dev input-xs" required [(ngModel)]="lieuOA">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                </div>
+            </fieldset>
+        </div>
+        <div class="flex-row-start flex-12">
             <fieldset class="flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-space flex-5">
@@ -385,7 +444,7 @@
                             <!-- // for new table  -->
 
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listMatiereRslt"
-                                [(ngModel)]="selectedMatiereToAdd" [filter]="true" [disabled]="disp" [showClear]="true"
+                                [(ngModel)]="selectedMatiereToAdd" [filter]="true" [showClear]="true"
                                 [style]="{minWidth: '50px', width: '50%' }" filterBy="label,value"
                                 [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                                 id="dropDownLists" (onClick)="clickDropDownUp(dropDownLists)" #dropDownLists
@@ -465,7 +524,7 @@
                                         <td style="width: 115px !important ">
 
 
-                                            <input disabled="" [(ngModel)]="inst.prixTotTTC" style="width: 115px;"
+                                            <input disabled="" [(ngModel)]="inst.mntTotalTTC" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
                                                 minlength="4" maxlength="8" size="10" />
                                         </td>
@@ -494,37 +553,37 @@
 
 
                                         <td style="width: 90px !important;font-size: 13px">
-                                            <input class="InputQte" (change)="ValueQteChanged()"
-                                                [(ngModel)]="inst.qteDemander"  type="number" name="number" step="1"/>
+                                            <input class="InputQte" (change)="calculateTaxe()" (change)="ValueQteChanged()"
+                                                [(ngModel)]="inst.qteDemander"   type="number" name="number" step="1"/>
                                         </td>
 
                                         <td style="width: 100px !important;font-size: 13px">
                                             <!-- prix uni ht  -->
                                             <input style="width: 100px;" class="InputQte" [(ngModel)]="inst.prixAchat"
-                                            type="number" name="number" step="1" />
+                                            type="number" name="prixAchat"   step='0.000001'  />
                                         </td>
                                         <td style="width: 130px !important;font-size: 13px">
                                             <!-- prix Total ht  -->
-                                            <input style="width: 130px;"  class="InputQte" [(ngModel)]="inst.prixTotalHT"
-                                            type="number" name="number" step="1"    
+                                            <input style="width: 130px;"   class="InputQte" [(ngModel)]="inst.mntTotalHT"
+                                            type="number" name="mntTotalHT" step="0.100000"    
                                                  />
                                         </td>
                                         <td style="width: 50px !important;font-size: 13px">
                                             <!-- taxe  -->
-                                            <input style="width: 50px;" class="InputQte" [(ngModel)]="inst.codeTaxe"
-                                            type="number" name="number" step="1" />
+                                            <input disabled="" style="width: 50px;" class="InputQte" [(ngModel)]="inst.valeurTaxe"
+                                            type="number" name="valeurTaxe" step="1" />
                                         </td>
                                          
                                         <td style="width: 115px !important ">
-                                            <input step="0.001" [(ngModel)]="inst.prixTotTTC" disabled=""
-                                                (change)="calculateThisYearTotal()" style="width: 115px;"
+                                            <input step="0.001" [(ngModel)]="inst.mntTotalTTC" disabled=""
+                                                 (change)="calculateTaxe()" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
                                                 minlength="4" maxlength="8" size="10" />
                                         </td>
 
                                         <td style="width: 50px !important;"> <button *ngIf="!editing" pButton
                                                 type="button" pDeleteEditableRow icon="pi pi-trash"
-                                                class="p-button-item " (click)="calculateThisYearTotal()"
+                                                class="p-button-item " (click)="calculateTaxe()"  
                                                 (click)="remove(ri)"></button>
 
                                         </td>
@@ -536,7 +595,7 @@
                             <br>
                             <!-- ///// table tva et TTC  -->
                              <div class="flex-row-start flex-12">
-                                <section class="flex-row-start flex-8">
+                                <!-- <section class="flex-row-start flex-8">
 
                                     <fieldset class="flex-row-start flex-5">
                                         <p-table id="tabDetails" dataKey="qte" editMode="row"
@@ -582,7 +641,50 @@
                                             </ng-template>
                                         </p-table>
                                     </fieldset>
+                                </section> -->
+
+                                <!-- // new calcul tax  -->
+                                <section class="flex-row-start flex-8">
+
+                                    <fieldset class="flex-row-start flex-5">
+                                        <p-table id="tabDetails" dataKey="qte" editMode="row"
+                                            [value]="listDataOAWithDetails" [scrollable]="true" scrollHeight="200px"
+                                            [tableStyle]="{'min-width': '20rem' , 'padding': '1px 1px 1px 1px' , 'width': '100%'}"
+                                            selectionMode="single" #dtInstAdd>
+                                            <ng-template pTemplate="footer" style="font-weight: 400 !important;">
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Totals Taxe</td>
+                                                    <input disabled="" step='0.01' [(ngModel)]="totaltaxeMnt "
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" id="totalTax19" name="totalTax19" required  />
+                                                </tr>
+
+
+                                                 
+
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Timbre</td>
+                                                    <input disabled=""  [(ngModel)]="mntTimbre"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number"  />
+                                                </tr>
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Total</td>
+                                                    <input step="0.001"   [(ngModel)]="TotalTaxeTimbre"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="TotalTaxeTmb" name="TotalTaxeTmb"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </fieldset>
                                 </section>
+
                                 <fieldset class="flex-row-start flex-4">
 
                                     <section class="flex-row-start flex-6">
@@ -665,7 +767,7 @@
                 <h2 class="text-default headerForm flex-4"> {{formHeader}}</h2>
 
                 <div class="flex-10">
-                    <button class="  btn btn-default save-add-ModalLarge" (click)="PostDemandeAchat()"> <i
+                    <button class="  btn btn-default save-add-ModalLarge" (click)="PostOrdreAchat()"> <i
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Save
                     </button>
@@ -694,7 +796,7 @@
                         <label class="control-label flex-6">Code</label>
                         <div class="control-input  flex-6">
                             <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
-                                class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
+                                class=" form-control-dev input-xs" required [(ngModel)]="codeSaisie">
                             <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
@@ -760,6 +862,39 @@
                                 id="w3review" name="w3review" rows="4" cols="50">
                                     </textarea>
                             <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 70px;"></i>
+                        </div>
+                    </section>
+                </div>
+            </fieldset>
+        </div>
+        <div class="flex-row-start flex-12">
+            <fieldset class="flex-6"  >
+                <legend>Conditions de livraison :</legend> 
+                <div class="flex-row-start flex-12">
+                    <section class="flex-row-start flex-4"  >
+                        <label class="control-label flex-4">Date Livraison</label>
+                        <div class="control-input flex-5" style="padding-left: 10px; ">
+
+                            <p-calendar [(ngModel)]="dateLivraison"   (onSelect)="transformDateFormat()"
+                                (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
+                                dateFormat="yy-mm-dd" />
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-5">
+                        <label class="control-label flex-3">Instructions</label>
+                        <div class="control-input  flex-6">
+                            <input  id="Instructions" maxlength="200" name="Instructions" type="text"
+                                class="form-control-dev input-xs" required [(ngModel)]="Instructions">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        </div>
+                    </section>
+                    <section class="flex-row-start flex-5" style="padding-left: 10px; ">
+                         <label class="control-label flex-4">Lieu</label>
+                        <div class="control-input  flex-6">
+                            <input  id="lieuOA" maxlength="200" name="lieuOA" type="text"
+                                class=" form-control-dev input-xs" required [(ngModel)]="lieuOA">
+                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
                         </div>
                     </section>
                 </div>
@@ -884,6 +1019,109 @@
                                     </tr>
                                 </ng-template>
                             </p-table>
+
+
+
+                            <br>
+                            <!-- ///// table tva et TTC  -->
+                             <div class="flex-row-start flex-12">
+                                <section class="flex-row-start flex-8">
+
+                                    <fieldset class="flex-row-start flex-5">
+                                        <p-table id="tabDetails" dataKey="qte" editMode="row"
+                                            [value]="listDataOAWithDetails" [scrollable]="true" scrollHeight="200px"
+                                            [tableStyle]="{'min-width': '20rem' , 'padding': '1px 1px 1px 1px' , 'width': '100%'}"
+                                            selectionMode="single" #dtInstAdd>
+                                            <ng-template pTemplate="footer" style="font-weight: 400 !important;">
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Totals Taxe 19</td>
+                                                    <input disabled="" step='0.01' [(ngModel)]="tott19 "
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" id="totalTax19" name="totalTax19" required  />
+                                                </tr>
+
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Totals Taxe 7</td>
+                                                    <input disabled="" step="0.001" [(ngModel)]="tott7"
+                                                        style="border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Timbre</td>
+                                                    <input disabled=""  [(ngModel)]="mntTimbre"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number"  />
+                                                </tr>
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Total</td>
+                                                    <input step="0.001"   [(ngModel)]="TotalTaxeTmb"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="TotalTaxeTmb" name="TotalTaxeTmb"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </fieldset>
+                                </section>
+                                <fieldset class="flex-row-start flex-4">
+
+                                    <section class="flex-row-start flex-6">
+                                        <p-table id="tabDetails" dataKey="qte" editMode="row"
+                                            [value]="listDataOAWithDetails" [scrollable]="true" scrollHeight="200px"
+                                            [tableStyle]="{'min-width': '20rem' , 'padding': '1px 1px 1px 1px' , 'width': '100%'}"
+                                            selectionMode="single" #dtInstAdd>
+                                            <ng-template pTemplate="footer" style="font-weight: 400 !important;">
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Prix Total HT</td>
+                                                    <input step='0.01' [(ngModel)]="TotalHTValue"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" id="valeurTVA" name="valeurTVA" required />
+                                                 </tr>
+ 
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Prix Total TTC</td>
+                                                    <input step="0.001" [(ngModel)]="prixTotalTTC"
+                                                        style="border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+
+
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Remise En %</td>
+                                                    <input step="0.001" (change)="valueRemiseChanged()" [(ngModel)]="remiseEnPourcent"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+                                                <tr
+                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
+                                                    <td colspan="3" class="text-right">Monatant Net</td>
+                                                    <input step="0.001" [(ngModel)]="mntNet"
+                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
+                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
+                                                        required minlength="4" maxlength="8" size="10" />
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </section>
+                                </fieldset>
+
+
+                            </div>
 
 
                         </div>

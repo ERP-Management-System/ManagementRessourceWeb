@@ -1124,6 +1124,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         this.listDdeAchatPushed.push({ label: (this.dataDemandeAchat[i].codeSaisie   ), value: this.dataDemandeAchat[i].code })
       }
       this.listDdeAchatRslt = this.listDdeAchatPushed;
+     
     })
   }
 
