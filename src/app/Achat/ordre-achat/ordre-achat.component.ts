@@ -1,9 +1,9 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem, SortEvent } from 'primeng/api';
 import { catchError, Subject, throwError } from 'rxjs';
-import { Table, TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table'; 
 
 import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
@@ -29,7 +29,7 @@ export class OrdreAchatComponent {
 
   constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-
+       
   }
 
 
@@ -42,7 +42,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -63,6 +63,10 @@ export class OrdreAchatComponent {
   isLoading = false;
   ngOnInit(): void {
 
+    // const headers = new HttpHeaders();
+    // headers.set('Accept-Language', 'ar'); 
+
+    localStorage.setItem("langue","ar")
 
     this.GelAllOrdreAchat();
     this.VoidsNew();
@@ -228,7 +232,7 @@ export class OrdreAchatComponent {
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
         }
         return throwError(errorMessage);
       })
@@ -471,7 +475,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
             }
             return throwError(errorMessage);
@@ -505,7 +509,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) { } else {
               this.final = new Array<any>();
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
             }
             return throwError(errorMessage);
           })
@@ -608,13 +612,14 @@ export class OrdreAchatComponent {
   // codeModeReglementDde: {}[] = [];
   dataOrdreAchat = new Array<OrdreAchat>();
   banque: any;
-  GelAllOrdreAchat() {
+  GelAllOrdreAchat() { 
+    // this.headers.append('foo', 'bar');
     this.param_achat_service.GetOrdreAchat().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -640,7 +645,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -667,7 +672,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -694,7 +699,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -722,7 +727,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
         }
         return throwError(errorMessage);
       })
@@ -746,7 +751,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
         }
         return throwError(errorMessage);
       })
@@ -835,7 +840,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -871,7 +876,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -898,7 +903,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -919,7 +924,7 @@ export class OrdreAchatComponent {
     //     let errorMessage = '';
     //     if (error.error instanceof ErrorEvent) { } else {
     //       alertifyjs.set('notifier', 'position', 'top-right');
-    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
     //     }
     //     return throwError(errorMessage);
@@ -1141,7 +1146,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -1233,7 +1238,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
           }
           return throwError(errorMessage);
@@ -1317,7 +1322,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
           }
           return throwError(errorMessage);
@@ -1331,7 +1336,7 @@ export class OrdreAchatComponent {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
             }
             return throwError(errorMessage);
@@ -1381,7 +1386,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
           }
           return throwError(errorMessage);
@@ -1431,7 +1436,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);

@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-
+ 
 @Injectable({
   providedIn: 'root'
 })
@@ -510,9 +510,12 @@ PostCategorieDepot(body: any) {
   ///// ordre Achat
 
 
-  GetOrdreAchat() {
+  GetOrdreAchat() {  
+    const headers= new HttpHeaders()
+  .set('content-type', 'application/json')
+  .set('Accept-Language', 'ar');
 
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/all`);
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/all`, { 'headers': headers });
   }
 
   GetOrdreAchatByCode(code: number) {
@@ -533,7 +536,10 @@ PostCategorieDepot(body: any) {
 
 
   DeleteOrdreAchat(code: number) {
-    return this.http.delete(`${environment.API_BASE_URL_ACHAT}ordre_achat/delete/` + code);
+    const headers= new HttpHeaders()
+    .set('content-type', 'application/json')
+    .set('Accept-Language', 'ar');
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}ordre_achat/delete/` + code , {'headers':headers});
   }
 
 

@@ -149,6 +149,7 @@ import { DepotComponent } from './DepotDepartement/depot/depot.component';
 import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
 import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
 import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
+import { CustomHttpInterceptorService } from './CustomHttpInterceptorService';
  
  
 
@@ -266,7 +267,9 @@ import { SignatureUserComponent } from './Access/signature-user/signature-user.c
  CommonModule, RouterModule
   ], 
   providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService ,DatePipe
+    { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService ,DatePipe,
+    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptorService, multi: true},
+
 ],
   bootstrap: [AppComponent]
 })

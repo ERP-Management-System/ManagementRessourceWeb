@@ -14,20 +14,11 @@
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",
-            "i18n": {
-                "sourceLocale": "en-US",
-                "locales": {
-                    "ru": {
-                        "translation": "src/locale/messages.ru.xlf"
-                    }
-                }
-            },
+            
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "localize":true, 
-                        "i18nMissingTranslation": "error",
+                    "options": { 
                         "allowedCommonJsDependencies": [
                             "rxjs-compat",
                             "alertifyjs",
@@ -56,6 +47,8 @@
                         "scripts": []
                     },
                     "configurations": {
+                        
+
                         "production": {
                             "budgets": [
                                 {
@@ -96,6 +89,7 @@
                         "port": 4500
                     },
                     "configurations": {
+                        
                         "production": {
                             "browserTarget": "ManageRessourceWeb:build:production",
                             "proxyConfig": "src/proxy.conf.json"
@@ -114,9 +108,8 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "ManageRessourceWeb:build",
-                        "format": "xlf",
-                        "outputPath": "src/locale"
+                        "browserTarget": "ManageRessourceWeb:build"
+                         
                     }
                 },
                 "test": {

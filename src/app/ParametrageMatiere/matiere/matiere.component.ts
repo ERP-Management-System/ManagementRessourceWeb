@@ -79,7 +79,7 @@ export class MatiereComponent {
   //       if (error.error instanceof ErrorEvent) {
   //       } else {
   //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
+  //         alertifyjs.error(` ${error.error.description}` + " Parametrage Failed");
   //       }
   //       return throwError(errorMessage);
   //     })
@@ -167,7 +167,7 @@ export class MatiereComponent {
   //     //     if (error.error instanceof ErrorEvent) {
   //     //     } else {
   //     //       alertifyjs.set('notifier', 'position', 'top-right');
-  //     //       alertifyjs.error(` ${error.error.message}` + " Parametrage Failed");
+  //     //       alertifyjs.error(` ${error.error.description}` + " Parametrage Failed");
 
   //     //     }
   //     //     return throwError(errorMessage);
@@ -196,7 +196,7 @@ export class MatiereComponent {
   //           if (error.error instanceof ErrorEvent) {
   //           } else {
   //             alertifyjs.set('notifier', 'position', 'top-right');
-  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.description}` + " Parametrage Failed");
   //           }
   //           return throwError(errorMessage);
   //         })
@@ -218,7 +218,7 @@ export class MatiereComponent {
   //           if (error.error instanceof ErrorEvent) {
   //           } else {
   //             alertifyjs.set('notifier', 'position', 'top-right');
-  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.description}` + " Parametrage Failed");
   //           }
   //           return throwError(errorMessage);
   //         })
@@ -240,7 +240,7 @@ export class MatiereComponent {
   //           if (error.error instanceof ErrorEvent) {
   //           } else {
   //             alertifyjs.set('notifier', 'position', 'top-right');
-  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.message}` + " Parametrage Failed");
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + `${error.error.description}` + " Parametrage Failed");
   //           }
   //           return throwError(errorMessage);
   //         })
@@ -260,7 +260,7 @@ export class MatiereComponent {
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
         }
         return throwError(errorMessage);
       })
@@ -453,7 +453,7 @@ export class MatiereComponent {
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
             }
             return throwError(errorMessage);
@@ -483,7 +483,7 @@ export class MatiereComponent {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
             }
             return throwError(errorMessage);
@@ -556,7 +556,7 @@ export class MatiereComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -585,7 +585,7 @@ export class MatiereComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -611,7 +611,7 @@ export class MatiereComponent {
   //       let errorMessage = '';
   //       if (error.error instanceof ErrorEvent) { } else {
   //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
   //       }
   //       return throwError(errorMessage);
@@ -639,7 +639,7 @@ export class MatiereComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
@@ -666,7 +666,7 @@ export class MatiereComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.message}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
 
         }
         return throwError(errorMessage);
