@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IdleService } from './idle.service'; 
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-home',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
-  constructor() { }
+export class HomeComponent  {
+ 
 
-  ngOnInit(): void {
+  title = 'ManageRessourceWeb';
+  
+  
+  constructor( private idleService: IdleService   ) {
   }
-
+  
 }

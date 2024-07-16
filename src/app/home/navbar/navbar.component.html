@@ -1,98 +1,100 @@
 <nav   class="menu" tabindex="0" >
-     <div id="sibdebarnav"class="sidebar">
+     <div id="sibdebarnav"class="left open">
 
    
 
     <div class="logo-details">
         <i class="bx bxl-c-plus-plus icon"></i>
         <div class="logo_name" >ManagmentRessource</div>
-       <i class="bx bx-menu-alt-right" id="btn" onclick="myFunction2()"  ></i> <!--  // -->
+       <!-- <i class="bx bx-menu-alt-right" id="btn" onclick="myFunction2()"  ></i>   -->
     </div>
 
     <ul  id="act" class="nav-list scroll"  >
-      <li   class="has-subnav">
+      <!-- <li   class="has-subnav">
         <i class="bx bx-search"></i>
         <input type="text" placeholder="Search...">
         <span class="tooltip">Search</span>
-      </li>
-        <li   class="has-subnav xx" >
-            <a [routerLink]="['']">
+      </li> -->
+        <li routerLinkActive="active" routerLinkActive="active" 
+        [routerLinkActiveOptions]={exact:true}  class="has-subnav" >
+            <a  
+             [routerLink]="['']">
                 <i class="bx bx-menu-alt-right "></i>
                 <span class="links_name ">Home</span>
             </a>
             <span class="tooltip">Home</span>
         </li>
-        <li  class="has-subnav">
+        <li  routerLinkActive="active"  (click)="onClick(2)"   [ngClass]="{'active': tab2==='tab2'}" class="has-subnav">
           <a href="#">
             <i class='bx bx-grid-alt'></i>
             <span class="links_name">Dashboard</span>
           </a>
           <span class="tooltip">Dashboard</span>
         </li>
-        <li   class="has-subnav" >
+        <li   routerLinkActive="active"  routerLinkActive="active"  (click)="onClick(3)"   [ngClass]="{'active': tab3==='tab3'}"   class="has-subnav" >
             <a [routerLink]="['/menu_parametrage']">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Paramétrage Central</span>
             </a>
             <span class="tooltip">Paramétrage Central</span>
         </li>
-        <li class="graphs">
+        <li routerLinkActive="active" class="graphs" (click)="onClick(4)"   [ngClass]="{'active': tab4==='tab4'}">
             <a [routerLink]="['/menu_achat']">
                 <i class="bx bx-grid-alt"></i>
                 <span class="links_name">Achats</span>
             </a>
             <span class="tooltip"  >Achats</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(5)"   [ngClass]="{'active': tab5==='tab5'}">
             <a href="#">
                 <i class="bx bx-user"></i>
                 <span class="links_name">Ventes</span>
             </a>
             <span class="tooltip">Ventes</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(6)"   [ngClass]="{'active': tab6==='tab6'}">
             <a [routerLink]="['/menu_parametrage_matiere']">
                 <i class="bx bx-chat"></i>
                 <span class="links_name">Parametrage matiere</span>
             </a>
             <span class="tooltip">Parametrage matiere</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(7)"   [ngClass]="{'active': tab7==='tab7'}">
             <a href="#">
                 <i class="bx bx-pie-chart-alt-2"></i>
                 <span class="links_name">Paramétrage Article</span>
             </a>
             <span class="tooltip">Paramétrage Article</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(8)"   [ngClass]="{'active': tab8==='tab8'}">
             <a href="#">
                 <i class="bx bx-folder"></i>
                 <span class="links_name">production</span>
             </a>
             <span class="tooltip">production</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(9)"   [ngClass]="{'active': tab9==='tab9'}">
             <a href="#">
                 <i class="bx bx-cart-alt"></i>
                 <span class="links_name">stocks</span>
             </a>
             <span class="tooltip">stocks</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(10)"   [ngClass]="{'active': tab10==='tab10'}" >
             <a href="#">
                 <i class="bx bx-heart"></i>
                 <span class="links_name">Client & Fournisseur</span>
             </a>
             <span class="tooltip">Client Fournisseur</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(11)"   [ngClass]="{'active': tab11==='tab11'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Bon de commande</span>
             </a>
             <span class="tooltip">Bon de commande</span>
         </li>
-        <li>
+        <li  routerLinkActive="active" (click)="onClick(12)"   [ngClass]="{'active': tab12==='tab12'}">
             <a [routerLink]="['/menu_depot_departement']">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Gestion des entrepôts</span>
@@ -100,84 +102,84 @@
             <span class="tooltip">Gestion des entrepôts</span>
         </li>
 
-        <li>
+        <li routerLinkActive="active" (click)="onClick(13)"   [ngClass]="{'active': tab13==='tab13'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Contrôle du transport</span>
             </a>
             <span class="tooltip">Contrôle du transport</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(14)"   [ngClass]="{'active': tab14==='tab14'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Mouvement</span>
             </a>
             <span class="tooltip">Mouvement</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(15)"   [ngClass]="{'active': tab15==='tab15'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Inventaires & Retours</span>
             </a>
             <span class="tooltip">Inventaires et les retours</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(16)"   [ngClass]="{'active': tab16==='tab16'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Planification & Suivi</span>
             </a>
             <span class="tooltip">Planification & Suivi</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(17)"   [ngClass]="{'active': tab17==='tab17'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Jalonnement</span>
             </a>
             <span class="tooltip">Jalonnement</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(18)"   [ngClass]="{'active': tab18==='tab18'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Qualite</span>
             </a>
             <span class="tooltip">Qualite</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(19)"   [ngClass]="{'active': tab19==='tab19'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Securite</span>
             </a>
             <span class="tooltip">Securite</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(20)"   [ngClass]="{'active': tab20==='tab20'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Envirenement</span>
             </a>
             <span class="tooltip">Envirenement</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(21)"   [ngClass]="{'active': tab21==='tab21'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Hygienemt</span>
             </a>
             <span class="tooltip">Hygienemt</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(22)"   [ngClass]="{'active': tab22==='tab22'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">GMAO</span>
             </a>
             <span class="tooltip">GMAO</span>
         </li>
-        <li>
+        <li (click)="onClick(23)"   [ngClass]="{'active': tab23==='tab23'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Comptabilité</span>
             </a>
             <span class="tooltip">Comptabilité</span>
         </li>
-        <li>
+        <li routerLinkActive="active" (click)="onClick(24)"   [ngClass]="{'active': tab24==='tab24'}">
             <a href="#">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Tresorerie</span>
@@ -185,7 +187,7 @@
             <span class="tooltip">Tresorerie</span>
         </li>
 
-        <li class="profile">
+        <!-- <li class="profile">
             <div class="profile-details"> 
                 <div class="name_job">
                     <div class="name">Gabriel Toledo</div>
@@ -193,8 +195,8 @@
                 </div>
             </div>
             <i class="bx bx-log-out" id="log_out"></i>
-        </li>
-        <li>
+        </li> -->
+        <li routerLinkActive="active" (click)="onClick(25)"   [ngClass]="{'active': tab25==='tab25'}">
           <a [routerLink]="['/menu_access']">
               <i class="fa-solid fa-fingerprint"></i>
               <span class="links_name">Access</span>
@@ -375,3 +377,5 @@ bxMenu.addEventListener("click", () => {
       </li>
     </ul>
   </div> -->
+
+  <!-- <router-outlet></router-outlet> -->

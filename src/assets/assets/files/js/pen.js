@@ -24,12 +24,16 @@ function myFunction2() {
 }
 
 
+
+ 
+
+
 // let menu_icon_box = document.querySelector(".scroll");
-function clickevent(){
+// function clickevent(){
 
-  document.getElementById("act").classList.toggle("active");
+//   document.getElementById("act").classList.toggle("active");
 
-}
+// }
         //     menu_icon_box.classList.toggle("active");
         // }
 

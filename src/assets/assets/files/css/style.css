@@ -6,15 +6,21 @@
 
 :host ::ng-deep .p-datatable-thead th {
   text-align: left !important;
-  color: rgb(253 253 253) !important;
-  background-color: #324960 !important;
-  border: 1px solid #ffffff !important;
-  /* border-width: 1px 1px 1px 1px !important; */
+  color: #333 !important;
+  /* background-color: #324960 !important; */
+  /* background: linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%); */
+  background-image: linear-gradient(to bottom, #fff 0, #e0e0e0 100%) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe0e0e0', GradientType=0) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
+
+  border: 1px solid #b7b7b7 !important; 
   height: 29px !important;
   padding: 0px 10px 0px !important;
   box-shadow: 4px -8px 20px 0px rgb(179 179 179 / 36%);
-  font-family: auto;
-  border-radius: 4px 4px 4px 4px;
+  font-family: Cairo !important;
+  border-radius: 3px; 
+  font-size: 13px !important; 
+  font-weight: bold !important;
 }
 
 :host ::ng-deep th {
@@ -320,7 +326,7 @@ tr.mat-footer-row {
   display: grid;
   width: 100%;
   height: 250px;
-  grid-template-areas: "head head" "sidebar  main" "sidebar  foot";
+  grid-template-areas: "head head" "left  main" "left  foot";
   grid-template-rows: 50px 1fr 30px;
   grid-template-columns: 120px 1fr 0px ;
   grid-gap: 5px;
@@ -1239,10 +1245,9 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
 
 :host ::ng-deep i.fa-lg.fa-fw.fa.fa-times.icon-required {
   color: red;
-  font-size: smaller;
+  font-size: 8px;
+  bottom: 2px !important;
   position: relative;
-  bottom: 25px;
-  right: 20px;
 }
 
 
@@ -1641,16 +1646,20 @@ input::file-selector-button {
   font-size: 13px;
 }
 :host ::ng-deep  .p-datatable .p-sortable-column:not(.p-highlight):hover .p-sortable-column-icon {
-  color: #ffffff;
+  /* color: #ffffff; */
   font-size: 14px;
 }
 
 :host ::ng-deep  .p-datatable .p-sortable-column .p-sortable-column-icon {
-  color: #ffffff;
+  /* color: #ffffff; */
   margin-left: 0.5rem;
   font-size: 12px;
 }
 
 :host ::ng-deep .p-datatable .p-sortable-column.p-highlight:hover .p-sortable-column-icon {
   color: #ffffff;
+}
+
+:host ::ng-deep .p-datatable {
+  scrollbar-color: #324960 white;
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule ,NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule, ArrayOfComponents } from './app-routing.module';
@@ -138,8 +138,7 @@ import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 import { BreadcrumbComponent } from './home/breadcrumb/breadcrumb.component';
   
 
-import {MatToolbarModule} from '@angular/material/toolbar'; 
-import { LoginComponent } from './login/login.component';
+import {MatToolbarModule} from '@angular/material/toolbar';  
 import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
 import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
 import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
@@ -150,6 +149,10 @@ import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/cate
 import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
 import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
 import { CustomHttpInterceptorService } from './CustomHttpInterceptorService';
+import { BonReceptionComponent } from './Achat/bon-reception/bon-reception.component';
+import { LoginComponent } from './home/login/login.component'; 
+import { ApppComponent } from './ApppComponent';
+import { BarTimeComponent } from './home/bar-time/bar-time.component';
  
  
 
@@ -159,7 +162,7 @@ import { CustomHttpInterceptorService } from './CustomHttpInterceptorService';
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent, DemandeAchatComponent, AppelOffreComponent,BreadcrumbComponent, LoginComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent
+  ,ArrayOfComponents, AchatMenuComponent,LoginComponent, DemandeAchatComponent, LoginComponent, AppelOffreComponent,BreadcrumbComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent, BonReceptionComponent, BarTimeComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,
@@ -266,11 +269,12 @@ import { CustomHttpInterceptorService } from './CustomHttpInterceptorService';
  NgxExtendedPdfViewerModule,
  CommonModule, RouterModule
   ], 
-  providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },
+  providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },ApppComponent,
     { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService ,DatePipe,
-    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptorService, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptorService, multi: true}
 
 ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule { }

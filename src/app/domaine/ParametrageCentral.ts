@@ -430,3 +430,45 @@ export interface City {
   name: string,
   code: string
 }
+
+export interface BonReception {
+  code: number,
+  codeSaisie: string, 
+  actif: boolean,
+  visible: boolean,
+  typeCircuitAchatDTO: {
+    code: number,
+    codeSaisie: string,
+    designationAr: string,
+    designationLt: string,
+  },
+  codeTypeCircuitAchat: number;
+  detailsBonReceptionDTOs: {
+    codeDemandeAchat: number,
+    codeMatiere: number,
+    designationMatiereAr: string,
+    designationMatiereLT: string,
+    codeSaisieMatiere: string,
+    codeColoris: number,
+    designationColorisAr: string,
+    designationColorisLT: string,
+    codeSaisieColoris: string,
+    codeUnite: number,
+    designationUniteAr: string,
+    designationUniteLT: string,
+    codeSaisieUnite: string,
+    qteDemander: number,
+    actif: boolean,
+    visible: boolean,
+    usercreate: string,
+    datecreate: Date,
+    qteLivrer:number;
+  }
+}
+
+export interface Fournisser{
+  code: number,
+  codeSaisie: string, 
+  actif: boolean,
+  visible: boolean,
+  }

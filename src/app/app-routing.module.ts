@@ -19,7 +19,7 @@ import { AchatMenuComponent } from './Achat/achat-menu/achat-menu.component';
 import { AppelOffreComponent } from './Achat/appel-offre/appel-offre.component';
 import { DemandeAchatComponent } from './Achat/demande-achat/demande-achat.component';
 import { UniteComponent } from './ParametrageMatiere/unite/unite.component'; 
-import { LoginComponent } from './login/login.component';
+ 
 import { OrdreAchatComponent } from './Achat/ordre-achat/ordre-achat.component';
 import { QcStrandardsComponent } from './ParametrageMatiere/qc-strandards/qc-strandards.component';
 import { TaxeComponent } from './parametrageCenral/taxe/taxe.component';
@@ -29,6 +29,8 @@ import { DepotComponent } from './DepotDepartement/depot/depot.component';
 import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
 import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
 import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
+import { BonReceptionComponent } from './Achat/bon-reception/bon-reception.component';
+import { LoginComponent } from './home/login/login.component';
  
   
 
@@ -40,21 +42,43 @@ const routes: Routes = [
       {
         pathMatch: 'full',
         path: '',
-        component: HomeComponent,
+        component: LoginComponent,
       }
     ]
   },
-  // {path: '', component: LoginComponent, pathMatch: 'full' , redirectTo: ''},
-  // { path: 'home', component: HomeComponent },
-  { path: 'menu_parametrage', component: ParametrageCentralComponent },
  
+  { path: 'home', component: HomeComponent , data: {
+    breadcrumb: null
+  },
+  children: []},
+
+
+  // { path: 'menu_parametrage', component: ParametrageCentralComponent , data:{title:'Menu Parametrage'} },
+  { path: 'menu_parametrage', component: ParametrageCentralComponent },
+
   { path: 'menu_parametrage/mode_reglement', component: ModeReglementComponent },
-  { path: 'menu_parametrage/devise', component: DeviseComponent },
-  { path: 'menu_parametrage/banque', component: BanqueComponent },
-  { path: 'menu_parametrage/saison', component: SaisonComponent },
+  { path: 'menu_parametrage/devise', component: DeviseComponent  },
+  { path: 'menu_parametrage/banque', component: BanqueComponent  },
+  { path: 'menu_parametrage/saison', component: SaisonComponent    },
   { path: 'menu_parametrage/type_caisse', component: TypeCaisseComponent },
   { path: 'menu_parametrage/region', component: RegionComponent },
   { path: 'menu_parametrage/taxe', component: TaxeComponent },
+
+
+  {
+    path: 'menu_parametrage',
+    component: ParametrageCentralComponent,
+    children: [
+ 
+      // *********** Clients PAGE ************ //
+      { path: 'menu_parametrage/mode_reglement', component: ModeReglementComponent },
+      { path: 'menu_parametrage/DeviseComponent', component: DeviseComponent },
+   
+    ]
+  },
+
+
+
 
   { path: 'menu_parametrage_matiere', component: MenuParametrageMatiereComponent }, 
   { path: 'menu_parametrage_matiere/matiere', component: MatiereComponent },
@@ -75,6 +99,7 @@ const routes: Routes = [
   { path: 'menu_achat/appel_offre', component: AppelOffreComponent },
   { path: 'menu_achat/demande_achat', component: DemandeAchatComponent },
   { path: 'menu_achat/ordre_achat', component: OrdreAchatComponent },
+  { path: 'menu_achat/bon_reception', component: BonReceptionComponent },
 
 
   { path: 'menu_access', component: AccessMenuComponent },
@@ -85,7 +110,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    paramsInheritanceStrategy: 'always'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { } 

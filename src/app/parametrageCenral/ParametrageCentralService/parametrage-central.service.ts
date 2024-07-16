@@ -652,6 +652,70 @@ PostCategorieDepot(body: any) {
   }
 
 
+//param 
+
+GetVisibleWithPrice() { 
+  return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePrice`); 
+}
+
+
+
+
+
+
+  ///// Bon Reception
+
+
+  GetBonReception() {   
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}bon_reception/all`);
+  }
+
+  GetBonReceptionByCode(code: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}details_bon_reception/` + code);
+  }
+
+
+  getBonReceptionEdition(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}details_bon_reception/edition/` + code, { responseType: "blob" });
+  }
+
+
+  UpdateBonReception(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}bon_reception/update`, body);
+  }
+
+
+  DeleteBonReception(code: number) {
+    const headers= new HttpHeaders()
+    .set('content-type', 'application/json')
+    .set('Accept-Language', 'ar');
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}bon_reception/delete/` + code , {'headers':headers});
+  }
+
+
+  PostBonReceptionWithDetails(body: any) {
+    return this.http.post(`${environment.API_BASE_URL_ACHAT}bon_reception`, body);
+  }
+
+ 
+  GetBonReceptionByEtatRecepetion(codeEtatReception : number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}bon_reception/etat_reception/`+codeEtatReception);
+  }
+
+
+  /// fournisseur
+
+  GetAllFournisseur() {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}fournisseur/all`);
+  }
+
+  GetFournisseurByCode(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}fournisseur/` + code);
+  }
 
 
 

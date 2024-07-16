@@ -297,11 +297,11 @@
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-3">Code</label>
+                        <label class="control-label flex-3">Code <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-6">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                           
                         </div>
                     </section>
                     <!-- <section class="flex-row-start flex-6"> -->
@@ -316,7 +316,7 @@
                 <div class="flex-row-start flex-12">
                     <div class="flex-row-start flex-12">
                         <section class="flex-row-start flex-6">
-                            <label class="control-label flex-3">Demande Achat</label>
+                            <label class="control-label flex-3">Demande Achat <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                             <div class="dop control-input flex-6">
                                 <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                                     [options]="listDdeAchatRslt" [(ngModel)]="selectedDdeAchat" [filter]="true"
@@ -325,8 +325,7 @@
                                     placeholder="&nbsp;" [required]="true" [lazy]="true" #ModeReglementDde="ngModel">
                                 </p-dropdown>
 
-
-                                <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+  
                             </div>
                         </section>
                     </div>
@@ -334,13 +333,13 @@
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Date Livraison</label>
+                        <label class="control-label flex-6">Date Livraison <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input flex-6">
 
                             <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
                                 (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            
                         </div>
 
 
@@ -363,22 +362,21 @@
             <fieldset class=" flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Mode Reglement</label>
+                        <label class="control-label flex-4">Mode Reglement <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-4">
                             <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                                 [options]="listModeReglementRslt" [(ngModel)]="selectedModeReglement" [filter]="true"
                                 [showClear]="true" [style]="{'width':'100%'}" filterBy="label,value"
                                 [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                                 #ModeReglementDde="ngModel">
-                            </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            </p-dropdown> 
                         </div>
                     </section>
                 </div>
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-4">Observation</label>
+                        <label class="control-label flex-4">Observation <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i>
                         <div class="dop control-input flex-8">
                             <textarea [(ngModel)]="observation"
@@ -596,11 +594,11 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Code</label>
+                        <label class="control-label flex-6">Code <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-6">
                             <input [disabled]="diss" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                           
                         </div>
                     </section>
                     <section class="flex-row-start flex-6" disabled="">

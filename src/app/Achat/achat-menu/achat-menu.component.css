@@ -1,1 +1,5 @@
-@import "src/assets/assets/files/css/StyleMenu.css";
+/* @import "../assets/files/css/StyleMenu.css"; */
+
+/* @import 'src/assets/assets/files/css/StyleMenu.css'; */
+
+@import url('/src/assets/assets/files/css/StyleMenu.css');
