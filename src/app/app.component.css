@@ -37,9 +37,9 @@
 }
 .mainbox>header {
     grid-area: head;
-    background-color: #1d1b31;
+    background-color: #354052;
     color: white;
-    padding: 15px 0px 0px 258px
+    padding: 15px 0px 0px 0px
 }
 
 .mainbox>nav {

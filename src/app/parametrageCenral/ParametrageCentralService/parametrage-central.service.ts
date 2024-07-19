@@ -518,12 +518,15 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/all`, { 'headers': headers });
   }
 
-  GetOrdreAchatByCode(code: number) {
+  GetDetailsOrdreAchatByCode(code: number) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/` + code);
   }
 
+  GetOrdreAchatByCodeIn(code: number) {
 
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/` + code);
+  }
   getOrderAchatEdition(code: number) {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/edition/` + code, { responseType: "blob" });
   }
@@ -532,6 +535,12 @@ PostCategorieDepot(body: any) {
   UpdateOrdreAchat(body: any) {
 
     return this.http.put(`${environment.API_BASE_URL_ACHAT}ordre_achat/update`, body);
+  }
+
+
+  UpdateEtatRecpetionOrdreAchat(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}ordre_achat/update_etat_reception`, body);
   }
 
 
@@ -688,6 +697,8 @@ GetVisibleWithPrice() {
   }
 
 
+
+  
   DeleteBonReception(code: number) {
     const headers= new HttpHeaders()
     .set('content-type', 'application/json')

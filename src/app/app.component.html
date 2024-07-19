@@ -1,6 +1,6 @@
 <body translate="no" class="nav-md">
 <div   class="mainbox" > 
-        <header>
+        <header  *ngIf="disabled">
             <!-- <div class="footer">{{ liveDateTime | date: "medium" }} 
                
                
@@ -15,7 +15,7 @@
         <main  id="content-wrapper" >
             <router-outlet onclick="closeNavBAr()"></router-outlet>
         </main>
-        <footer>Footer</footer>
+        <footer  *ngIf="disabled">Footer</footer>
     </div> 
 </body>
 

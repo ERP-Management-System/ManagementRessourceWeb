@@ -14,13 +14,14 @@ export class LoginComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    sessionStorage.clear();
   }
 
   formValidation(){
     console.log(this.userName);
     console.log(this.password);
  
-    localStorage.setItem("username","usernamessssssss")
+    sessionStorage.setItem("username","soufien")
     this.router.navigate(['home'], { relativeTo: this.route })
 
     

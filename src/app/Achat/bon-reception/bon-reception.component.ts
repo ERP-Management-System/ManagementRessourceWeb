@@ -9,6 +9,7 @@ import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, BonReception, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { DatePipe } from '@angular/common';
+import { EDITOR_VALUE_ACCESSOR } from 'primeng/editor';
 
 declare const PDFObject: any;
 @Component({
@@ -142,14 +143,9 @@ export class BonReceptionComponent {
   clearForm() {
     this.onRowUnselect(event);
     this.code == undefined;
-    this.designationAr = '';
-    this.designationLt = '';
-    this.actif = false;
-    this.visible = false;
     this.codeSaisie = '';
     this.selectedModeReglement = '';
     this.selectedMatiereToAdd = '';
-
     this.listDataBRWithDetails = new Array<any>();
     this.final = new Array<any>();
     this.prixTotalTTC = 0;
@@ -162,8 +158,13 @@ export class BonReceptionComponent {
     this.mntTimbre = 0;
     this.selectedOA = null;
     this.totaltaxeMnt = 0;
-    this.TotalTaxeTimbre = 0; 
-   
+    this.TotalTaxeTimbre = 0;
+    this.selectedFournisseur = null;
+    this.selectedDepot = null;
+    this.codeFactureFournisseur = '';
+    this.dateFactureFournisseur = null;
+    this.MntFactureFournisseur = '';
+
   }
 
   closeModalPrint() {
@@ -202,7 +203,7 @@ export class BonReceptionComponent {
   selectedDemandeAchat!: any;
   selectedDepot: any;
   selectedFournisseur: any;
-  codeFactureFournisseur:any;
+  codeFactureFournisseur: any;
 
   selectedModeReglement: any;
   onRowSelect(event: any) {
@@ -234,7 +235,7 @@ export class BonReceptionComponent {
 
   onRowUnselect(event: any) {
     console.log('row unselect : ', event);
-    this.code = event.data = null;    
+    this.code = event.data = null;
     this.selectedModeReglement = '';
     this.selectedMatiereToAdd = '';
 
@@ -250,15 +251,140 @@ export class BonReceptionComponent {
     this.mntTimbre = 0;
     this.selectedOA = null;
     this.totaltaxeMnt = 0;
-    this.TotalTaxeTimbre = 0;  
+    this.TotalTaxeTimbre = 0;
 
   }
 
 
+  // qteDemanderTemp: any;
+  // qteReceptionnerTemp: any;
+  // codeMatieresTemp: any;
+  // codeEtatReception:any;
+  updateEtatReceptionOrdreAchat() {
+
+    let codeMatieresTemp;
+    let qteReceptionnerTemp;
+    let qteDemanderTemp;
+
+    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
+
+      codeMatieresTemp = { code: this.listDataBRWithDetails[y].codeMatieres };
+      qteReceptionnerTemp = this.listDataBRWithDetails[y].qteReceptionner;
+      qteDemanderTemp = this.listDataBRWithDetails[y].qteDemander;
+
+    }
 
 
-  DeleteOrdreAchat(code: any) {
-    this.param_achat_service.DeleteOrdreAchat(code).pipe(
+    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
+
+      this.GetDataFromTableEditor = {
+
+        codeFournisseur: this.selectedFournisseur,
+        codeDepot: this.selectedDepot,
+        codematiere: { code: this.listDataBRWithDetails[y].codeMatieres },
+        codeUnite: { code: this.listDataBRWithDetails[y].codeUnites },
+        codeColoris: { code: this.listDataBRWithDetails[y].codeColoriss },
+        valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
+        qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
+        qteDemander: this.listDataBRWithDetails[y].qteDemander,
+        userCreate: this.userCreate,
+        prixAchat: this.listDataBRWithDetails[y].prixAchat,
+        mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
+        mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
+        mntTotalTaxe: this.listDataBRWithDetails[y].mntTotalTTC - -this.listDataBRWithDetails[y].mntTotalHT,
+      }
+      this.final.push(this.GetDataFromTableEditor);
+
+
+
+
+    }
+
+    if (qteDemanderTemp > qteReceptionnerTemp) {
+      console.log(' qteDemanderTemp  > qteReceptionnerTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
+      // this.codeEtatReception = 5
+      let body = {
+        code: this.selectedOA,
+        codeEtatReception: 5,
+      }
+      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) {
+          } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe(
+        (res: any) => {
+
+
+        }
+      )
+    } else if (qteDemanderTemp == qteReceptionnerTemp) {
+      console.log('==  qteDemanderTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
+      let body = {
+        code: this.selectedOA,
+        codeEtatReception: 7,
+      }
+      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) {
+          } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe(
+        (res: any) => {
+
+
+        }
+      )
+    } else {
+      console.log('qteDemanderTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
+      let body = {
+        code: this.selectedOA,
+        codeEtatReception: 2,
+      }
+      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) {
+          } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe(
+        (res: any) => {
+
+
+        }
+      )
+    }
+
+
+
+
+
+
+
+
+
+  }
+
+
+  DeleteBonReception(code: any) {
+    this.param_achat_service.DeleteBonReception(code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -281,12 +407,12 @@ export class BonReceptionComponent {
       }
     )
   }
-  clearSelected(): void { 
+  clearSelected(): void {
     this.code == undefined;
     this.designationAr = '';
     this.designationLt = '';
     this.actif = false;
-    this.visible = false; 
+    this.visible = false;
     this.selectedModeReglement = '';
     this.selectedMatiereToAdd = '';
 
@@ -302,7 +428,7 @@ export class BonReceptionComponent {
     this.mntTimbre = 0;
     this.selectedOA = null;
     this.totaltaxeMnt = 0;
-    this.TotalTaxeTimbre = 0; 
+    this.TotalTaxeTimbre = 0;
 
   }
 
@@ -414,19 +540,49 @@ export class BonReceptionComponent {
   final = new Array<any>();
   codeColoris: any;
   qteReceptionner: any = 1;
+  qteDemander: any;
   codeSaisieMaitere: any;
   codeUnite: any;
   observation: any;
   MntFactureFournisseur: any;
   dateFactureFournisseur: any;
+
+
+  // ControlQteReceptQteDde() {
+  //   for (let x = 0; x < this.listDataBRWithDetails.length; x++) {
+
+  //     let diffQteRcptQteDde = 0;
+
+  //     diffQteRcptQteDde = -this.listDataBRWithDetails[x].qteReceptionner - -this.listDataBRWithDetails[x].qteDemander
+  //     console.log("diffrence qte rcp et qte dde ", diffQteRcptQteDde)
+
+  //     if (diffQteRcptQteDde > 10) {
+  //       alertifyjs.set('notifier', 'position', 'top-right');
+  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Quantite Receptionner ne peux etre superieur a Quantite Demander Que de 10");
+  //       break;
+
+  //     } else if(diffQteRcptQteDde < 10) {
+  //       alertifyjs.set('notifier', 'position', 'top-right');
+  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Quantite Receptionner ne peux etre superieur a Quantite Demander Que de 10");
+  //       break;
+
+  //     }else{
+  //       alertifyjs.set('notifier', 'position', 'top-left');
+  //       alertifyjs.success(  " OK");
+
+  //     }
+  //     break;
+
+
+  //   }
+
+
+
+
+  // }
+
+
   PostBonReception() {
-
-
-
-
-
-
-
 
     if (!this.codeSaisie || this.listDataBRWithDetails.length == 0) {
       alertifyjs.set('notifier', 'position', 'top-right');
@@ -441,16 +597,18 @@ export class BonReceptionComponent {
 
       } else {
 
-
+        // this.updateEtatReceptionOrdreAchat();
 
         for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
           this.GetDataFromTableEditor = {
 
-
-            codematiere: { code: this.listDataBRWithDetails[y].codeMatieres },
-            codeUnite: { code: this.listDataBRWithDetails[y].codeUnites },
-            codeColoris: { code: this.listDataBRWithDetails[y].codeColoriss },
+            codeFournisseur: this.selectedFournisseur,
+            codeDepot: this.selectedDepot, 
+            codeMatieres:this.listDataBRWithDetails[y].codeMatieres ,
+            matiereDTO:{code:this.listDataBRWithDetails[y].codeMatieres} ,
+            codeUnites:  this.listDataBRWithDetails[y].codeUnites  ,
+            codeColoriss:   this.listDataBRWithDetails[y].codeColoriss ,
             valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
             qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
             qteDemander: this.listDataBRWithDetails[y].qteDemander,
@@ -458,7 +616,7 @@ export class BonReceptionComponent {
             prixAchat: this.listDataBRWithDetails[y].prixAchat,
             mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
             mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
-            mntTotalTaxe: this.listDataBRWithDetails[y].mntTotalTTC - -this.listDataBRWithDetails[y].mntTotalHT,
+            mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe /100),
           }
           this.final.push(this.GetDataFromTableEditor);
 
@@ -472,12 +630,12 @@ export class BonReceptionComponent {
           designationLt: this.designationLt,
           codeModeReglement: this.selectedModeReglement,
           userCreate: this.userCreate,
-          codeFournisseur: null,
+
           code: this.code,
           actif: this.actif,
           visible: this.visible,
-          detailsOrdreAchatDTOs: this.final,
-          observation: this.observation,
+          detailsBonReceptionDTOs: this.final,
+          observation: "test obserrtvation from code",
           codeEtatReception: "2",
           codeDemandeAchat: this.selectedDemandeAchat,
           codeAppelOffre: this.selectedAppelOffre,
@@ -487,9 +645,11 @@ export class BonReceptionComponent {
           mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
           mntRemise: this.remiseEnPourcent,
           mntTimbre: this.mntTimbre,
-          dateLivraison: this.dateLivraison,
-          lieu: this.lieuOA,
-          instruction: this.Instructions,
+          dateFactureFournisseur: this.dateFactureFournisseur,
+          mntFactureFournisseur: this.MntFactureFournisseur,
+          codeFactureFournisseur: this.codeFactureFournisseur,
+          codeFournisseur: this.selectedFournisseur,
+          codeDepot: this.selectedDepot,
           codeTypeCircuitAchat: 2,
           mntNet: this.mntNet,
         }
@@ -499,7 +659,7 @@ export class BonReceptionComponent {
         if (this.code != null) {
           body['code'] = this.code;
           console.log("Body to Update", body)
-          this.param_achat_service.UpdateOrdreAchat(body).pipe(
+          this.param_achat_service.UpdateBonReception(body).pipe(
             catchError((error: HttpErrorResponse) => {
               let errorMessage = '';
               if (error.error instanceof ErrorEvent) {
@@ -533,7 +693,7 @@ export class BonReceptionComponent {
         else {
           console.log("Body to Post", body)
 
-          this.param_achat_service.PostOrdreAchatWithDetails(body).pipe(
+          this.param_achat_service.PostBonReceptionWithDetails(body).pipe(
             catchError((error: HttpErrorResponse) => {
               let errorMessage = '';
               if (error.error instanceof ErrorEvent) { } else {
@@ -791,9 +951,9 @@ export class BonReceptionComponent {
   disp: boolean = false;
 
   transformDateFormat() {
-    this.dateLivraison = this.datePipe.transform(this.dateLivraison, "yyyy-MM-dd")
+    this.dateFactureFournisseur = this.datePipe.transform(this.dateFactureFournisseur, "yyyy-MM-dd")
 
-    console.log("  transformDateFormat  this.dateLivraison", this.dateLivraison)
+    console.log("  transformDateFormat  this.dateLivraison", this.dateFactureFournisseur)
   };
 
   dateLivraison: any;
@@ -1230,17 +1390,37 @@ export class BonReceptionComponent {
       this.prixTotalTTC = 0.000000;
       this.TotalHTValue = 0.000000;
       this.remiseEnPourcent = 0.000000;
-      this.mntNet = 0.000000; 
+      this.mntNet = 0.000000;
       this.totaltaxeMnt = 0.000000;
       this.TotalTaxeTmb = 0.000000;
       this.mntTimbre = 0.000000;
 
     } else {
 
+      this.param_achat_service.GetOrdreAchatByCodeIn(this.selectedOA).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+
+          }
+          return throwError(errorMessage);
+        })
+      ).subscribe((data: any) => {
+        this.selectedDemandeAchat = data.codeDemandeAchat;
+        this.selectedAppelOffre = data.codeAppelOffre;
+
+      }
+      )
 
 
 
-      this.param_achat_service.GetOrdreAchatByCode(this.selectedOA).pipe(
+
+
+
+
+      this.param_achat_service.GetDetailsOrdreAchatByCode(this.selectedOA).pipe(
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
@@ -1313,72 +1493,72 @@ export class BonReceptionComponent {
   }
 
   codeDemandeAchats: any;
-  GetDemandeAchatWhereCodeIn() {
-    this.listDemandeAchatRslt = []
-    this.listDataBRWithDetails = new Array<any>();
+  // GetDemandeAchatWhereCodeIn() {
+  //   this.listDemandeAchatRslt = []
+  //   this.listDataBRWithDetails = new Array<any>();
 
-    if (this.selectedAppelOffre == null) {
+  //   if (this.selectedAppelOffre == null) {
 
-    } else {
-
-
-
-      this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) { } else {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
-
-          }
-          return throwError(errorMessage);
-        })
-
-      ).subscribe((data1: any) => {
-        this.dataAppelOffre = data1;
-        this.codeDemandeAchats = data1.codeDemandeAchat
-        this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
-          catchError((error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) { } else {
-              alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
-
-            }
-            return throwError(errorMessage);
-          })
-
-        ).subscribe((data2: any) => {
-          this.dataDemandeAchat = data2;
-          // console.log("data length", data2);
-          this.listDemandeAchatPushed = [];
-          // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
-          // }
-          console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
-          this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-          // this.prixTotalTTC = 0.000000;
-          // this.TotalHTValue = 0.000000;
-          // this.remiseEnPourcent = 0.000000;
-          // this.mntNet = 0.000000;
-          // this.tott19 = 0.000000;
-          // this.tott7 = 0.000000;
-          // this.TotalTaxeTmb = 0.000000;
-          // this.mntTimbre = 0.000000;
-          // this.dateLivraison = null
-          // this.Instructions = '';
-          // this.lieuOA = '';
-        }
-        )
-
-
-      })
-
-    }
+  //   } else {
 
 
 
-  }
+  //     this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre).pipe(
+  //       catchError((error: HttpErrorResponse) => {
+  //         let errorMessage = '';
+  //         if (error.error instanceof ErrorEvent) { } else {
+  //           alertifyjs.set('notifier', 'position', 'top-right');
+  //           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+
+  //         }
+  //         return throwError(errorMessage);
+  //       })
+
+  //     ).subscribe((data1: any) => {
+  //       this.dataAppelOffre = data1;
+  //       this.codeDemandeAchats = data1.codeDemandeAchat
+  //       this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
+  //         catchError((error: HttpErrorResponse) => {
+  //           let errorMessage = '';
+  //           if (error.error instanceof ErrorEvent) { } else {
+  //             alertifyjs.set('notifier', 'position', 'top-right');
+  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+
+  //           }
+  //           return throwError(errorMessage);
+  //         })
+
+  //       ).subscribe((data2: any) => {
+  //         this.dataDemandeAchat = data2;
+  //         // console.log("data length", data2);
+  //         this.listDemandeAchatPushed = [];
+  //         // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
+  //         this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
+  //         // }
+  //         console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
+  //         this.listDemandeAchatRslt = this.listDemandeAchatPushed;
+  //         // this.prixTotalTTC = 0.000000;
+  //         // this.TotalHTValue = 0.000000;
+  //         // this.remiseEnPourcent = 0.000000;
+  //         // this.mntNet = 0.000000;
+  //         // this.tott19 = 0.000000;
+  //         // this.tott7 = 0.000000;
+  //         // this.TotalTaxeTmb = 0.000000;
+  //         // this.mntTimbre = 0.000000;
+  //         // this.dateLivraison = null
+  //         // this.Instructions = '';
+  //         // this.lieuOA = '';
+  //       }
+  //       )
+
+
+  //     })
+
+  //   }
+
+
+
+  // }
 
 
 

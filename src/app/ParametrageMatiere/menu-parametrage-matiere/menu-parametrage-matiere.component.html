@@ -1,82 +1,87 @@
-<div class="container">
+<div class="container" id="menu_parametrage_matiere">
     <div class="row text-center">
       <h2>Main Menu Matiere</h2>
-      <div id="menu-box">
-        <div id="item" class="col-sm-6 col-md-3"  [routerLink]="['/menu_parametrage_matiere/matiere']" >
+      <div id="menu-box"  >
+       <div id="matier_menu">
+        <div id="item"  *ngIf="VisMatiereMenu" class="col-sm-6 col-md-3"  [routerLink]="['/menu_parametrage_matiere/matiere']" >
           <div class="container-block">
             <div class="block1">
               <i class="fa fa-cogs" aria-hidden="true"></i>
             </div>
             <div class="block2">
-              <span>Matiere</span>
+              <span>{{DesigntionMenuMatiere}}</span>
               <p>Tissu Jersey , Button 35 , ...</p>
               
             </div>   
           </div>
         </div>
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/coloris']"  >
+       </div>
+
+        
+        <div id="item" *ngIf="VisColoris" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/coloris']"  >
           <div class="container-block" >
             <div class="block1" >
               <i class="fa fa-paint-brush" aria-hidden="true"></i>
             </div>
             <div class="block2">
-              <span >Coloris</span>
+              <span >{{DesigntionMenuColoris}}</span>
               <p>Bleu , Rouge , ...</p>
             </div>
           </div>
         </div>
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/type_matiere']">
+        <div id="item" *ngIf="VisTypeMatiere" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/type_matiere']">
           <div class="container-block">
             <div class="block1">
               <i class="fa fa-tag" aria-hidden="true"></i>
             </div>
             <div class="block2">
-              <span>Type Matiere</span>
+              <span>{{DesigntionMenuTypeMatiere}}</span>
               <p>Tissu , Button , ...</p>
             </div>
           </div>    
         </div>
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/taille']">
+        <div id="item" *ngIf="VisTaille"  class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/taille']">
           <div class="container-block">
             <div class="block1">
               <i class="fa fa-outdent" aria-hidden="true"></i>
             </div>
             <div class="block2">
-              <span>Taille</span>
+              <span>{{DesigntionMenuTaille}}</span>
               <p>L , XL , XXL , ...</p>
             </div>
           </div>    
         </div>
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/unite']">
+        <div id="item"  *ngIf="VisGrilleTaille"  class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/grille_taille']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-tasks"></i>
+            </div>
+            <div class="block2">
+              <span>{{DesigntionMenuGrilleTaille}}</span>
+               <p>S ==> XL , M => 2XL , ....</p>
+            </div>
+          </div>    
+        </div>
+        <div id="item" *ngIf="VisUnite"  class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/unite']">
           <div class="container-block">
             <div class="block1">
               <i class="fa fa-bars" aria-hidden="true"></i>
             </div>
             <div class="block2">
-              <span>Unite</span>
+              <span>{{DesigntionMenuUnite}}</span>
               <p>Piece , Meter , ...</p>
             </div>
           </div>    
         </div>
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/grille_taille']">
-          <div class="container-block">
-            <div class="block1">
-              <i class="fa fa-tasks"></i>
-            </div>
-            <div class="block2">
-              <span>Grille Taille</span>
-               <p>S ==> XL , M => 2XL , ....</p>
-            </div>
-          </div>    
-        </div>
+       
 
-        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/qc_standards']">
+        <div id="item" *ngIf="VisQcStand"  class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/qc_standards']">
           <div class="container-block">
             <div class="block1">
               <i class="fa fa-tasks"></i>
             </div>
             <div class="block2">
-              <span> QC Standards</span>
+              <span>{{DesigntionMenuQcStand}}</span>
               <p>Qualite Control Standards</p>
             </div>
           </div>    

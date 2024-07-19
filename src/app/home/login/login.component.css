@@ -9,15 +9,27 @@ body {
   height: 100vh;
   margin: auto;
 }
-#login .container .login-row .login-column .login-box {
+/* 
+
+.container {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  border: 1px solid #9C9C9C;
+  background-color: #EAEAEA;
+}
+  */
+
+
+#login  .container .login-row .login-column .login-box {
   margin-left: 345px;
   margin-top: 105px;
   max-width: 600px; 
   height: 320px;
   border: 1px solid #9C9C9C;
   background-color: #EAEAEA;
-  min-height: 100%;/* fill the screen height to allow vertical alignement */
-  display: grid; /* display:flex works too since body is the only grid cell */
+  min-height: 100%; 
+  display: grid;  
 }
 #login .container .login-row .login-column .login-box .login-form {
   padding: 20px;
@@ -29,5 +41,3 @@ body {
 #login {
  
 }
-
- 

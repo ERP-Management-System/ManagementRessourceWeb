@@ -835,7 +835,7 @@ export class OrdreAchatComponent {
 
   GetOrdreAchatByCode(code: number) {
 
-    this.param_achat_service.GetOrdreAchatByCode(this.selectedOrdreAchat.code).pipe(
+    this.param_achat_service.GetDetailsOrdreAchatByCode(this.selectedOrdreAchat.code).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {

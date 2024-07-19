@@ -119,6 +119,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParametrageCentralService } from './parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import {MatCardModule} from '@angular/material/card';
  
+ 
 
 
 

@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.liveClock();
     this.getvaluesFromLocalStorage();
+    
+    
   }
   title = 'ManageRessourceWeb';
 
@@ -25,12 +27,28 @@ export class AppComponent implements OnInit {
     }, 1000);
   }
   disabled: boolean = false;
+  timer :any;
+  
+  currentTime = 0;
+
+ 
+
+ 
   getvaluesFromLocalStorage() {
-    if (localStorage.getItem("username") === null) {
-      this.disabled = false
-    } else {
-      this.disabled = true
-    }
+    // this.stopTimer();
+    var intervalId = setInterval(() =>{
+      if (sessionStorage.getItem("username") === null) {
+        this.disabled = false
+      } else {
+        this.disabled = true
+      }
+   }, 100);
+console.log("intervalId" )
+  
+
+     
+ 
+    
   }
 
 

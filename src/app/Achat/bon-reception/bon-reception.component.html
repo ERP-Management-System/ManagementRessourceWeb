@@ -226,7 +226,7 @@
             <fieldset class="deleteForms">
                 <h4 class="text-delete ">Êtes-vous sûr de vouloir supprimer ?
                     <p-button icon="pi pi-save" data-dismiss="modal" label="supprimer"
-                        styleClass="save-delete p-button-success" (click)="DeleteOrdreAchat(code)"></p-button>
+                        styleClass="save-delete p-button-success" (click)="DeleteBonReception(code)"></p-button>
                     <p-button icon="pi pi-sign-out" label="Fermer" styleClass="btn-cancel-delete p-button-danger"
                         data-dismiss="modal"> </p-button>
 
@@ -621,7 +621,7 @@
 
                                         <td style="width: 160px !important;font-size: 13px">
                                             <input style="width: 160px !important" class="InputQte"
-                                                [(ngModel)]="inst.qteReceptionner" type="number" name="number"
+                                                [(ngModel)]="inst.qteReceptionner"   type="number" name="number"
                                                 step="1" />
                                         </td>
 
