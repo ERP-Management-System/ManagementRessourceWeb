@@ -112,7 +112,7 @@ export class ModeReglementComponent implements OnInit {
   //       if (error.error instanceof ErrorEvent) {
   //       } else {
   //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error(` ${error.error.description}` + " Parametrage Failed");
+  //         alertifyjs.error(` ${error.error.description}` );
   //       }
   //       return throwError(errorMessage);
   //     })
@@ -208,7 +208,7 @@ export class ModeReglementComponent implements OnInit {
   //     //     if (error.error instanceof ErrorEvent) {
   //     //     } else {
   //     //       alertifyjs.set('notifier', 'position', 'top-right');
-  //     //       alertifyjs.error(` ${error.error.description}` + " Parametrage Failed");
+  //     //       alertifyjs.error(` ${error.error.description}` );
 
   //     //     }
   //     //     return throwError(errorMessage);
@@ -301,7 +301,7 @@ export class ModeReglementComponent implements OnInit {
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
         }
         return throwError(errorMessage);
       })
@@ -495,7 +495,7 @@ export class ModeReglementComponent implements OnInit {
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
             }
             return throwError(errorMessage);
@@ -525,7 +525,7 @@ export class ModeReglementComponent implements OnInit {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
             }
             return throwError(errorMessage);
@@ -635,7 +635,7 @@ export class ModeReglementComponent implements OnInit {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -669,7 +669,7 @@ export class ModeReglementComponent implements OnInit {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -695,7 +695,7 @@ export class ModeReglementComponent implements OnInit {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);

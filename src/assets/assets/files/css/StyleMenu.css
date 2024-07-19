@@ -12,6 +12,18 @@ h2 {
 .container {
     margin: 50px auto;
 }
+:host ::ng-deep  .mainbox    {
+ 
+    display: grid !important;
+    width: 100% !important; 
+    grid-template-areas: "head head" "left  main" "left  foot" !important;
+    grid-template-rows: 50px 1fr 30px !important;
+    grid-template-columns: 70px 1fr 0px !important;
+    grid-gap: 5px!important;
+    margin: 0px !important;
+    font-size: 15px !important;
+
+}
 #item{
     -webkit-transition: all 0.2s ease-in;
     -moz-transition: all 0.2s ease-in;

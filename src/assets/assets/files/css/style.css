@@ -336,6 +336,20 @@ tr.mat-footer-row {
   overflow-y: scroll !important;
 
 }  
+
+
+:host ::ng-deep  .mainbox    {
+ 
+  display: grid;
+  width: 100%; 
+  grid-template-areas: "head head" "left  main" "left  foot";
+  grid-template-rows: 50px 1fr 30px;
+  grid-template-columns: 70px 1fr 0px ;
+  grid-gap: 5px; 
+  margin: 0px;
+  font-size: 15px; 
+
+}
 :host ::ng-deep .p-datatable .p-datatable-header {
   background: #f8f9fa;
   color: #343a40;

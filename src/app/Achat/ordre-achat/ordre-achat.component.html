@@ -480,10 +480,10 @@
                                         <th style="width: 100px !important;font-size: 13px">Unite</th>
                                         <th style="width: 100px !important;font-size: 13px">Coloris</th>
                                         <th style="width: 90px !important;font-size: 13px">Quantite</th>
-                                        <th style="width: 100px !important;font-size: 13px">PU. HT</th>
-                                        <th style="width: 130px !important;font-size: 13px">PT. HT</th>
-                                        <th style="width: 50px !important;font-size: 13px">Taxe</th>
-                                        <th style="width: 115px !important;font-size: 13px">Prix Total TTC</th>
+                                        <th  *ngIf="visDetailsPrice" style="width: 100px !important;font-size: 13px">PU. HT</th>
+                                        <th  *ngIf="visDetailsPrice" style="width: 130px !important;font-size: 13px">PT. HT</th>
+                                        <th *ngIf="visDetailsPrice" style="width: 50px !important;font-size: 13px">Taxe</th>
+                                        <th *ngIf="visDetailsPrice" style="width: 115px !important;font-size: 13px">Prix Total TTC</th>
                                         <th style="width: 50px !important;font-size: 13px">Supp.</th>
 
 
@@ -557,24 +557,24 @@
                                                 [(ngModel)]="inst.qteDemander"   type="number" name="number" step="1"/>
                                         </td>
 
-                                        <td style="width: 100px !important;font-size: 13px">
+                                        <td *ngIf="visDetailsPrice" style="width: 100px !important;font-size: 13px">
                                             <!-- prix uni ht  -->
                                             <input style="width: 100px;" class="InputQte" [(ngModel)]="inst.prixAchat"
                                             type="number" name="prixAchat"   step='0.000001'  />
                                         </td>
-                                        <td style="width: 130px !important;font-size: 13px">
+                                        <td *ngIf="visDetailsPrice" style="width: 130px !important;font-size: 13px">
                                             <!-- prix Total ht  -->
                                             <input style="width: 130px;"   class="InputQte" [(ngModel)]="inst.mntTotalHT"
                                             type="number" name="mntTotalHT" step="0.100000"    
                                                  />
                                         </td>
-                                        <td style="width: 50px !important;font-size: 13px">
+                                        <td *ngIf="visDetailsPrice" style="width: 50px !important;font-size: 13px">
                                             <!-- taxe  -->
                                             <input disabled="" style="width: 50px;" class="InputQte" [(ngModel)]="inst.valeurTaxe"
                                             type="number" name="valeurTaxe" step="1" />
                                         </td>
                                          
-                                        <td style="width: 115px !important ">
+                                        <td  *ngIf="visDetailsPrice"style="width: 115px !important ">
                                             <input step="0.001" [(ngModel)]="inst.mntTotalTTC" disabled=""
                                                  (change)="calculateTaxe()" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
@@ -594,54 +594,8 @@
                             
                             <br>
                             <!-- ///// table tva et TTC  -->
-                             <div class="flex-row-start flex-12">
-                                <!-- <section class="flex-row-start flex-8">
-
-                                    <fieldset class="flex-row-start flex-5">
-                                        <p-table id="tabDetails" dataKey="qte" editMode="row"
-                                            [value]="listDataOAWithDetails" [scrollable]="true" scrollHeight="200px"
-                                            [tableStyle]="{'min-width': '20rem' , 'padding': '1px 1px 1px 1px' , 'width': '100%'}"
-                                            selectionMode="single" #dtInstAdd>
-                                            <ng-template pTemplate="footer" style="font-weight: 400 !important;">
-                                                <tr
-                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Totals Taxe 19</td>
-                                                    <input disabled="" step='0.01' [(ngModel)]="tott19 "
-                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" id="totalTax19" name="totalTax19" required  />
-                                                </tr>
-
-
-                                                <tr
-                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Totals Taxe 7</td>
-                                                    <input disabled="" step="0.001" [(ngModel)]="tott7"
-                                                        style="border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" type="number" id="valeurTVA" name="valeurTVA"
-                                                        required minlength="4" maxlength="8" size="10" />
-                                                </tr>
-
-
-                                                <tr
-                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Timbre</td>
-                                                    <input disabled=""  [(ngModel)]="mntTimbre"
-                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" type="number"  />
-                                                </tr>
-
-                                                <tr
-                                                    style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Total</td>
-                                                    <input step="0.001"   [(ngModel)]="TotalTaxeTmb"
-                                                        style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
-                                                        class="InputQte" type="number" id="TotalTaxeTmb" name="TotalTaxeTmb"
-                                                        required minlength="4" maxlength="8" size="10" />
-                                                </tr>
-                                            </ng-template>
-                                        </p-table>
-                                    </fieldset>
-                                </section> -->
+                             <div *ngIf="visDetailsPrice" class="flex-row-start flex-12">
+                                
 
                                 <!-- // new calcul tax  -->
                                 <section class="flex-row-start flex-8">

@@ -20,8 +20,25 @@ declare const PDFObject: any;
 })
 export class OrdreAchatComponent {
 
+  visDetailsPrice: boolean = false;
+  GelParamVisibleWithPrice() {
+    // this.headers.append('foo', 'bar');
+    this.param_achat_service.GetVisibleWithPrice().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
+        }
+        return throwError(errorMessage);
+      })
 
+    ).subscribe((data: any) => {
+      this.visDetailsPrice = data.visible;
+
+    })
+  }
 
   v2!: any[];
 
@@ -42,7 +59,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -475,7 +492,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
             }
             return throwError(errorMessage);
@@ -509,7 +526,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) { } else {
               this.final = new Array<any>();
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
             }
             return throwError(errorMessage);
           })
@@ -619,7 +636,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -645,7 +662,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -672,7 +689,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -699,7 +716,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -727,7 +744,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
         }
         return throwError(errorMessage);
       })
@@ -751,7 +768,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
         }
         return throwError(errorMessage);
       })
@@ -840,7 +857,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -876,7 +893,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -903,7 +920,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -924,7 +941,7 @@ export class OrdreAchatComponent {
     //     let errorMessage = '';
     //     if (error.error instanceof ErrorEvent) { } else {
     //       alertifyjs.set('notifier', 'position', 'top-right');
-    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
     //     }
     //     return throwError(errorMessage);
@@ -1146,7 +1163,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);
@@ -1238,7 +1255,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
           }
           return throwError(errorMessage);
@@ -1322,7 +1339,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
           }
           return throwError(errorMessage);
@@ -1336,7 +1353,7 @@ export class OrdreAchatComponent {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
             }
             return throwError(errorMessage);
@@ -1386,7 +1403,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
           }
           return throwError(errorMessage);
@@ -1436,7 +1453,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` + " Parametrage Failed");
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
         }
         return throwError(errorMessage);

@@ -1,5 +1,5 @@
-<div id="login">
-        <div class="container">
+<!-- <div id="login">
+        <div class="container" style="height: 550px;">
             <div  class=" login-row row justify-content-center align-items-center">
                 <div   class=" login-column col-md-6">
                     <div  class=" login-box col-md-12">
@@ -22,4 +22,25 @@
             </div>
         </div>
     </div>
-    
+     -->
+
+     
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>Login</h1>
+            <form action="#" method="POST">
+                <div class="textbox">
+                    <label for="email">User Name</label>
+                    <input [(ngModel)]="userName"  type="text" id="UserName" name="UserName" placeholder="Enter your UserName" required>
+                </div>
+                <div class="textbox">
+                    <label for="password">Password</label>
+                    <input [(ngModel)]="password" type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button (click)="formValidation()"  type="submit" class="btn">Login</button> 
+            </form>
+        </div>
+    </div>
+</body>
+ 

@@ -1007,3 +1007,22 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
   }
 }
   
+
+:host ::ng-deep  .p-dialog-header-icons.ng-tns-c2656225073-0 {
+  display: none;
+}
+
+.navbar-brand {
+  display: inline-block;
+  padding-top: 15px;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.input-group {
+ 
+  padding: 10px 0px 0px 0px;
+}

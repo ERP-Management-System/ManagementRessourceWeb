@@ -1,13 +1,13 @@
 <body translate="no" class="nav-md">
 <div   class="mainbox" > 
-        <header  *ngIf="disabled">
+        <header   >
             <!-- <div class="footer">{{ liveDateTime | date: "medium" }} 
                
                
 
             </div> -->
             <!--  -->
-        <app-bar-time></app-bar-time>
+        <app-bar-time *ngIf="disabled"></app-bar-time>
  
 
           </header>
