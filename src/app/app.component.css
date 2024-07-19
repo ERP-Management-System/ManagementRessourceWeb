@@ -11,27 +11,28 @@
     font-size: 15px;
     overflow-y: scroll !important;
 } */
- 
-.mainbox    {
- 
+
+.mainbox {
+
     display: grid;
-    width: 100%; 
+    width: 100%;
     grid-template-areas: "head head" "left  main" "left  foot";
     grid-template-rows: 50px 1fr 30px;
-    grid-template-columns: 70px 1fr 0px ;
-    grid-gap: 5px; 
+    grid-template-columns: 70px 1fr 0px;
+    grid-gap: 5px;
     margin: 0px;
-    font-size: 15px; 
-
+    font-size: 15px;
+    height: 100vh;
 }
- 
-.breadcrumbDev{
+
+.breadcrumbDev {
     height: 47px;
     /* display: flex; */
     position: fixed;
     left: 110px !important;
     top: 0px;
 }
+
 .mainbox>header {
     grid-area: head;
     background-color: #354052;
@@ -43,12 +44,14 @@
     grid-area: app-navbar;
     /* background-color: #ffa08c; */
 }
+
 .sidebar.open .mainbox {
- 
+
     background-color: chartreuse;
     font-size: 44px !important;
-  
-  }  
+
+}
+
 .mainbox>main {
     grid-area: main;
     background: #e0e0e09c;
@@ -117,13 +120,13 @@
     height: calc(100% - 140px);
 }
 
-:host ::ng-deep  .sidebar .scroll {
+:host ::ng-deep .sidebar .scroll {
     overflow-y: scroll;
     scrollbar-width: none;
     padding: 0px 0px 0px 0px;
 
- 
-  scrollbar-color: #5a5555 #ffffff;
+
+    scrollbar-color: #5a5555 #ffffff;
 
 }
 
@@ -378,4 +381,4 @@
     color: #ffffff;
     font-size: 2.1rem;
     width: 100%;
-  }
+}

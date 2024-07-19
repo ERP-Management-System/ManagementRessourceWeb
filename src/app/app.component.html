@@ -1,23 +1,17 @@
 <body translate="no" class="nav-md">
 <div   class="mainbox" > 
         <header   >
-            <!-- <div class="footer">{{ liveDateTime | date: "medium" }} 
-               
-               
-
+            <!-- <div class="footer">{{ liveDateTime | date: "medium" }}  
             </div> -->
-            <!--  -->
-        <app-bar-time *ngIf="disabled"></app-bar-time>
- 
-
+  
+        <app-bar-time *ngIf="disabled"></app-bar-time> 
           </header>
         <app-navbar   *ngIf="disabled"></app-navbar> 
-        <main  id="content-wrapper" >
+        <main *ngIf="disabled"  id="content-wrapper" >
             <router-outlet onclick="closeNavBAr()"></router-outlet>
         </main>
         <footer  *ngIf="disabled">Footer</footer>
     </div> 
 </body>
-
-<!-- <router-outlet onclick="closeNavBAr()"></router-outlet> -->
+ 
 

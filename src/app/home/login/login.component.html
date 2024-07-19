@@ -24,23 +24,33 @@
     </div>
      -->
 
-     
+
 <body>
     <div class="container">
         <div class="login-box">
             <h1>Login</h1>
-            <form action="#" method="POST">
+            <form action="#" method="POST" (ngSubmit)="formValidation()" [formGroup]="userForm" novalidate>
                 <div class="textbox">
                     <label for="email">User Name</label>
-                    <input [(ngModel)]="userName"  type="text" id="UserName" name="UserName" placeholder="Enter your UserName" required>
+                    <input [(ngModel)]="userName" pInputText
+                        formControlName="userName" type="text" id="UserName" name="UserName"
+                        placeholder="Enter your userName" required>
+                    <small class="p-error block" *ngIf="
+                        userForm.get('userName')?.invalid && userForm.get('userName')?.dirty
+                      ">
+                        First name is required</small>
                 </div>
                 <div class="textbox">
                     <label for="password">Password</label>
-                    <input [(ngModel)]="password" type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input [(ngModel)]="password" pInputText formControlName="password" type="password" id="password"
+                        name="password" placeholder="Enter your password" required>
+                        <small class="p-error block" *ngIf="
+                        userForm.get('password')?.invalid && userForm.get('password')?.dirty
+                      ">
+                      First name is required</small>
                 </div>
-                <button (click)="formValidation()"  type="submit" class="btn">Login</button> 
+                <button [disabled]="userForm.invalid" type="submit" class="btn">Login</button>
             </form>
         </div>
     </div>
 </body>
- 

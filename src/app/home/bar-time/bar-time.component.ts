@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class BarTimeComponent implements OnInit {
   ngOnInit(): void {
     this.liveClock(); 
+    this.MethodeVisbileNavBars();
   }
   constructor(private route: ActivatedRoute, private router: Router) { }
   liveDateTime = new Date();
@@ -30,7 +31,7 @@ export class BarTimeComponent implements OnInit {
     if (mode === 'Print') {
 
 
-      button.setAttribute('data-target', '#ModalPrint');
+      button.setAttribute('data-target', '#ModalLogOut');
       this.formHeader = "Log Out"
       this.visibleModalLogOut = true; 
 
@@ -38,11 +39,29 @@ export class BarTimeComponent implements OnInit {
     }
 
   }
-
+  reloadPage() {
+    setTimeout(()=>{
+      window.location.reload();
+    }, 10);
+}
   LogOut(){
+  
+    
+    sessionStorage.clear();
     this.router.navigate([''], { relativeTo: this.route })
+    this.reloadPage();
 
   }
-
-  
+  VisibleBarTime : boolean = false;
+  MethodeVisbileNavBars(){   
+    var count=0;
+    var intervalId = setInterval(() =>{if(sessionStorage.getItem("username") == null || sessionStorage.getItem("username") == '' ){ 
+      this.VisibleBarTime = false;
+    }else{
+      this.VisibleBarTime = true; 
+    } 
+    count=count+1;
+    if (count==1000) clearInterval(intervalId);
+    }, 10); 
+  }
 }

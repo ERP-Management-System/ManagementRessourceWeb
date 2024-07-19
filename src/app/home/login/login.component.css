@@ -43,7 +43,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 .container {
@@ -84,6 +84,7 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
+  font-size: 13px;
 }
 
 .textbox input:focus {

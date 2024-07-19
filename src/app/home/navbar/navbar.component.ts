@@ -1,11 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  ngOnInit(): void {
+    
+
+    this.MethodeVisbileNavBars();
+
+  }
+
+  VisibleNavBar : boolean = false;
+  // usernameSsesion  :  any ='';
+  MethodeVisbileNavBars(){   
+    var count=0;
+    console.log(sessionStorage.getItem("username"));
+    var intervalId = setInterval(() =>{if(sessionStorage.getItem("username") == '' ||  sessionStorage.getItem("username") === null ){ 
+      this.VisibleNavBar = false;
+    }else{
+      this.VisibleNavBar = true; 
+    } 
+    count=count+1;
+    if (count==1000) clearInterval(intervalId);
+    }, 10);
+
+   
+
+ 
+
+    
+  }
 
   step:any;
   

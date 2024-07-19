@@ -19,7 +19,7 @@
 
 <!-- <body class="fixed-nav sticky-footer bg-dark" id="page-top"> -->
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+<nav *ngIf="VisibleBarTime" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
 
     <a class="navbar-brand" href="index.html">Start Bootstrap</a>
     <!-- <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,6 +29,9 @@
 
 
         <ul class="navbar-nav ml-auto">
+            <li style=" padding: 15px 10px 0px 0px; ">
+                {{ liveDateTime | date: "dd/MM/yyyy hh:mm a" }}
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
@@ -115,6 +118,7 @@
                     <a class="dropdown-item small" href="#">View all alerts</a>
                 </div>
             </li>
+            
             <li class="nav-item">
                 <!-- <form class="form-inline my-2 my-lg-0 mr-lg-2"> -->
                 <div class="input-group">
@@ -130,11 +134,11 @@
             <li class="nav-item">
                 <!-- <a   class="nav-link" data-toggle="modal" data-target="#exampleModal"> -->
                 <!-- <i class="fa fa-fw fa-sign-out"></i>Logout</a> -->
-                <button  style="margin: 10px 5px 0px 20px;width: 100%; height: 68%;" data-backdrop="false" type="button" class="Bouton-add-new2 btn btn-outline-warning "
-                    data-original-title="Print" data-toggle="modal" data-target="#ModalPrint"
-                    (click)="onOpenModal('Print')">
-                    <div class="bouton_style-2">  <i class="fa-solid fa-right-from-bracket"></i> Logout</div>
-                   
+                <button style="margin: 10px 5px 0px 20px;width: 100%; height: 68%;" data-backdrop="false" type="button"
+                    class="Bouton-add-new2 btn btn-outline-warning " data-original-title="Print" data-toggle="modal"
+                    data-target="#ModalLogOut" (click)="onOpenModal('Print')">
+                    <div class="bouton_style-2"> <i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+
                 </button>
             </li>
         </ul>
@@ -142,41 +146,9 @@
 </nav>
 <div class="content-wrapper">
 
-    <!-- /.container-fluid-->
-    <!-- /.content-wrapper-->
-
-    <!-- Scroll to Top Button-->
-    <!-- <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fa fa-angle-up"></i>
-      </a> -->
-    <!-- 
-  
-  
-  out Modal-->
-    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-              <a class="btn btn-primary" [routerLink]="['']">Logout</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-
-
     <!-- modal primeNG Print -->
-    <p-dialog id="ModalPrint" header="Header" [closeOnEscape]="true" [(visible)]="visibleModalLogOut"
-        data-backdrop="false" [modal]="true" styleClass="ModalPrint" [draggable]="false" [resizable]="false">
+    <p-dialog id="ModalLogOut" header="Header" [closeOnEscape]="true" [(visible)]="visibleModalLogOut"
+        data-backdrop="false" [modal]="true" styleClass="ModalLogOut" [draggable]="false" [resizable]="false">
 
 
 
@@ -193,7 +165,8 @@
                     class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
             </button>
 
-            <button class="btn btn-outline-warning close-ModalPrint" :closable="true" data-dismiss="modal" (click)="LogOut()">
+            <button class="btn btn-outline-warning close-ModalLogOut" :closable="true" data-dismiss="modal"
+                (click)="LogOut()">
                 <i class="fa-solid fa-right-from-bracket"></i>Log Out
             </button>
 
