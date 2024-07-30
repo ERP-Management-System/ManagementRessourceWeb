@@ -393,10 +393,6 @@ export class DemandeAchatComponent {
     } else {
       this.decryptedValue = 'No value found in session storage';
     }
-
-
-
-
         if (this.password == this.decryptedValue) {
 
 
