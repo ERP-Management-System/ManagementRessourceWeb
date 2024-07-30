@@ -9,6 +9,7 @@ import { AO, AODetails, AppelOffre, City, Coloris, Compteur, DemandeAchat, Depar
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { Card } from 'primeng/card';
 import { DatePipe } from '@angular/common';
+import { EncryptionService } from 'src/app/shared/EcrypteService/EncryptionService';
 
 
 
@@ -29,7 +30,7 @@ export class DemandeAchatComponent {
 
   openModal!: boolean;
   items!: MenuItem[];
-  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
+  constructor(private encryptionService: EncryptionService,private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
   }
@@ -365,23 +366,38 @@ export class DemandeAchatComponent {
 
   }
   diss: boolean = false;
+  decryptedValue: string = ''; 
   approveDemandeAchat(mode: string) {
 
-    this.param_achat_service.GetPasswordChangeApprouveAchat().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-        } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-        }
-        return throwError(errorMessage);
-      })
+    // this.param_achat_service.GetPasswordChangeApprouveAchat().pipe(
+    //   catchError((error: HttpErrorResponse) => {
+    //     let errorMessage = '';
+    //     if (error.error instanceof ErrorEvent) {
+    //     } else {
+    //       alertifyjs.set('notifier', 'position', 'top-right');
+    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+    //     }
+    //     return throwError(errorMessage);
+    //   })
 
-    ).subscribe(
-      (res: any) => {
+    // ).subscribe(
+    //   (res: any) => {
 
-        if (this.password == res.valeur) {
+
+          
+    const encryptedValue = sessionStorage.getItem('PasswordAnnuleApprouve');
+    if (encryptedValue) {
+       
+      this.decryptedValue = this.encryptionService.decrypt(encryptedValue);
+       
+    } else {
+      this.decryptedValue = 'No value found in session storage';
+    }
+
+
+
+
+        if (this.password == this.decryptedValue) {
 
 
           this.visbileModalPassword = false;
@@ -441,8 +457,8 @@ export class DemandeAchatComponent {
 
         }
 
-      }
-    )
+      // }
+    // )
 
 
 
@@ -475,9 +491,7 @@ export class DemandeAchatComponent {
       this.GetColorisActifVisible();
       this.GelUniteActifVisible();
       this.GetDemandeAchatByCode(this.selectedDemandeAchat);
-      // this.RemplireDropTaxe();
-
-      // this.GetTypeTaxe();
+      this.Getusers();
 
     }
   }
@@ -611,6 +625,7 @@ export class DemandeAchatComponent {
           codematiere: { code: this.listDataDAWithDetails[y].codeMatieres },
           codeUnite: { code: this.listDataDAWithDetails[y].codeUnites },
           codeColoris: { code: this.listDataDAWithDetails[y].codeColoriss },
+          laize:   this.listDataDAWithDetails[y].laize ,
           qteDemander: this.listDataDAWithDetails[y].qteDemander, userCreate: this.userCreate,
         }
         this.final.push(this.GetDataFromTableEditor);

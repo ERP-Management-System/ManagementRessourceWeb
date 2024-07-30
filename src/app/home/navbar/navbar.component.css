@@ -397,7 +397,7 @@ span.links_name {
 }
 
 .left .nav-list {
-    height: calc(100% - 140px);
+    height: calc(100% - 70px);
     overflow-x: hidden;
 }
 

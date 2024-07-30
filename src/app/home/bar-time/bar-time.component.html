@@ -130,23 +130,80 @@
                     </span>
                 </div>
                 <!-- </form> -->
+            </li> 
+            <li class="nav-item dropdown" style="padding-left: 20px;margin: 5px 0px 0px 0px;">
+                <a style="border: 1px solid gray;border-radius: 8px;padding: 11px 0px 11px 7px;" class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-fw fa-user-tie"></i>   <a style="padding-left: 10px;">{{UserConnected}}</a>
+                    <span class="d-lg-none">Alerts
+                        <span class="badge badge-pill badge-warning">6 New</span>
+                    </span>
+                    <!-- <span class="indicator text-warning d-none d-lg-block">
+                        <i class="fa fa-fw fa-circle"></i>
+                    </span> -->
+                </a>
+                <div class="dropdown-menu" aria-labelledby="alertsDropdown" style="width: 160px;">
+                    <h6 class="dropdown-header">Account Setting:</h6>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" >
+                        <!-- <span class="text-success">
+                            <strong>
+                                <i class="fa fa-long-arrow-up fa-fw"></i>Password</strong>
+                        </span> -->
+                        <!-- <button style="width: 100%; height: 68%;" data-backdrop="false" type="button"
+                        class="btn btn-outline-info " data-original-title="LogOut" data-toggle="modal"
+                        data-target="#ModalLogOut" (click)="onOpenModal('LogOut')">
+                        <div class="bouton_style-2"> <i class="fa-solid fa-right-from-bracket"></i> Password</div>
+                    </button> -->
+                    <button class="btn-grad astro-MG2CNCJP"  data-original-title="LogOut" data-toggle="modal"
+                    data-target="#ModalLogOut" (click)="onOpenModal('LogOut')"  style="background-image: linear-gradient(to right, #003973 0%, #E5E5BE  51%, #003973  100%)" data-color1="#003973" data-color2="#E5E5BE">
+                        Password
+                      </button>
+         
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item">
+                        <!-- <button style="width: 100%; height: 68%;" data-backdrop="false" type="button"
+                        class="btn btn-outline-info " data-original-title="LogOut" data-toggle="modal"
+                        data-target="#ModalLogOut" (click)="onOpenModal('LogOut')">
+                        <div class="bouton_style-2"> <i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+                    </button> -->
+                        <button class="btn-grad astro-MG2CNCJP"  data-original-title="LogOut" data-toggle="modal"
+                        data-target="#ModalLogOut" (click)="onOpenModal('LogOut')"  style="background-image: linear-gradient(to right, #003973 0%, #E5E5BE  51%, #003973  100%)" data-color1="#003973" data-color2="#E5E5BE">
+                        Logout
+                          </button>
+                
+                    </a>
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">
+                        <span class="text-success">
+                            <strong>
+                                <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
+                        </span>
+                        <span class="small float-right text-muted">11:21 AM</span>
+                        <div class="dropdown-message small">This is an automated server response message. All systems
+                            are online.</div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item small" href="#">View all alerts</a> -->
+                </div>
             </li>
             <li class="nav-item">
                 <!-- <a   class="nav-link" data-toggle="modal" data-target="#exampleModal"> -->
                 <!-- <i class="fa fa-fw fa-sign-out"></i>Logout</a> -->
-                <button style="margin: 10px 5px 0px 20px;width: 100%; height: 68%;" data-backdrop="false" type="button"
-                    class="Bouton-add-new2 btn btn-outline-warning " data-original-title="Print" data-toggle="modal"
-                    data-target="#ModalLogOut" (click)="onOpenModal('Print')">
+                <!-- <button style="margin: 10px 5px 0px 20px;width: 100%; height: 68%;" data-backdrop="false" type="button"
+                    class="Bouton-add-new2 btn btn-outline-warning " data-original-title="LogOut" data-toggle="modal"
+                    data-target="#ModalLogOut" (click)="onOpenModal('LogOut')">
                     <div class="bouton_style-2"> <i class="fa-solid fa-right-from-bracket"></i> Logout</div>
 
-                </button>
+                </button> -->
             </li>
         </ul>
     </div>
 </nav>
 <div class="content-wrapper">
 
-    <!-- modal primeNG Print -->
+    <!-- modal primeNG LogOut -->
     <p-dialog id="ModalLogOut" header="Header" [closeOnEscape]="true" [(visible)]="visibleModalLogOut"
         data-backdrop="false" [modal]="true" styleClass="ModalLogOut" [draggable]="false" [resizable]="false">
 

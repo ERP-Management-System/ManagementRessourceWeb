@@ -14,7 +14,7 @@
         <div class="material-table">
             <div class="card">
                 <p-toast></p-toast>
-                <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal"
+                <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal" appendTo="body"
                     data-target="#ModalPassword"></p-contextMenu>
 
                 <p-table #dt1 [contextMenu]="cm" [(contextMenuSelection)]="selectedAppelOffre" [value]="dataAppelOffre"
@@ -131,11 +131,26 @@
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
                             <!-- <th class="validationTrad" style=" width: 45px;padding: 2px 0px 0px 4px !important;">Valid.</th> -->
-                            <th style="width: 120px;">code Saisie</th>
-                            <th>Mode Reglement</th>
-                            <th>Date Creation</th>
-                            <th>Demande Achat</th>
-                            <th>Date Livraison</th>
+                            <th pSortableColumn="codeSaisie" style="width:120px">
+                                code Saisie <p-sortIcon field="codeSaisie"  />
+                            </th>
+                            <!-- <th style="width: 120px;">code Saisie</th> -->
+                            <th pSortableColumn="modeReglementDTO.designationAr"  >
+                                Mode Reglement <p-sortIcon field="modeReglementDTO.designationAr"  />
+                            </th>
+                            <!-- <th>Mode Reglement</th> -->
+                            <th pSortableColumn="dateCreate" >
+                                Date Creation <p-sortIcon field="dateCreate"  />
+                            </th>
+                            <!-- <th>Date Creation</th> -->
+                            <th pSortableColumn="demandeAchatDTO.codeSaisie" >
+                                Demande Achat<p-sortIcon field="demandeAchatDTO.codeSaisie"  />
+                            </th>
+                            <!-- <th>Demande Achat</th> -->
+                            <th pSortableColumn="dateLivraison" >
+                                Date Livraison<p-sortIcon field="dateLivraison"  />
+                            </th>
+                            <!-- <th>Date Livraison</th> -->
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
@@ -269,7 +284,7 @@
 
         <fieldset class="flex-12">
             <div class="flex-row-start flex-12">
-                <h2 class="text-default headerForm flex-4"> xx {{formHeader}}</h2>
+                <h2 class="text-default headerForm flex-4">{{formHeader}}</h2>
 
                 <div class="flex-10">
                     <button class="  btn btn-default save-add-ModalLarge" (click)="PostAppelOffre()"> <i
@@ -297,7 +312,7 @@
             <fieldset class="flex-8">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-3">Code <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-3">Code :  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-6">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
@@ -316,7 +331,7 @@
                 <div class="flex-row-start flex-12">
                     <div class="flex-row-start flex-12">
                         <section class="flex-row-start flex-6">
-                            <label class="control-label flex-3">Demande Achat <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                            <label class="control-label flex-3">Demande Achat : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                             <div class="dop control-input flex-6">
                                 <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                                     [options]="listDdeAchatRslt" [(ngModel)]="selectedDdeAchat" [filter]="true"
@@ -333,7 +348,7 @@
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Date Livraison <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-6">Date Livraison :  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input flex-6">
 
                             <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
@@ -345,8 +360,8 @@
 
                     </section>
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Adresse Livraison</label>
-                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px;right: 10px;"></i>
+                        <label class="control-label flex-6">Adresse Livraison :  <i class="fa-lg fa-fw fa fa-times icon-required" ></i></label>
+                       
                         <div class="dop control-input flex-8">
                             <textarea [(ngModel)]="adressLivraison"
                                 style="height: 70px;width: 180px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
@@ -362,7 +377,7 @@
             <fieldset class=" flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Mode Reglement <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-4">Mode Reglement : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-4">
                             <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                                 [options]="listModeReglementRslt" [(ngModel)]="selectedModeReglement" [filter]="true"
@@ -376,8 +391,8 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-4">Observation <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
-                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i>
+                        <label class="control-label flex-4">Observation : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                         
                         <div class="dop control-input flex-8">
                             <textarea [(ngModel)]="observation"
                                 style="height: 70px;width: 330px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
@@ -427,9 +442,10 @@
                                     <tr>
                                         <th style="width: 30px !important;font-size: 13px">#</th>
                                         <th style="width: 100px !important;font-size: 13px">Code</th>
-                                        <th style="width: 180px !important;font-size: 13px">Designation Matiere</th>
-                                        <th style="width: 150px !important;font-size: 13px">Designation Unite</th>
-                                        <th style="width: 150px !important;font-size: 13px">Designation Coloris</th>
+                                        <th style="width: 180px !important;font-size: 13px">Matiere</th>
+                                        <!-- <th style="width: 115px !important;font-size: 13px">Laize</th> -->
+                                        <th style="width: 150px !important;font-size: 13px">Unite</th>
+                                        <th style="width: 150px !important;font-size: 13px">Coloris</th>
                                         <th style="width: 100px !important;font-size: 13px">Quantite</th>
                                         <th style="width: 80px !important;font-size: 13px">Supprimer</th>
 
@@ -469,7 +485,13 @@
 
                                         </td>
 
+                                        <!-- <td style="width: 115px !important ">
 
+
+                                            <input disabled="" [(ngModel)]="inst.laize" style="width: 115px;"
+                                                class="InputQte" type="number" id="name" name="name" required
+                                                minlength="4" maxlength="8" size="10" />
+                                        </td> -->
 
                                         <td style="width: 150px !important;">
                                             <select class="DropChoisie" [(ngModel)]="inst.codeUnites"
@@ -607,42 +629,39 @@
 
                 </div>
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Desgiantion Arabic </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div>
-                    </section>
-                    <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Desgiantion Latine </label>
-                        <div class="control-input flex-6">
-                            <input type="text" id="designation_lt" maxlength="200" name="designation_lt"
-                                class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
-                                [required]="true">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
-                        </div>
-                    </section>
+                    <div class="flex-row-start flex-12">
+                        <section class="flex-row-start flex-6">
+                            <label class="control-label flex-3">Demande Achat : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                            <div class="dop control-input flex-6">
+                                <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
+                                    [options]="listDdeAchatRslt" [(ngModel)]="selectedDdeAchat" [filter]="true"
+                                    (onChange)="GetDemandeAchatByCode(selectedDdeAchat)" [showClear]="true"
+                                    [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
+                                    placeholder="&nbsp;" [required]="true" [lazy]="true" #ModeReglementDde="ngModel">
+                                </p-dropdown>
+
+  
+                            </div>
+                        </section>
+                    </div>
 
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Date Livraison</label>
+                        <label class="control-label flex-6">Date Livraison :  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input flex-6">
 
                             <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
                                 (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="dd/mm/yy" />
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            
                         </div>
 
 
                     </section>
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-6">Adresse Livraison</label>
-                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px;right: 10px;"></i>
+                        <label class="control-label flex-6">Adresse Livraison :  <i class="fa-lg fa-fw fa fa-times icon-required" ></i></label>
+                       
                         <div class="dop control-input flex-8">
                             <textarea [(ngModel)]="adressLivraison"
                                 style="height: 70px;width: 180px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
@@ -658,23 +677,22 @@
             <fieldset class=" flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Mode Reglement</label>
+                        <label class="control-label flex-4">Mode Reglement : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-4">
                             <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                                 [options]="listModeReglementRslt" [(ngModel)]="selectedModeReglement" [filter]="true"
                                 [showClear]="true" [style]="{'width':'100%'}" filterBy="label,value"
                                 [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                                 #ModeReglementDde="ngModel">
-                            </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            </p-dropdown> 
                         </div>
                     </section>
                 </div>
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-4">Observation</label>
-                        <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 0px; top:10px"></i>
+                        <label class="control-label flex-4">Observation : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                         
                         <div class="dop control-input flex-8">
                             <textarea [(ngModel)]="observation"
                                 style="height: 70px;width: 330px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
@@ -689,12 +707,9 @@
         <div class="flex-row-start flex-12">
             <fieldset class="flex-6">
                 <div class="flex-row-start flex-12">
-                    <section class="flex-row-space flex-5">
+                    <!-- <section class="flex-row-space flex-5">
                         <label class="control-label flex-3">Matiere</label>
-                        <div class="dop control-input flex-10">
-
-
-                            <!-- // for new table  -->
+                        <div class="dop control-input flex-10"> 
 
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listMatiereRslt"
                                 [(ngModel)]="selectedMatiereToAdd" [filter]="true" [disabled]="disp" [showClear]="true"
@@ -708,7 +723,7 @@
                             <br />
                         </div>
 
-                    </section>
+                    </section> -->
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6 tab">
@@ -727,9 +742,10 @@
                                     <tr>
                                         <th style="width: 30px !important;font-size: 13px">#</th>
                                         <th style="width: 100px !important;font-size: 13px">Code</th>
-                                        <th style="width: 180px !important;font-size: 13px">Designation Matiere</th>
-                                        <th style="width: 150px !important;font-size: 13px">Designation Unite</th>
-                                        <th style="width: 150px !important;font-size: 13px">Designation Coloris</th>
+                                        <th style="width: 180px !important;font-size: 13px">Matiere</th>
+                                        <!-- <th style="width: 115px !important;font-size: 13px">Laize</th> -->
+                                        <th style="width: 150px !important;font-size: 13px">Unite</th>
+                                        <th style="width: 150px !important;font-size: 13px">Coloris</th>
                                         <th style="width: 100px !important;font-size: 13px">Quantite</th>
                                         <th style="width: 80px !important;font-size: 13px">Supprimer</th>
 
@@ -769,7 +785,13 @@
 
                                         </td>
 
+                                        <!-- <td style="width: 115px !important ">
 
+
+                                            <input disabled="" [(ngModel)]="inst.laize" style="width: 115px;"
+                                                class="InputQte" type="number" id="name" name="name" required
+                                                minlength="4" maxlength="8" size="10" />
+                                        </td> -->
 
                                         <td style="width: 150px !important;">
                                             <select class="DropChoisie" [(ngModel)]="inst.codeUnites"
@@ -844,8 +866,8 @@
                             class="fa-lg fa-fw fa fa-check icon-save"></i>
                         Ouvrire
                     </button>
-                    <button class=" btn btn-default cancel-add-ModalLarge" :closable="true" data-dismiss="modal"> <i
-                            class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+                    <button class=" btn btn-default cancel-add-ModalLarge"  (click)="CloseModal()" :closable="true" data-dismiss="modal"> <i
+                            class="fa-lg fa-fw fa fa-times  icon-fermer " ></i>Fermer
                     </button>
                 </div>
             </div>

@@ -523,6 +523,14 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/` + code);
   }
 
+  GetDetailsOrdreAchatByCodeNotFullRevcived(code: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat_not_full_recived/` + code);
+  }
+
+  
+
+
   GetOrdreAchatByCodeIn(code: number) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/` + code);
@@ -564,7 +572,10 @@ PostCategorieDepot(body: any) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception/`+codeEtatReception);
   }
+  GetOrdreAchatNonReceptionnerTotalement( ) {
 
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception_in/5,2`);
+  }
 
   /// statu matiere
 
@@ -617,6 +628,19 @@ PostCategorieDepot(body: any) {
   GetPasswordChangeApprouveAchat() { 
     return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`); 
   }
+  // maskResponse(data: any): any {
+  //   // Assuming 'data.sensitiveField' is the field you want to mask
+  //   data.valeur = data.valeur.replace(/\d/g, '*'); 
+  //   return data;
+  // }
+  // getData(): Promise<any> {
+  //   return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`)
+  //     .toPromise()
+  //     .then((response:any) => {
+  //       return this.maskResponse(response.valeur.replace(/\d/g, '*')); // Apply masking
+  //     });
+  // }
+ 
 
 
   // userr 
@@ -666,7 +690,9 @@ PostCategorieDepot(body: any) {
 GetVisibleWithPrice() { 
   return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePrice`); 
 }
-
+GetVisibleWithPriceBR() { 
+  return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePriceBR`); 
+}
 
 
 

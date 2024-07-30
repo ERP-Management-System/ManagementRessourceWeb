@@ -1,9 +1,9 @@
-import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem, SortEvent } from 'primeng/api';
 import { catchError, Subject, throwError } from 'rxjs';
-import { Table, TableModule } from 'primeng/table'; 
+import { Table, TableModule } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
@@ -28,7 +28,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -46,7 +46,7 @@ export class OrdreAchatComponent {
 
   constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-       
+
   }
 
 
@@ -59,7 +59,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -75,7 +75,25 @@ export class OrdreAchatComponent {
 
   selectedMatiere: any;
 
+  // showTable: boolean = false;
+  // showTableUnite : boolean = false;
+  // selectedUniteFromTab : any
+  // ShowTab(){
+  //   this.showTable = true;
+  // }
+  // ShowTabUnite(){
+  //   this.showTableUnite = true;
+  // }
 
+  // codeUnites:any;
+  // HideTable(event: any){
+  //   this.showTable = false;
+  //   this.codeUnites = "sss";
+  // }
+
+  // HideTableUnite (event: any){
+  //   this.showTableUnite = false;
+  // }
   pdfData!: Blob;
   isLoading = false;
   ngOnInit(): void {
@@ -83,18 +101,18 @@ export class OrdreAchatComponent {
     // const headers = new HttpHeaders();
     // headers.set('Accept-Language', 'ar'); 
 
-    localStorage.setItem("langue","ar")
-
+    localStorage.setItem("langue", "ar")
+    this.GelParamVisibleWithPrice();
     this.GelAllOrdreAchat();
     this.VoidsNew();
     this.getValued();
-    this.v2 = [
-      { field: 'codeSaisie', header: 'Code Saisie' },
-      { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
-      { field: 'unite', header: 'Unite' },
-      { field: 'coloris', header: 'Coloris' },
-      { field: 'quantite', header: 'Quantite' },
-    ];
+    // this.v2 = [
+    //   { field: 'codeSaisie', header: 'Code Saisie' },
+    //   { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
+    //   { field: 'unite', header: 'Unite' },
+    //   { field: 'coloris', header: 'Coloris' },
+    //   { field: 'quantite', header: 'Quantite' },
+    // ];
 
 
   }
@@ -211,9 +229,9 @@ export class OrdreAchatComponent {
     this.observation = event.data.observation;
     this.selectedDemandeAchat = event.data.demandeAchatDTO.code;
     this.selectedAppelOffre = event.data.codeAppelOffre;
-    this.qteDemander = event.data.qteDemander; 
+    this.qteDemander = event.data.qteDemander;
     this.prixTotalTTC = event.data.mntTotalTTC;
-    this.TotalHTValue = event.data.mntTotalHT; 
+    this.TotalHTValue = event.data.mntTotalHT;
     this.remiseEnPourcent = event.data.mntRemise;
     this.mntTimbre = event.data.mntTimbre;
     this.TotalTaxeTimbre = event.data.mntTotalTaxe;
@@ -249,7 +267,7 @@ export class OrdreAchatComponent {
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -305,6 +323,7 @@ export class OrdreAchatComponent {
       this.GelAllAppelOffre();
       // this.GetDemandeAchatWhereCodeIn();
       this.GetCodeSaisie();
+      this.GetFournisseur();
 
     } else
       if (mode === 'edit') {
@@ -338,10 +357,8 @@ export class OrdreAchatComponent {
           this.visibleNewModal = true;
           this.visDelete = false;
           this.visibleModalPrint = false;
-          // this.CalculeTaxeTimbre();
-          // this.calculateTaxe();
-          // this.GetDemandeAchat();
           this.GelAllDA();
+          this.GetFournisseur();
         }
 
       } else
@@ -437,9 +454,10 @@ export class OrdreAchatComponent {
         this.GetDataFromTableEditor = {
 
 
-          codematiere: { code: this.listDataOAWithDetails[y].codeMatieres },
-          codeUnite: { code: this.listDataOAWithDetails[y].codeUnites },
-          codeColoris: { code: this.listDataOAWithDetails[y].codeColoriss },
+          matiereDTO: { code: this.listDataOAWithDetails[y].codeMatieres },
+          codeMatieres: this.listDataOAWithDetails[y].codeMatieres,
+          codeUnites: this.listDataOAWithDetails[y].codeUnites,
+          codeColoriss: this.listDataOAWithDetails[y].codeColoriss,
           valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe,
           qteDemander: this.listDataOAWithDetails[y].qteDemander,
           userCreate: this.userCreate,
@@ -460,7 +478,7 @@ export class OrdreAchatComponent {
         designationLt: this.designationLt,
         codeModeReglement: this.selectedModeReglement,
         userCreate: this.userCreate,
-        codeFournisseur: null,
+        codeFournisseur: this.selectedFournisseur,
         code: this.code,
         actif: this.actif,
         visible: this.visible,
@@ -477,7 +495,7 @@ export class OrdreAchatComponent {
         dateLivraison: this.dateLivraison,
         lieu: this.lieuOA,
         instruction: this.Instructions,
-        codeTypeCircuitAchat:2,
+        codeTypeCircuitAchat: 2,
         mntNet: this.mntNet,
       }
 
@@ -492,7 +510,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
             }
             return throwError(errorMessage);
@@ -526,7 +544,7 @@ export class OrdreAchatComponent {
             if (error.error instanceof ErrorEvent) { } else {
               this.final = new Array<any>();
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
             }
             return throwError(errorMessage);
           })
@@ -570,6 +588,8 @@ export class OrdreAchatComponent {
 
   public remove(index: number): void {
     this.listDataOAWithDetails.splice(index, 1);
+    this.calculateTaxe() ; 
+    this.ValueQteChanged();
     console.log("index", index);
   }
 
@@ -629,14 +649,14 @@ export class OrdreAchatComponent {
   // codeModeReglementDde: {}[] = [];
   dataOrdreAchat = new Array<OrdreAchat>();
   banque: any;
-  GelAllOrdreAchat() { 
+  GelAllOrdreAchat() {
     // this.headers.append('foo', 'bar');
     this.param_achat_service.GetOrdreAchat().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -662,7 +682,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -689,7 +709,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -716,7 +736,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -744,7 +764,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -768,7 +788,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -857,7 +877,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -893,7 +913,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -920,7 +940,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1163,7 +1183,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1231,94 +1251,7 @@ export class OrdreAchatComponent {
 
   GetDemandeAchatByCode(code: number) {
 
-    if (this.selectedDemandeAchat == null) {
-      this.listDataOAWithDetails = new Array<any>();
-      this.prixTotalTTC = 0.000000;
-      this.TotalHTValue = 0.000000;
-      this.remiseEnPourcent = 0.000000;
-      this.mntNet = 0.000000;
-      this.tott19 = 0.000000;
-      this.tott7 = 0.000000;
-      this.TotalTaxeTmb = 0.000000;
-      this.mntTimbre = 0.000000;
-
-      this.dateLivraison = null
-      this.Instructions = '';
-      this.lieuOA = '';
-    } else {
-
-
-
-
-      this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDemandeAchat).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) { } else {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-          }
-          return throwError(errorMessage);
-        })
-      ).subscribe((data: any) => {
-        this.listDataOAWithDetails = new Array<any>();
-        this.listDataOAWithDetails = data;
-        //  get first row in data
-        let x = this.listDataOAWithDetails;
-        this.dateLivraison = x[0].dateLivraison;
-        // this.dateLivraison =  data.dateLivraison[0] ;
-        console.log("this.dateLivraison", this.dateLivraison,)
-        // this.dateLivraison = this.datePipe.transform(x[0].dateLivraison, "yy-mm-dd")
-        console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataOAWithDetails);
-        for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
-
-          this.GetDataFromTableEditor = {
-            qteDemander: this.listDataOAWithDetails[y].qteDemander,
-            prixAchat: this.listDataOAWithDetails[y].prixAchat,
-            valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe
-
-          }
-          this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
-          this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
-          this.listDataOAWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
-          this.listDataOAWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
-
-          let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
-          let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
-
-          this.listDataOAWithDetails[y].prixAchat = prixUniAchat1;
-          let value3 = this.listDataOAWithDetails[y].prixAchat;
-          this.listDataOAWithDetails[y].prixAchat = value3.toFixed(6);
-
-
-          let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
-
-          let pxtotal = qteDemander1 * prixUniAchat1;
-          let valeurTaxe1 = valeurtaxe * pxtotal;
-          let valeurTotalTTC = pxtotal + +valeurTaxe1;
-
-          this.listDataOAWithDetails[y].mntTotalTTC = valeurTotalTTC;
-          let value = this.listDataOAWithDetails[y].mntTotalTTC;
-          this.listDataOAWithDetails[y].mntTotalTTC = value.toFixed(6);
-
-
-          this.listDataOAWithDetails[y].mntTotalHT = pxtotal;
-          let value2 = this.listDataOAWithDetails[y].mntTotalHT;
-          this.listDataOAWithDetails[y].mntTotalHT = value2.toFixed(6);
-
-          console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
-
-
-
-        }
-
-        // this.calculateThisYearTotal();
-        this.calculateTaxe();
-        console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataOAWithDetails);
-
-
-      })
-    }
+    
 
 
   }
@@ -1339,7 +1272,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1348,42 +1281,121 @@ export class OrdreAchatComponent {
       ).subscribe((data1: any) => {
         this.dataAppelOffre = data1;
         this.codeDemandeAchats = data1.codeDemandeAchat
+        this.selectedDemandeAchat = data1.codeDemandeAchat;
         this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
           catchError((error: HttpErrorResponse) => {
             let errorMessage = '';
             if (error.error instanceof ErrorEvent) { } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
             }
             return throwError(errorMessage);
           })
 
         ).subscribe((data2: any) => {
-          this.dataDemandeAchat = data2;
-          // console.log("data length", data2);
-          this.listDemandeAchatPushed = [];
-          // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
-          // }
-          console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
+          this.dataDemandeAchat = data2; 
+          this.listDemandeAchatPushed = []; 
+          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })  
           this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-          // this.prixTotalTTC = 0.000000;
-          // this.TotalHTValue = 0.000000;
-          // this.remiseEnPourcent = 0.000000;
-          // this.mntNet = 0.000000;
-          // this.tott19 = 0.000000;
-          // this.tott7 = 0.000000;
-          // this.TotalTaxeTmb = 0.000000;
-          // this.mntTimbre = 0.000000;
-          // this.dateLivraison = null
-          // this.Instructions = '';
-          // this.lieuOA = '';
+
+
+          /// get details order achat 
+          if (this.selectedDemandeAchat == null) {
+            this.listDataOAWithDetails = new Array<any>();
+            this.prixTotalTTC = 0.000000;
+            this.TotalHTValue = 0.000000;
+            this.remiseEnPourcent = 0.000000;
+            this.mntNet = 0.000000;
+            this.tott19 = 0.000000;
+            this.tott7 = 0.000000;
+            this.TotalTaxeTmb = 0.000000;
+            this.mntTimbre = 0.000000;
+      
+            this.dateLivraison = null
+            this.Instructions = '';
+            this.lieuOA = '';
+          } else {
+      
+      
+      
+      
+            this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDemandeAchat).pipe(
+              catchError((error: HttpErrorResponse) => {
+                let errorMessage = '';
+                if (error.error instanceof ErrorEvent) { } else {
+                  alertifyjs.set('notifier', 'position', 'top-right');
+                  alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+      
+                }
+                return throwError(errorMessage);
+              })
+            ).subscribe((data: any) => {
+              this.listDataOAWithDetails = new Array<any>();
+              this.listDataOAWithDetails = data;
+              //  get first row in data
+              let x = this.listDataOAWithDetails;
+              this.dateLivraison = x[0].dateLivraison;
+              // this.dateLivraison =  data.dateLivraison[0] ;
+              console.log("this.dateLivraison", this.dateLivraison,)
+              // this.dateLivraison = this.datePipe.transform(x[0].dateLivraison, "yy-mm-dd")
+              console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataOAWithDetails);
+              for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
+      
+                this.GetDataFromTableEditor = {
+                  qteDemander: this.listDataOAWithDetails[y].qteDemander,
+                  prixAchat: this.listDataOAWithDetails[y].prixAchat,
+                  valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe
+      
+                }
+                this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
+                this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
+                this.listDataOAWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
+                this.listDataOAWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
+      
+                let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
+                let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
+      
+                this.listDataOAWithDetails[y].prixAchat = prixUniAchat1;
+                let value3 = this.listDataOAWithDetails[y].prixAchat;
+                this.listDataOAWithDetails[y].prixAchat = value3.toFixed(6);
+      
+      
+                let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
+      
+                let pxtotal = qteDemander1 * prixUniAchat1;
+                let valeurTaxe1 = valeurtaxe * pxtotal;
+                let valeurTotalTTC = pxtotal + +valeurTaxe1;
+      
+                this.listDataOAWithDetails[y].mntTotalTTC = valeurTotalTTC;
+                let value = this.listDataOAWithDetails[y].mntTotalTTC;
+                this.listDataOAWithDetails[y].mntTotalTTC = value.toFixed(6);
+      
+      
+                this.listDataOAWithDetails[y].mntTotalHT = pxtotal;
+                let value2 = this.listDataOAWithDetails[y].mntTotalHT;
+                this.listDataOAWithDetails[y].mntTotalHT = value2.toFixed(6);
+      
+                console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
+      
+      
+      
+              }
+      
+              // this.calculateThisYearTotal();
+              this.calculateTaxe();
+              console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataOAWithDetails);
+      
+      
+            })
+          }
         }
         )
 
 
       })
+
+      
 
     }
 
@@ -1403,7 +1415,7 @@ export class OrdreAchatComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1444,7 +1456,7 @@ export class OrdreAchatComponent {
   }
 
 
-  dataDA= new Array<DemandeAchat>();
+  dataDA = new Array<DemandeAchat>();
   listDAPushed = new Array<any>();
   // listModeReglementRslt = new Array<any>();
   GelAllDA() {
@@ -1453,7 +1465,7 @@ export class OrdreAchatComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1468,6 +1480,36 @@ export class OrdreAchatComponent {
       this.listDemandeAchatRslt = this.listDAPushed;
     })
   }
+
+
+
+  selectedFournisseur: any;
+  DataFournisseur = new Array<OrdreAchat>();
+  listFRSPushed = new Array<any>();
+  listFRSRslt = new Array<any>();
+
+  GetFournisseur() {
+    this.param_achat_service.GetAllFournisseur().pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) { } else {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
+        }
+        return throwError(errorMessage);
+      })
+
+    ).subscribe((data: any) => {
+      this.DataFournisseur = data;
+      this.listFRSPushed = [];
+      for (let i = 0; i < this.DataFournisseur.length; i++) {
+        this.listFRSPushed.push({ label: this.DataFournisseur[i].designationAr, value: this.DataFournisseur[i].code })
+      }
+      this.listFRSRslt = this.listFRSPushed;
+    })
+  }
+
 
 }
 

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem, SortEvent } from 'primeng/api';
-import { catchError, Subject, throwError } from 'rxjs';
+import { catchError, findIndex, Subject, throwError } from 'rxjs';
 import { Table, TableModule } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
@@ -41,7 +41,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -58,10 +58,15 @@ export class BonReceptionComponent {
   selectedMatiere: any;
 
   pdfData!: Blob;
-  isLoading = false;
+  isLoading = false; 
   ngOnInit(): void {
-    localStorage.setItem("langue", "ar")
+    
 
+ 
+
+
+    localStorage.setItem("langue", "ar")
+    this.GelParamVisibleWithPrice();
     this.GelAllOrdreAchat();
     this.VoidsNew();
     this.getValued();
@@ -79,12 +84,12 @@ export class BonReceptionComponent {
   visDetailsPrice: boolean = false;
   GelParamVisibleWithPrice() {
     // this.headers.append('foo', 'bar');
-    this.param_achat_service.GetVisibleWithPrice().pipe(
+    this.param_achat_service.GetVisibleWithPriceBR().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -195,6 +200,8 @@ export class BonReceptionComponent {
   actif!: boolean;
   visible!: boolean;
 
+
+  disColQte:boolean = false;
   mntTotalTTC: any;
 
   selectedAppelOffre!: any;
@@ -256,131 +263,6 @@ export class BonReceptionComponent {
   }
 
 
-  // qteDemanderTemp: any;
-  // qteReceptionnerTemp: any;
-  // codeMatieresTemp: any;
-  // codeEtatReception:any;
-  updateEtatReceptionOrdreAchat() {
-
-    let codeMatieresTemp;
-    let qteReceptionnerTemp;
-    let qteDemanderTemp;
-
-    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
-
-      codeMatieresTemp = { code: this.listDataBRWithDetails[y].codeMatieres };
-      qteReceptionnerTemp = this.listDataBRWithDetails[y].qteReceptionner;
-      qteDemanderTemp = this.listDataBRWithDetails[y].qteDemander;
-
-    }
-
-
-    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
-
-      this.GetDataFromTableEditor = {
-
-        codeFournisseur: this.selectedFournisseur,
-        codeDepot: this.selectedDepot,
-        codematiere: { code: this.listDataBRWithDetails[y].codeMatieres },
-        codeUnite: { code: this.listDataBRWithDetails[y].codeUnites },
-        codeColoris: { code: this.listDataBRWithDetails[y].codeColoriss },
-        valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
-        qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
-        qteDemander: this.listDataBRWithDetails[y].qteDemander,
-        userCreate: this.userCreate,
-        prixAchat: this.listDataBRWithDetails[y].prixAchat,
-        mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
-        mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
-        mntTotalTaxe: this.listDataBRWithDetails[y].mntTotalTTC - -this.listDataBRWithDetails[y].mntTotalHT,
-      }
-      this.final.push(this.GetDataFromTableEditor);
-
-
-
-
-    }
-
-    if (qteDemanderTemp > qteReceptionnerTemp) {
-      console.log(' qteDemanderTemp  > qteReceptionnerTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
-      // this.codeEtatReception = 5
-      let body = {
-        code: this.selectedOA,
-        codeEtatReception: 5,
-      }
-      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) {
-          } else {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-          }
-          return throwError(errorMessage);
-        })
-
-      ).subscribe(
-        (res: any) => {
-
-
-        }
-      )
-    } else if (qteDemanderTemp == qteReceptionnerTemp) {
-      console.log('==  qteDemanderTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
-      let body = {
-        code: this.selectedOA,
-        codeEtatReception: 7,
-      }
-      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) {
-          } else {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-          }
-          return throwError(errorMessage);
-        })
-
-      ).subscribe(
-        (res: any) => {
-
-
-        }
-      )
-    } else {
-      console.log('qteDemanderTemp : ', qteDemanderTemp, 'qteReceptionnerTemp', qteReceptionnerTemp);
-      let body = {
-        code: this.selectedOA,
-        codeEtatReception: 2,
-      }
-      this.param_achat_service.UpdateEtatRecpetionOrdreAchat(body).pipe(
-        catchError((error: HttpErrorResponse) => {
-          let errorMessage = '';
-          if (error.error instanceof ErrorEvent) {
-          } else {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-          }
-          return throwError(errorMessage);
-        })
-
-      ).subscribe(
-        (res: any) => {
-
-
-        }
-      )
-    }
-
-
-
-
-
-
-
-
-
-  }
 
 
   DeleteBonReception(code: any) {
@@ -456,7 +338,7 @@ export class BonReceptionComponent {
       this.GelAllDepotPrincipal();
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
-      this.GetFournisseur();
+      // this.GetFournisseur();
       this.GelParamVisibleWithPrice();
       this.GetCodeSaisie();
       this.GetOrdreAchat();
@@ -483,13 +365,13 @@ export class BonReceptionComponent {
 
 
           this.GelAllDepotPrincipal();
-          this.GetFournisseur();
+          // this.GetFournisseur();
 
           this.onRowSelect;
           this.GelAllAppelOffre();
           this.GetColorisActifVisible();
           this.GelUniteActifVisible();
-          this.GetOrdreAchatByCode(this.selectedBonReception);
+          // this.GetOrdreAchatByCode(this.selectedBonReception);
           this.visibleNewModal = true;
           this.visDelete = false;
           this.visibleModalPrint = false;
@@ -537,7 +419,9 @@ export class BonReceptionComponent {
   userCreate = "soufien";
 
   GetDataFromTableEditor: any;
-  final = new Array<any>();
+  NewGetDataFromTableEditor: any;
+  final = new Array<any>(); 
+  final2 = new Array<any>();
   codeColoris: any;
   qteReceptionner: any = 1;
   qteDemander: any;
@@ -547,39 +431,19 @@ export class BonReceptionComponent {
   MntFactureFournisseur: any;
   dateFactureFournisseur: any;
 
+ 
+  ControlDetailsReceptionner() {
+    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
-  // ControlQteReceptQteDde() {
-  //   for (let x = 0; x < this.listDataBRWithDetails.length; x++) {
+      if (this.listDataBRWithDetails[y].qteReceptionner == null) {
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px; font-size:13px""></i>' + " Remplire Touts les Details ");
+        break;
+      } else {
 
-  //     let diffQteRcptQteDde = 0;
-
-  //     diffQteRcptQteDde = -this.listDataBRWithDetails[x].qteReceptionner - -this.listDataBRWithDetails[x].qteDemander
-  //     console.log("diffrence qte rcp et qte dde ", diffQteRcptQteDde)
-
-  //     if (diffQteRcptQteDde > 10) {
-  //       alertifyjs.set('notifier', 'position', 'top-right');
-  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Quantite Receptionner ne peux etre superieur a Quantite Demander Que de 10");
-  //       break;
-
-  //     } else if(diffQteRcptQteDde < 10) {
-  //       alertifyjs.set('notifier', 'position', 'top-right');
-  //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Quantite Receptionner ne peux etre superieur a Quantite Demander Que de 10");
-  //       break;
-
-  //     }else{
-  //       alertifyjs.set('notifier', 'position', 'top-left');
-  //       alertifyjs.success(  " OK");
-
-  //     }
-  //     break;
-
-
-  //   }
-
-
-
-
-  // }
+      }
+    }
+  }
 
 
   PostBonReception() {
@@ -590,149 +454,185 @@ export class BonReceptionComponent {
 
     } else {
 
+      this.ControlDetailsReceptionner();
+   
+      for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
+        /// control set only totalment livred =0 
 
-      if (this.MntFactureFournisseur != this.mntNet) {
-        alertifyjs.set('notifier', 'position', 'top-right');
-        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Montant Facture Erronée");
+        // if(this.listDataBRWithDetails[y].totalementLivred = 0 ){
 
-      } else {
-
-        // this.updateEtatReceptionOrdreAchat();
-
-        for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
-
-          this.GetDataFromTableEditor = {
-
-            codeFournisseur: this.selectedFournisseur,
-            codeDepot: this.selectedDepot, 
-            codeMatieres:this.listDataBRWithDetails[y].codeMatieres ,
-            matiereDTO:{code:this.listDataBRWithDetails[y].codeMatieres} ,
-            codeUnites:  this.listDataBRWithDetails[y].codeUnites  ,
-            codeColoriss:   this.listDataBRWithDetails[y].codeColoriss ,
-            valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
-            qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
-            qteDemander: this.listDataBRWithDetails[y].qteDemander,
-            userCreate: this.userCreate,
-            prixAchat: this.listDataBRWithDetails[y].prixAchat,
-            mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
-            mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
-            mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe /100),
+          // if(this.listDataBRWithDetails[y].qteReceptionner + +this.listDataBRWithDetails[y].qteLivrer >=  this.listDataBRWithDetails[y].qteDemander ){
+          //   console.log(" qteReceptionner >=qteDemander  "  )
+          //   this.GetDataFromTableEditor = { 
+          //     laize: this.listDataBRWithDetails[y].laize,
+          //     codeFournisseur: this.selectedFournisseur,
+          //     codeDepot: this.selectedDepot,
+          //     codeMatieres: this.listDataBRWithDetails[y].codeMatieres,
+          //     matiereDTO: { code: this.listDataBRWithDetails[y].codeMatieres },
+          //     codeUnites: this.listDataBRWithDetails[y].codeUnites,
+          //     codeColoriss: this.listDataBRWithDetails[y].codeColoriss,
+          //     valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
+          //     qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
+          //     qteDemander: this.listDataBRWithDetails[y].qteDemander,
+          //     userCreate: this.userCreate,
+          //     prixAchat: this.listDataBRWithDetails[y].prixAchat,
+          //     mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
+          //     mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
+          //     totalementLivred: 1,
+          //     mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe / 100),
+          //   }
+          // }else{
+          //   console.log(" qteReceptionner <qteDemander  "  )
+            this.GetDataFromTableEditor = { 
+              laize: this.listDataBRWithDetails[y].laize,
+              codeFournisseur: this.selectedFournisseur,
+              codeDepot: this.selectedDepot,
+              codeMatieres: this.listDataBRWithDetails[y].codeMatieres,
+              matiereDTO: { code: this.listDataBRWithDetails[y].codeMatieres },
+              codeUnites: this.listDataBRWithDetails[y].codeUnites,
+              codeColoriss: this.listDataBRWithDetails[y].codeColoriss,
+              valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
+              qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
+              qteDemander: this.listDataBRWithDetails[y].qteDemander,
+              userCreate: this.userCreate,
+              prixAchat: this.listDataBRWithDetails[y].prixAchat,
+              mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
+              mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
+            
+        codeOrdreAchat: this.selectedOA,
+              mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe / 100),
+            // }
           }
-          this.final.push(this.GetDataFromTableEditor);
+
+      
+        //   break;
+        // }
+        // // else totalment livred =1  dont update qte recived
+        // else{
+
+        // }
+        //update col totalment_livred 
+        
+
+        
+        this.final.push(this.GetDataFromTableEditor);
+      }
 
 
 
-
-        }
-        let body = {
-          codeSaisie: this.codeSaisie,
-          designationAr: this.designationAr,
-          designationLt: this.designationLt,
-          codeModeReglement: this.selectedModeReglement,
-          userCreate: this.userCreate,
-
-          code: this.code,
-          actif: this.actif,
-          visible: this.visible,
-          detailsBonReceptionDTOs: this.final,
-          observation: "test obserrtvation from code",
-          codeEtatReception: "2",
-          codeDemandeAchat: this.selectedDemandeAchat,
-          codeAppelOffre: this.selectedAppelOffre,
-          codeOrdreAchat: this.selectedOA,
-          mntTotalTTC: this.prixTotalTTC,
-          mntTotalHT: this.TotalHTValue,
-          mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
-          mntRemise: this.remiseEnPourcent,
-          mntTimbre: this.mntTimbre,
-          dateFactureFournisseur: this.dateFactureFournisseur,
-          mntFactureFournisseur: this.MntFactureFournisseur,
-          codeFactureFournisseur: this.codeFactureFournisseur,
-          codeFournisseur: this.selectedFournisseur,
-          codeDepot: this.selectedDepot,
-          codeTypeCircuitAchat: 2,
-          mntNet: this.mntNet,
-        }
+      let body = {
+        codeSaisie: this.codeSaisie,
+        designationAr: this.designationAr,
+        designationLt: this.designationLt,
+        codeModeReglement: this.selectedModeReglement,
+        userCreate: this.userCreate,
+        // detailsOrdreAchatDTOs: this.final2,
+        code: this.code,
+        actif: this.actif,
+        visible: this.visible,
+        detailsBonReceptionDTOs: this.final,
+        observation: "test obserrtvation from code",
+        codeEtatReception: "2",
+        codeDemandeAchat: this.selectedDemandeAchat,
+        codeAppelOffre: this.selectedAppelOffre,
+        codeOrdreAchat: this.selectedOA,
+        mntTotalTTC: this.prixTotalTTC,
+        mntTotalHT: this.TotalHTValue,
+        mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
+        mntRemise: this.remiseEnPourcent,
+        mntTimbre: this.mntTimbre,
+        dateFactureFournisseur: this.dateFactureFournisseur,
+        mntFactureFournisseur: this.MntFactureFournisseur,
+        codeFactureFournisseur: this.codeFactureFournisseur,
+        codeFournisseur: this.selectedFournisseur,
+        codeDepot: this.selectedDepot,
+        codeTypeCircuitAchat: 2,
+        mntNet: this.mntNet,
+      }
 
 
 
-        if (this.code != null) {
-          body['code'] = this.code;
-          console.log("Body to Update", body)
-          this.param_achat_service.UpdateBonReception(body).pipe(
-            catchError((error: HttpErrorResponse) => {
-              let errorMessage = '';
-              if (error.error instanceof ErrorEvent) {
-              } else {
-                alertifyjs.set('notifier', 'position', 'top-right');
-                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-              }
-              return throwError(errorMessage);
-            })
-
-          ).subscribe(
-
-            (res: any) => {
+      if (this.code != null) {
+        body['code'] = this.code;
+        console.log("Body to Update", body)
+        this.param_achat_service.UpdateBonReception(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) {
+            } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
-
-              this.clearForm();
-              this.ngOnInit();
-              this.check_actif = true;
-              this.check_inactif = false;
-              this.onRowUnselect(event);
-              this.clearSelected();
-              this.visibleNewModal = false;
-              this.visDelete = false;
-              this.codeDemandeAchat = this.selectedBonReception.code
-              this.visibleModalPrint = false;
-            }
-          );
-        }
-        else {
-          console.log("Body to Post", body)
-
-          this.param_achat_service.PostBonReceptionWithDetails(body).pipe(
-            catchError((error: HttpErrorResponse) => {
-              let errorMessage = '';
-              if (error.error instanceof ErrorEvent) { } else {
-                this.final = new Array<any>();
-                alertifyjs.set('notifier', 'position', 'top-right');
-                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-              }
-              return throwError(errorMessage);
-            })
-          ).subscribe(
-            (res: any) => {
-              alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
-              this.visibleNewModal = false;
-              this.visDelete = false;
-              this.visibleModalPrint = true;
-              this.clearForm();
-              this.ngOnInit();
-              this.code;
-              this.final;
-              this.check_actif = true;
-              this.check_inactif = false;
-              this.onRowUnselect(event);
-              this.clearSelected();
-              body: { };
-              this.visibleModalPrint = true;
-              console.log("res", res);
-              this.codeDemandeAchat = res.code;
-              this.RemplirePrint(this.codeDemandeAchat);
-
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
             }
-          )
+            return throwError(errorMessage);
+          })
+
+        ).subscribe(
+
+          (res: any) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+
+            this.clearForm();
+            this.ngOnInit();
+            this.check_actif = true;
+            this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
+            this.visibleNewModal = false;
+            this.visDelete = false;
+            this.codeDemandeAchat = this.selectedBonReception.code
+            this.visibleModalPrint = false;
+          }
+        );
+      }
+      else {
+        console.log("Body to Post", body)
+
+        this.param_achat_service.PostBonReceptionWithDetails(body).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              this.final = new Array<any>();
+              this.mntNet = 0;
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+            }
+            return throwError(errorMessage);
+          })
+        ).subscribe(
+          (res: any) => {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
+            this.visibleNewModal = false;
+            this.visDelete = false;
+            this.visibleModalPrint = true;
+            this.clearForm();
+            this.ngOnInit();
+            this.code;
+            this.final;
+            this.check_actif = true;
+            this.check_inactif = false;
+            this.onRowUnselect(event);
+            this.clearSelected();
+            body: { };
+            this.visibleModalPrint = true;
+            console.log("res", res);
+            this.codeDemandeAchat = res.code;
+            this.RemplirePrint(this.codeDemandeAchat);
+
+
+          }
+        )
 
 
 
-        }
       }
     }
+
+
+
+    // }
 
 
 
@@ -744,9 +644,23 @@ export class BonReceptionComponent {
   public remove(index: number): void {
     this.listDataBRWithDetails.splice(index, 1);
     this.calculateTaxe();
+    this. ValueQteChanged(); 
     console.log("index", index);
   }
 
+  VerifQteDde(index: number){
+
+    for (let y = 0; y < this.listDataBRWithDetails.length; y++) { 
+      if(this.listDataBRWithDetails[y].qteLivrer.index> this.listDataBRWithDetails[y].qteDemander.index ){
+       index.toPrecision()
+       this.disColQte  = true;
+      }else{
+       this.disColQte = false;
+      }
+      
+   }
+    
+  }
 
 
   types!: any[];
@@ -810,7 +724,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -832,7 +746,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -859,7 +773,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -887,7 +801,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -911,7 +825,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -994,31 +908,7 @@ export class BonReceptionComponent {
   MakeEnabled() {
     this.disp = false;
   }
-
-  // GetOrdreAchatByCode(code: number) {
-
-  //   this.param_achat_service.GetOrdreAchatByCode(this.selectedOrdreAchat.code).pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       let errorMessage = '';
-  //       if (error.error instanceof ErrorEvent) { } else {
-  //         alertifyjs.set('notifier', 'position', 'top-right');
-  //         alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-  //       }
-  //       return throwError(errorMessage);
-  //     })
-
-  //   ).subscribe((data: any) => {
-  //     this.listDataOAWithDetails = new Array<any>();
-  //     this.listDataOAWithDetails = data;
-  //     console.log("listDataDAWithDetails is ", this.listDataOAWithDetails);
-
-
-  //   })
-  // }
-
-
-
+ 
   getIconCirDirect() {
     return "url('assets/assets/images/cir_direct.png')";
   }
@@ -1038,7 +928,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1065,7 +955,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1081,99 +971,8 @@ export class BonReceptionComponent {
       this.listDemandeAchatRslt = this.listDemandeAchatPushed;
     }
     )
-    // this.param_achat_service.GetDemandeAchatByCodeIn(this.selectedOrdreAchat.codeDemandeAchat).pipe(
-    //   catchError((error: HttpErrorResponse) => {
-    //     let errorMessage = '';
-    //     if (error.error instanceof ErrorEvent) { } else {
-    //       alertifyjs.set('notifier', 'position', 'top-right');
-    //       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
 
-    //     }
-    //     return throwError(errorMessage);
-    //   })
-
-    // ).subscribe((data2: any) => {
-    //   this.dataDemandeAchat = data2;
-    //   // console.log("data length", data2);
-    //   this.listDemandeAchatPushed = [];
-    //   // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-    //   this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
-    //   // }
-    //   console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
-    //   this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-    //   // this.prixTotalTTC = 0.000000;
-    //   // this.TotalHTValue = 0.000000;
-    //   // this.remiseEnPourcent = 0.000000;
-    //   // this.mntNet = 0.000000;
-    //   // this.tott19 = 0.000000;
-    //   // this.tott7 = 0.000000;
-    //   // this.TotalTaxeTmb = 0.000000;
-    //   // this.mntTimbre = 0.000000;
-    //   // this.dateLivraison = null
-    //   // this.Instructions = '';
-    //   // this.lieuOA = '';
-    // }
-    // )
   }
-
-
-
-  // valeurTVA: any;
-  // remiseEnPourcent: any;
-  // prixTotalTTC: any;
-  // mntNet: any;
-  // TotalHTValue: any;
-  // totalTax19: any;
-  // TotalTax7: any;
-  // mntTimbre: any;
-  // TotalTaxeTmb: any;
-  // TOTHT!: any;
-  // TOTTTC!: any;
-  // calculateThisYearTotal() {
-  //   let totalHT = 0.000000;
-  //   let totalTTC = 0.000000;
-  //   let mnttotalHT19 = 0.000000;
-  //   let mnttotalHT0 = 0.000000;
-  //   let mnttotalHT7 = 0.000000;
-  //   for (let sale of this.listDataOAWithDetails) {
-  //     totalHT += +sale.prixTotalHT;
-  //     totalTTC += +sale.prixTotTTC;
-  //     let mnttaxe = sale.codeTaxe / 100;
-  //     if (sale.codeTaxe == 19) {
-
-  //       mnttotalHT19 += +sale.prixTotalHT * mnttaxe;
-  //       this.totalTax19 = mnttotalHT19;
-  //       let valuetx19 = this.totalTax19;
-  //       this.totalTax19 = valuetx19.toFixed(6);
-
-  //     }
-  //     if (sale.codeTaxe == 7) {
-  //       mnttotalHT7 += +sale.prixTotalHT * mnttaxe;
-  //       this.TotalTax7 = mnttotalHT7;
-  //       let valuetx7 = this.TotalTax7;
-  //       this.TotalTax7 = valuetx7.toFixed(6);
-  //     } if (sale.codeTaxe == 0) {
-  //       this.TotalTax7 = this.TotalTax7;
-  //       this.totalTax19 = this.totalTax19;
-  //     }
-
-
-  //   }
-  //   console.log("total", totalHT)
-  //   this.TOTHT = totalHT;
-  //   let value2 = this.TOTHT;
-  //   this.TOTHT = value2.toFixed(6); 
-  //   this.TotalHTValue = this.TOTHT;
-
-
-  //   this.TOTTTC = totalTTC;
-  //   let value22 = this.TOTTTC;
-  //   this.TOTTTC = value22.toFixed(6); 
-  //   this.prixTotalTTC = this.TOTTTC;
-
-  //   this.CalculeTaxeTimbre();
-
-  // }
 
   totaltaxeMnt: number = 0.00000;
   TotalTaxeTimbre: any = 0.00000;
@@ -1221,7 +1020,7 @@ export class BonReceptionComponent {
   thisYearTotal!: any;
   valeurTVA: any;
   remiseEnPourcent: any = 0.0000;
-  mntNet: any;
+  mntNet: any = 0.000000;
   prixTotalTTC: any = 0.000000;
   TotalHTValue: any = 0.000000;
   totalTax19: any = 0.000000;
@@ -1230,77 +1029,6 @@ export class BonReceptionComponent {
   TotalTaxeTmb: any;
   tott19!: number;
   tott7!: number;
-  // calculateThisYearTotal() {
-
-  //   let total = 0.000000;
-  //   let mnttotalHT19 = 0.000000;
-  //   let mnttotalHT7 = 0.000000;
-  //   let pxTotTTc = 0.00000;
-  //   for (let sale of this.listDataOAWithDetails) {
-  //     total += +sale.mntTotalHT;
-  //     let mnttaxe = sale.valeurTaxe / 100;
-  //     if (sale.valeurTaxe == 19) {
-
-  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
-  //       let valuetx19 = mnttotalHT19;
-  //       this.totalTax19 = valuetx19.toFixed(6)
-  //       this.tott19 = this.totalTax19;
-  //       this.tott7 = this.totalTax7;
-  //     }
-  //     if (sale.valeurTaxe == 7) {
-  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
-
-  //       let valuetx7 = mnttotalHT7;
-  //       this.totalTax7 = valuetx7.toFixed(6)
-  //       this.tott7 = this.totalTax7;
-  //       this.tott19 = this.totalTax19;
-  //     }
-  //     if (sale.valeurTaxe == 0) {
-  //       this.tott7 = this.totalTax7;
-  //       this.tott19 = this.totalTax19;
-  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 7) {
-  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
-
-  //       let valuetx7 = mnttotalHT7;
-  //       this.totalTax7 = valuetx7.toFixed(6)
-  //       this.tott7 = this.totalTax7;
-  //       this.tott19 = this.totalTax19;
-  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 19) {
-  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
-  //       let valuetx19 = mnttotalHT19;
-  //       this.totalTax19 = valuetx19.toFixed(6)
-  //       this.tott7 = this.totalTax7;
-  //       this.tott19 = this.totalTax19;
-  //     } if (sale.valeurTaxe == 0 && sale.valeurTaxe == 19 && sale.valeurTaxe == 7) {
-  //       mnttotalHT19 += +sale.mntTotalHT * mnttaxe;
-  //       let valuetx19 = mnttotalHT19;
-  //       this.totalTax19 = valuetx19.toFixed(6);
-  //       mnttotalHT7 += +sale.mntTotalHT * mnttaxe;
-
-  //       let valuetx7 = mnttotalHT7;
-  //       this.totalTax7 = valuetx7.toFixed(6)
-
-  //       this.tott7 = this.totalTax7;
-  //       this.tott19 = this.totalTax19;
-  //     }
-
-
-  //   }
-
-
-
-  //   this.thisYearTotal = total;
-  //   let value2 = this.thisYearTotal;
-  //   this.thisYearTotal = value2.toFixed(6);
-
-  //   this.TotalHTValue = this.thisYearTotal;
-
-
-  //   this.CalculeTaxeTimbre();
-
-  //   //pxTotTTc.toFixed(6);
-
-  // }
 
   codeTaxeA: any;
   DataTimbre = new Array<Param>;
@@ -1310,18 +1038,23 @@ export class BonReceptionComponent {
   CalculeTaxeTimbre() {
 
 
+
     this.param_achat_service.GetMntTimbre().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
       })
 
     ).subscribe((data: any) => {
+      // this.TotalHTValue=0
+      // this.totaltaxeMnt=0
+
+
       this.DataTimbre = data;
       this.mntTimbre = data.valeur;
       let totTaxTimb = +this.mntTimbre + +this.totaltaxeMnt;
@@ -1331,6 +1064,8 @@ export class BonReceptionComponent {
 
       this.prixTotalTTC = pxTotTTc.toFixed(6);
       this.valueRemiseChanged();
+
+
     })
 
 
@@ -1347,37 +1082,46 @@ export class BonReceptionComponent {
 
 
   ValueQteChanged() {
+     
     for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
-      this.GetDataFromTableEditor = {
-        qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
-        prixAchat: this.listDataBRWithDetails[y].prixAchat,
-        valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
-        qteDemander: this.listDataBRWithDetails[y].qteDemander
+ 
+
+      if(this.listDataBRWithDetails[y].qteReceptionner > 0 ){
+        this.GetDataFromTableEditor = {
+          qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
+          prixAchat: this.listDataBRWithDetails[y].prixAchat,
+          valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
+          qteDemander: this.listDataBRWithDetails[y].qteDemander
+  
+        }
+        this.listDataBRWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
+        this.listDataBRWithDetails[y].qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
+        this.listDataBRWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
+        this.listDataBRWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
+        this.listDataBRWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
+  
+        let qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
+        let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
+        let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
+  
+        let pxtotal = qteReceptionner * prixUniAchat1;
+        let valeurTaxe1 = valeurtaxe * pxtotal;
+        let valeurTotalTTC = pxtotal + +valeurTaxe1
+        this.listDataBRWithDetails[y].mntTotalTTC = valeurTotalTTC;
+        let value = this.listDataBRWithDetails[y].mntTotalTTC;
+        this.listDataBRWithDetails[y].mntTotalTTC = value.toFixed(6);
+  
+  
+        this.listDataBRWithDetails[y].mntTotalHT = pxtotal;
+        let value2 = this.listDataBRWithDetails[y].mntTotalHT;
+        this.listDataBRWithDetails[y].mntTotalHT = value2.toFixed(6);
+  
+      }else{
 
       }
-      this.listDataBRWithDetails[y].qteReceptionqteDemanderner = this.GetDataFromTableEditor.qteDemander;
-      this.listDataBRWithDetails[y].qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
-      this.listDataBRWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
-      this.listDataBRWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
-      this.listDataBRWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
 
-      let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
-      let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
-      let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
-
-      let pxtotal = qteDemander1 * prixUniAchat1;
-      let valeurTaxe1 = valeurtaxe * pxtotal;
-      let valeurTotalTTC = pxtotal + +valeurTaxe1
-      this.listDataBRWithDetails[y].mntTotalTTC = valeurTotalTTC;
-      let value = this.listDataBRWithDetails[y].mntTotalTTC;
-      this.listDataBRWithDetails[y].mntTotalTTC = value.toFixed(6);
-
-
-      this.listDataBRWithDetails[y].mntTotalHT = pxtotal;
-      let value2 = this.listDataBRWithDetails[y].mntTotalHT;
-      this.listDataBRWithDetails[y].mntTotalHT = value2.toFixed(6);
-
+     
     }
     // this.calculateThisYearTotal();
     this.calculateTaxe();
@@ -1402,7 +1146,7 @@ export class BonReceptionComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1410,6 +1154,25 @@ export class BonReceptionComponent {
       ).subscribe((data: any) => {
         this.selectedDemandeAchat = data.codeDemandeAchat;
         this.selectedAppelOffre = data.codeAppelOffre;
+
+        this.selectedFournisseur = data.codeFournisseur;
+        this.param_achat_service.GetFournisseurByCode(data.codeFournisseur).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
+            }
+            return throwError(errorMessage);
+          })
+
+        ).subscribe((data: any) => {
+          this.DataFournisseur = data;
+          this.listFRSPushed = [];
+          this.listFRSPushed.push({ label: data.designationAr, value: data.code })
+          this.listFRSRslt = this.listFRSPushed;
+        })
 
       }
       )
@@ -1420,12 +1183,12 @@ export class BonReceptionComponent {
 
 
 
-      this.param_achat_service.GetDetailsOrdreAchatByCode(this.selectedOA).pipe(
+      this.param_achat_service.GetDetailsOrdreAchatByCodeNotFullRevcived(this.selectedOA).pipe(
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1434,134 +1197,37 @@ export class BonReceptionComponent {
         this.listDataBRWithDetails = new Array<any>();
         this.listDataBRWithDetails = data;
         //  get first row in data
-        let x = this.listDataBRWithDetails;
-        // this.dateLivraison = this.datePipe.transform(x[0].dateLivraison, "yy-mm-dd")
-        console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataBRWithDetails);
+        let x = this.listDataBRWithDetails;  
+        this.mntNet = 0;
         for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
-          this.GetDataFromTableEditor = {
-            qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
-            prixAchat: this.listDataBRWithDetails[y].prixAchat,
-            valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
-            qteDemander: this.listDataBRWithDetails[y].qteDemander
-
+          if(this.listDataBRWithDetails[y].qteLivrer >= this.listDataBRWithDetails[y].qteDemander )
+            {
+              this.listDataBRWithDetails[y].qteReceptionner= this.listDataBRWithDetails[y].qteLivrer ;
+            }else{
+              this.listDataBRWithDetails[y].qteReceptionner =0  ;
+               
+            }
+            if(this.listDataBRWithDetails[y].qteLivrer == 0  )
+              {
+                this.listDataBRWithDetails[y].qteLivrer = 0 ;
+              }else{
+                this.listDataBRWithDetails[y].qteLivrer =this.listDataBRWithDetails[y].qteLivrer   ;
+                 
+              }
           }
-          this.listDataBRWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
-          this.listDataBRWithDetails[y].qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
-          this.listDataBRWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
-          this.listDataBRWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
-          this.listDataBRWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
 
-          let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
-          let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
-
-          this.listDataBRWithDetails[y].prixAchat = prixUniAchat1;
-          let value3 = this.listDataBRWithDetails[y].prixAchat;
-          this.listDataBRWithDetails[y].prixAchat = value3.toFixed(6);
-
-
-          let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
-
-          let pxtotal = qteDemander1 * prixUniAchat1;
-          let valeurTaxe1 = valeurtaxe * pxtotal;
-          let valeurTotalTTC = pxtotal + +valeurTaxe1;
-
-          this.listDataBRWithDetails[y].mntTotalTTC = valeurTotalTTC;
-          let value = this.listDataBRWithDetails[y].mntTotalTTC;
-          this.listDataBRWithDetails[y].mntTotalTTC = value.toFixed(6);
-
-
-          this.listDataBRWithDetails[y].mntTotalHT = pxtotal;
-          let value2 = this.listDataBRWithDetails[y].mntTotalHT;
-          this.listDataBRWithDetails[y].mntTotalHT = value2.toFixed(6);
-
-          console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
-
-
-
-        }
-
-        // this.calculateThisYearTotal();
-        this.calculateTaxe();
-        console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataBRWithDetails);
 
 
       })
     }
 
 
+   
+
   }
 
-  codeDemandeAchats: any;
-  // GetDemandeAchatWhereCodeIn() {
-  //   this.listDemandeAchatRslt = []
-  //   this.listDataBRWithDetails = new Array<any>();
-
-  //   if (this.selectedAppelOffre == null) {
-
-  //   } else {
-
-
-
-  //     this.param_achat_service.GetAppelOffreByCode(this.selectedAppelOffre).pipe(
-  //       catchError((error: HttpErrorResponse) => {
-  //         let errorMessage = '';
-  //         if (error.error instanceof ErrorEvent) { } else {
-  //           alertifyjs.set('notifier', 'position', 'top-right');
-  //           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-  //         }
-  //         return throwError(errorMessage);
-  //       })
-
-  //     ).subscribe((data1: any) => {
-  //       this.dataAppelOffre = data1;
-  //       this.codeDemandeAchats = data1.codeDemandeAchat
-  //       this.param_achat_service.GetDemandeAchatByCodeIn(this.codeDemandeAchats).pipe(
-  //         catchError((error: HttpErrorResponse) => {
-  //           let errorMessage = '';
-  //           if (error.error instanceof ErrorEvent) { } else {
-  //             alertifyjs.set('notifier', 'position', 'top-right');
-  //             alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-  //           }
-  //           return throwError(errorMessage);
-  //         })
-
-  //       ).subscribe((data2: any) => {
-  //         this.dataDemandeAchat = data2;
-  //         // console.log("data length", data2);
-  //         this.listDemandeAchatPushed = [];
-  //         // for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-  //         this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
-  //         // }
-  //         console.log("data codeDemandeAchats", this.listDemandeAchatPushed);
-  //         this.listDemandeAchatRslt = this.listDemandeAchatPushed;
-  //         // this.prixTotalTTC = 0.000000;
-  //         // this.TotalHTValue = 0.000000;
-  //         // this.remiseEnPourcent = 0.000000;
-  //         // this.mntNet = 0.000000;
-  //         // this.tott19 = 0.000000;
-  //         // this.tott7 = 0.000000;
-  //         // this.TotalTaxeTmb = 0.000000;
-  //         // this.mntTimbre = 0.000000;
-  //         // this.dateLivraison = null
-  //         // this.Instructions = '';
-  //         // this.lieuOA = '';
-  //       }
-  //       )
-
-
-  //     })
-
-  //   }
-
-
-
-  // }
-
-
-
+  codeDemandeAchats: any; 
   GetCodeEtatReception() {
     if (this.selectedEtatReception == undefined) {
 
@@ -1572,7 +1238,7 @@ export class BonReceptionComponent {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1622,7 +1288,7 @@ export class BonReceptionComponent {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1643,12 +1309,12 @@ export class BonReceptionComponent {
   listOARslt = new Array<any>();
 
   GetOrdreAchat() {
-    this.param_achat_service.GetOrdreAchat().pipe(
+    this.param_achat_service.GetOrdreAchatNonReceptionnerTotalement().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1670,29 +1336,18 @@ export class BonReceptionComponent {
   listFRSPushed = new Array<any>();
   listFRSRslt = new Array<any>();
 
-  GetFournisseur() {
-    this.param_achat_service.GetAllFournisseur().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+  GetFournisseur(codeFournisseur: number) {
+    if (this.selectedOA == null) {
 
-        }
-        return throwError(errorMessage);
-      })
+    } else {
 
-    ).subscribe((data: any) => {
-      this.DataFournisseur = data;
-      this.listFRSPushed = [];
-      for (let i = 0; i < this.DataFournisseur.length; i++) {
-        this.listFRSPushed.push({ label: this.DataFournisseur[i].designationAr, value: this.DataFournisseur[i].code })
-      }
-      this.listFRSRslt = this.listFRSPushed;
-    })
+      // console.log("selectedOA" , this.selectedOA.codeFournisseur)
+
+    }
   }
 
 
+  
 
 }
 

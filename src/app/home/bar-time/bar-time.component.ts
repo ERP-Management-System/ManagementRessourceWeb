@@ -7,9 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './bar-time.component.css'
 })
 export class BarTimeComponent implements OnInit {
+  UserConnected:any;
   ngOnInit(): void {
-    this.liveClock(); 
+    this.liveClock();
     this.MethodeVisbileNavBars();
+
   }
   constructor(private route: ActivatedRoute, private router: Router) { }
   liveDateTime = new Date();
@@ -27,41 +29,47 @@ export class BarTimeComponent implements OnInit {
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal'); 
-    if (mode === 'Print') {
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'LogOut') {
 
 
       button.setAttribute('data-target', '#ModalLogOut');
       this.formHeader = "Log Out"
-      this.visibleModalLogOut = true; 
+      this.visibleModalLogOut = true;
 
 
     }
 
   }
   reloadPage() {
-    setTimeout(()=>{
+    setTimeout(() => {
       window.location.reload();
     }, 10);
-}
-  LogOut(){
-  
-    
+  }
+  LogOut() {
+
+
     sessionStorage.clear();
+  //   this.router.navigateByUrl('', {skipLocationChange: true}).then(() => {
+  //     this.router.navigate(['']);
+  // });
+  this.reloadPage();
     this.router.navigate([''], { relativeTo: this.route })
-    this.reloadPage();
+   
 
   }
-  VisibleBarTime : boolean = false;
-  MethodeVisbileNavBars(){   
-    var count=0;
-    var intervalId = setInterval(() =>{if(sessionStorage.getItem("username") == null || sessionStorage.getItem("username") == '' ){ 
-      this.VisibleBarTime = false;
-    }else{
-      this.VisibleBarTime = true; 
-    } 
-    count=count+1;
-    if (count==1000) clearInterval(intervalId);
-    }, 10); 
+  VisibleBarTime: boolean = false;
+  MethodeVisbileNavBars() {
+    var count = 0;
+    var intervalId = setInterval(() => {
+      if (sessionStorage.getItem("username") == null || sessionStorage.getItem("username") == '') {
+        this.VisibleBarTime = false;
+      } else {
+        this.VisibleBarTime = true;
+        this.UserConnected = sessionStorage.getItem("username");
+      }
+      count = count + 1;
+      if (count == 1000) clearInterval(intervalId);
+    }, 10);
   }
 }

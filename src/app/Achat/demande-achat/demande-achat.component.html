@@ -15,7 +15,7 @@
             <div class="card">
                 <p-toast></p-toast>
 
-                <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal"
+                <p-contextMenu #cm [model]="items" data-original-title="ModalPassword" data-toggle="modal" appendTo="body"
                     data-target="#ModalPassword"></p-contextMenu>
 
 
@@ -282,11 +282,11 @@
             <fieldset class="flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Code</label>
+                        <label class="control-label flex-4">Code : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-4">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                           
                         </div>
                     </section>
 
@@ -310,21 +310,21 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Depot</label>
+                        <label class="control-label flex-4">Depot : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepotRslt"
                                 [(ngModel)]="selectedDepot" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                          
                         </div>
                     </section>
                 </div>
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Departement</label>
+                        <label class="control-label flex-4">Departement : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown name="ModeReglementDde"   class="dropdown"
                                 [options]="RsltDepartement" [(ngModel)]="selectedDepartement" 
@@ -332,7 +332,7 @@
                                   placeholder="&nbsp;" [required]="true" [lazy]="true"
                                 #ModeReglementDde="ngModel">
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                           
                         </div>
                     </section>
 
@@ -357,45 +357,40 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Observation</label>
+                        <label class="control-label flex-3"> Observation : <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 50px;"></i></label>
                         <div class="dop control-input flex-4">
                             <textarea [(ngModel)]="observation"
                                 style="height: 50px;width: 350px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
                                 id="w3review" name="w3review" rows="4" cols="50">
                                     </textarea>
-                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 50px;"></i>
+                           
                         </div>
                     </section>
                 </div>
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Demandeur</label>
-                        <div class="dop control-input flex-6">
-                            <!-- <p-multiSelect [style]="{'width':'100%'}" display="chip" optionValue="code"
-                                [maxSelectedLabels]="5" [options]="users"   [(ngModel)]="selectedUsers"
-                                optionLabel="name"></p-multiSelect> -->
-
-
+                        <label class="control-label flex-3">Demandeur  : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <div class="dop control-input flex-6"> 
 
                                 <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listUserRslt"
                                 [(ngModel)]="selectedUsers" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                          
                         </div>
                     </section>
 
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Date Souhaitée</label>
+                        <label class="control-label flex-3">Date Souhaitée : <i class="fa-lg fa-fw fa fa-times icon-required" ></i>
+                        </label>
                         <div class="control-input flex-6">
                             <p-calendar [minDate]="minDate" [maxDate]="maxDate" [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
                                 (onChange)="transformDateFormat()" [showButtonBar]="true" inputId="min-max" [readonlyInput]="true"
                                 dateFormat="yy-mm-dd" />
-                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 5px;right: 183px;"></i>
                         </div>
 
 
@@ -448,7 +443,7 @@
                                         <th style="width: 30px !important;font-size: 13px">#</th>
                                         <th style="width: 80px !important;font-size: 13px">Code</th>
                                         <th style="width: 140px !important;font-size: 13px">Designation Matiere</th>
-                                        <th style="width: 115px !important;font-size: 13px">Quantite Dispo.</th>
+                                        <th style="width: 115px !important;font-size: 13px">Laize</th>
 
                                         <th style="width: 100px !important;font-size: 13px">Unite</th>
                                         <th style="width: 100px !important;font-size: 13px">Coloris</th>
@@ -497,7 +492,7 @@
                                         <td style="width: 115px !important ">
 
 
-                                            <input disabled="" [(ngModel)]="inst.prixTotTTC" style="width: 115px;"
+                                            <input  [(ngModel)]="inst.laize" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
                                                 minlength="4" maxlength="8" size="10" />
                                         </td>
@@ -756,11 +751,11 @@
             <fieldset class="flex-6">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Code</label>
+                        <label class="control-label flex-4">Code :   <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-4">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                          
                         </div>
                     </section>
 
@@ -784,21 +779,21 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Depot</label>
+                        <label class="control-label flex-4">Depot :   <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepotRslt"
                                 [(ngModel)]="selectedDepot" [filter]="true" [showClear]="true"
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                          
                         </div>
                     </section>
 
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Departement</label>
+                        <label class="control-label flex-4">Departement :   <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown name="RsltDepartement"   class="dropdown"
                                 [options]="RsltDepartement" [(ngModel)]="selectedDepartement" 
@@ -806,7 +801,7 @@
                                   placeholder="&nbsp;" [required]="true" [lazy]="true"
                                 >
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                          
                         </div>
                     </section>
                 </div>
@@ -830,19 +825,19 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Observation</label>
+                        <label class="control-label flex-3">Observation : <i class="fa-lg fa-fw fa fa-times icon-required"  ></i></label>
                         <div class="dop control-input flex-4">
                             <textarea [(ngModel)]="observation"
                                 style="height: 50px;width: 350px;font-size: 13px;border: 1px solid #e2e2e2;border-radius: 6px;"
                                 id="w3review" name="w3review" rows="4" cols="50">
                                     </textarea>
-                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 50px;"></i>
+                            
                         </div>
                     </section>
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Demandeur</label>
+                        <label class="control-label flex-3">Demandeur  : <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <!-- <p-multiSelect [style]="{'width':'100%'}" display="chip" optionValue="code"
                                 [maxSelectedLabels]="5" [options]="users"   [(ngModel)]="selectedUsers"
@@ -855,19 +850,19 @@
                                 [style]="{'width':'100%'}" filterBy="label,value" [autoDisplayFirst]="true"
                                 placeholder="&nbsp;" [required]="true" [lazy]="true">
                             </p-dropdown>
-                            <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            
                         </div>
                     </section>
 
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-12">
-                        <label class="control-label flex-3">Date Souhaitée</label>
+                        <label class="control-label flex-3">Date Souhaitée : <i class="fa-lg fa-fw fa fa-times icon-required"  ></i></label>
                         <div class="control-input flex-6">
                             <p-calendar [(ngModel)]="dateLivraison" (onSelect)="transformDateFormat()"
                                 (onChange)="transformDateFormat()" [showButtonBar]="true" [readonlyInput]="true"
                                 dateFormat="yy-mm-dd" />
-                            <i class="fa-lg fa-fw fa fa-times icon-required" style="bottom: 5px;right: 183px;"></i>
+                            
                         </div>
 
 
@@ -917,7 +912,7 @@
                                         <th style="width: 30px !important;font-size: 13px">#</th>
                                         <th style="width: 80px !important;font-size: 13px">Code</th>
                                         <th style="width: 140px !important;font-size: 13px">Designation Matiere</th>
-                                        <th style="width: 115px !important;font-size: 13px">Quantite Dispo.</th>
+                                        <th style="width: 115px !important;font-size: 13px">Laize</th>
 
                                         <th style="width: 100px !important;font-size: 13px">Unite</th>
                                         <th style="width: 100px !important;font-size: 13px">Coloris</th>
@@ -966,7 +961,7 @@
                                         <td style="width: 115px !important ">
 
 
-                                            <input disabled="" [(ngModel)]="inst.prixTotTTC" style="width: 115px;"
+                                            <input disabled="" [(ngModel)]="inst.laize" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
                                                 minlength="4" maxlength="8" size="10" />
                                         </td>

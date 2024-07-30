@@ -9,7 +9,8 @@ import * as alertifyjs from 'alertifyjs'
 import { AO, AODetails, AppelOffre, Coloris, Compteur, DemandeAchat, DetailsAppelOffre, Matiere, ModeReglement, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { DatePipe } from '@angular/common';
-
+import * as CryptoJS from 'crypto-js';
+import { EncryptionService } from 'src/app/shared/EcrypteService/EncryptionService';
 
 declare const PDFObject: any;
 
@@ -39,7 +40,7 @@ export class AppelOffreComponent {
 
   openModal!: boolean;
 
-  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
+  constructor(private encryptionService: EncryptionService,private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
   }
@@ -77,58 +78,59 @@ export class AppelOffreComponent {
   CloseModal() {
     this.visbileModalPassword = false;
     this.visibleModalApprove = false;
-  }
+  } 
+  decryptedValue: string = ''; 
   approveAO(mode: string) {
-
-    this.param_achat_service.GetPasswordChangeApprouveAchat().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-        } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-        }
-        return throwError(errorMessage);
-      })
-
-    ).subscribe(
-      (res: any) => {
-
-        if (this.password == res.valeur) {
+    
+    const encryptedValue = sessionStorage.getItem('PasswordAnnuleApprouve');
+    if (encryptedValue) {
+       
+      this.decryptedValue = this.encryptionService.decrypt(encryptedValue);
+       
+    } else {
+      this.decryptedValue = 'No value found in session storage';
+    }
 
 
-          this.visbileModalPassword = false;
-          const container = document.getElementById('main-container');
-          const contextMenu = document.createElement('button');
-          contextMenu.type = 'button';
-          contextMenu.style.display = 'none';
-          contextMenu.setAttribute('data-toggle', 'modal');
-          if (mode === 'ApproveModal') {
-            contextMenu.setAttribute('data-target', '#ModalApprove');
-            this.formHeader = "Valider Appel Offre";
-            this.visibleModalApprove = true;
-            this.visDelete = false;
-            this.visibleNewModal = false;
-            this.visibleModalPrint = false;
-            this.visbileModalPassword = false;
-            this.GelMatiereActive();
-            this.onRowSelect;
-            this.GelAllModeReglement();
-            this.GetColorisActifVisible();
-            this.GelUniteActifVisible();
-            this.GetAppelOffreByCode(this.selectedAppelOffre);
-            this.diss = true;
-            this.password='';
-          }
+    if (this.password == this.decryptedValue) {
 
-        } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Password Error");
 
-        }
-
+      this.visbileModalPassword = false;
+      const container = document.getElementById('main-container');
+      const contextMenu = document.createElement('button');
+      contextMenu.type = 'button';
+      contextMenu.style.display = 'none';
+      contextMenu.setAttribute('data-toggle', 'modal');
+      if (mode === 'ApproveModal') {
+        contextMenu.setAttribute('data-target', '#ModalApprove');
+        this.formHeader = "Valider Appel Offre";
+        this.visibleModalApprove = true;
+        this.visDelete = false;
+        this.visibleNewModal = false;
+        this.visibleModalPrint = false;
+        this.visbileModalPassword = false;
+        this.GelMatiereActive();
+        this.onRowSelect;
+        this.GelAllModeReglement();
+        this.GetColorisActifVisible();
+        this.GelUniteActifVisible();
+        this.GetAppelOffreByCode(this.selectedAppelOffre);
+        this.diss = true;
+        this.password = '';
       }
-    )
+
+    } else {
+      alertifyjs.set('notifier', 'position', 'top-right');
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Password Error");
+
+    }
+
+
+
+
+
+    // }
+    // )
 
 
 
@@ -137,31 +139,31 @@ export class AppelOffreComponent {
   }
 
 
-  
- ApproveAppelOffre(mode: string) { 
-          this.visbileModalPassword = false;
-          const container = document.getElementById('main-container');
-          const contextMenu = document.createElement('button');
-          contextMenu.type = 'button';
-          contextMenu.style.display = 'none';
-          contextMenu.setAttribute('data-toggle', 'modal');
-          if (mode === 'ApproveModal') {
-            contextMenu.setAttribute('data-target', '#ModalApprove');
-            this.formHeader = "Valider Appel Offre";
-            this.visibleModalApprove = true;
-            this.visDelete = false;
-            this.visibleNewModal = false;
-            this.visibleModalPrint = false;
-            this.visbileModalPassword = false;
-            this.GelMatiereActive();
-            this.onRowSelect;
-            this.GelAllModeReglement();
-            this.GetColorisActifVisible();
-            this.GelUniteActifVisible();
-            this.GetAppelOffreByCode(this.selectedAppelOffre);
-            this.diss = true;
-            this.password='';
-          } 
+
+  ApproveAppelOffre(mode: string) {
+    this.visbileModalPassword = false;
+    const container = document.getElementById('main-container');
+    const contextMenu = document.createElement('button');
+    contextMenu.type = 'button';
+    contextMenu.style.display = 'none';
+    contextMenu.setAttribute('data-toggle', 'modal');
+    if (mode === 'ApproveModal') {
+      contextMenu.setAttribute('data-target', '#ModalApprove');
+      this.formHeader = "Valider Appel Offre";
+      this.visibleModalApprove = true;
+      this.visDelete = false;
+      this.visibleNewModal = false;
+      this.visibleModalPrint = false;
+      this.visbileModalPassword = false;
+      this.GelMatiereActive();
+      this.onRowSelect;
+      this.GelAllModeReglement();
+      this.GetColorisActifVisible();
+      this.GelUniteActifVisible();
+      this.GetAppelOffreByCode(this.selectedAppelOffre);
+      this.diss = true;
+      this.password = '';
+    }
   }
   password: any;
   OpenPasswordModal(mode: string) {
@@ -290,7 +292,7 @@ export class AppelOffreComponent {
     this.dateLivraison = event.data.dateLivraison;
     this.adressLivraison = event.data.adressLivraison;
     this.selectedValue = event.data.codeEtatApprouverOrdreAchat;
-this.selectedDdeAchat =  event.data.codeDemandeAchat;
+    this.selectedDdeAchat = event.data.codeDemandeAchat;
     console.log('vtData : ', event, 'selected AO code : ', this.selectedAppelOffre, "date",);
 
     if (event.data.codeEtatApprouverOrdreAchat == 2) {
@@ -298,19 +300,19 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
       this.disBtnDelete = true;
       this.VisBtnPrintAO = true;
       this.VisBtnDeleteAO = false;
-      this.disBtnValider=true;
+      this.disBtnValider = true;
     } else if (event.data.codeEtatApprouverOrdreAchat == 3) {
       this.VisBtnDeleteAO = true;
       this.disBtnModif = true;
       this.disBtnDelete = true;
       this.VisBtnPrintAO = false;
-      this.disBtnValider=true;
+      this.disBtnValider = true;
     } else {
       this.VisBtnDeleteAO = true;
       this.disBtnModif = false;
       this.disBtnDelete = false;
       this.VisBtnPrintAO = false;
-      this.disBtnValider=false;
+      this.disBtnValider = false;
     }
 
 
@@ -341,7 +343,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         if (error.error instanceof ErrorEvent) {
         } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -377,7 +379,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -417,7 +419,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
       this.GelUniteActifVisible();
       this.GetColorisActifVisible();
       this.GetCodeSaisie();
-      this.GelDemandeAchatApprouved() ;
+      this.GelDemandeAchatApprouved();
 
     } else
       if (mode === 'edit') {
@@ -444,7 +446,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
           this.GelMatiereActive();
 
 
-          this.GelDemandeAchatApprouved() ;
+          this.GelDemandeAchatApprouved();
           this.onRowSelect;
           this.GelAllModeReglement();
 
@@ -640,7 +642,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
   };
 
   PostAppelOffre() {
-    if ( !this.selectedDdeAchat || !this.selectedModeReglement || !this.codeSaisie || this.listDataAOWithDetails.length == 0 || !this.adressLivraison) {
+    if (!this.selectedDdeAchat || !this.selectedModeReglement || !this.codeSaisie || this.listDataAOWithDetails.length == 0 || !this.adressLivraison) {
       alertifyjs.set('notifier', 'position', 'top-right');
       alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
     } else {
@@ -684,7 +686,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
             if (error.error instanceof ErrorEvent) {
             } else {
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
             }
             return throwError(errorMessage);
@@ -726,7 +728,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
             if (error.error instanceof ErrorEvent) { } else {
               this.final = new Array<any>();
               alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
             }
             return throwError(errorMessage);
           })
@@ -838,7 +840,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
           alertifyjs.timer = 100;
         }
         return throwError(errorMessage);
@@ -864,7 +866,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -893,7 +895,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -921,7 +923,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -948,7 +950,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
         }
         return throwError(errorMessage);
       })
@@ -1014,11 +1016,11 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
 
 
     if ((this.selectedMatiereToAdd != undefined) && (this.selectedMatiereToAdd != "") && (!exist)) {
-      this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => { 
+      this.param_achat_service.GetMatiereByCode(this.selectedMatiereToAdd).subscribe((Newdata: any) => {
         this.Newcompteur = this.Newcompteur + 1;
 
         this.listDataAOWithDetails.push(Newdata);
-        console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails); 
+        console.log(" PushTableData listDataAOWithDetails", this.listDataAOWithDetails);
         this.disp = true;
       })
     }
@@ -1036,7 +1038,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1082,7 +1084,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
           }
           return throwError(errorMessage);
@@ -1097,11 +1099,11 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
 
       })
 
-    } 
+    }
     // console.log("selectedCountry" , this.selectedCountry.code)
   }
 
-  
+
   dataDemandeAchat = new Array<DemandeAchat>();
   listDdeAchatPushed = new Array<any>();
   listDdeAchatRslt = new Array<any>();
@@ -1111,7 +1113,7 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
         }
         return throwError(errorMessage);
@@ -1121,14 +1123,14 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
       this.dataDemandeAchat = data;
       this.listDdeAchatPushed = [];
       for (let i = 0; i < this.dataDemandeAchat.length; i++) {
-        this.listDdeAchatPushed.push({ label: (this.dataDemandeAchat[i].codeSaisie   ), value: this.dataDemandeAchat[i].code })
+        this.listDdeAchatPushed.push({ label: (this.dataDemandeAchat[i].codeSaisie), value: this.dataDemandeAchat[i].code })
       }
       this.listDdeAchatRslt = this.listDdeAchatPushed;
-     
+
     })
   }
 
-  
+
   GetDemandeAchatByCode(code: number) {
 
     if (this.selectedDdeAchat == null) {
@@ -1140,14 +1142,14 @@ this.selectedDdeAchat =  event.data.codeDemandeAchat;
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) { } else {
             alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-  
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
           }
           return throwError(errorMessage);
         })
       ).subscribe((data: any) => {
         this.listDataAOWithDetails = new Array<any>();
-        this.listDataAOWithDetails = data; 
+        this.listDataAOWithDetails = data;
 
       })
     }

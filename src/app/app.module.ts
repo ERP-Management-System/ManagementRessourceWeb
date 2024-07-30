@@ -148,8 +148,7 @@ import { MenuDepotDepartementComponent } from './DepotDepartement/menu-depot-dep
 import { DepotComponent } from './DepotDepartement/depot/depot.component';
 import { CategorieDepotComponent } from './DepotDepartement/categorie-depot/categorie-depot.component';
 import { AccessMenuComponent } from './Access/access-menu/access-menu.component';
-import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
-import { CustomHttpInterceptorService } from './CustomHttpInterceptorService';
+import { SignatureUserComponent } from './Access/signature-user/signature-user.component'; 
 import { BonReceptionComponent } from './Achat/bon-reception/bon-reception.component';
 import { LoginComponent } from './home/login/login.component'; 
 import { ApppComponent } from './ApppComponent';
@@ -272,7 +271,7 @@ import { BarTimeComponent } from './home/bar-time/bar-time.component';
   ], 
   providers: [ ConfirmationService, { provide: MAT_DIALOG_DATA, useValue: {} },ApppComponent,
     { provide: MatDialogRef, useValue: {} },ParametrageCentralService, MessageService ,DatePipe,
-    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptorService, multi: true}
+    
 
 ],
   bootstrap: [AppComponent],

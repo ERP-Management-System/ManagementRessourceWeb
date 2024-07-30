@@ -1,2 +1,27 @@
 @import "src/assets/assets/files/css/style.css";
 
+
+:host ::ng-deep .p-datatable-thead th {
+    text-align: left !important;
+    color: #333 !important;
+    /* background-color: #324960 !important; */
+    /* background: linear-gradient(to top, lightgrey 0%, lightgrey 1%, #e0e0e0 26%, #efefef 48%, #d9d9d9 75%, #bcbcbc 100%); */
+    background-image: linear-gradient(to bottom, #fff 0, #e0e0e0 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe0e0e0', GradientType=0) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
+  
+    border: 1px solid #b7b7b7 !important; 
+    height: 40px !important;
+    padding: 0px 10px 0px !important;
+    box-shadow: 4px -8px 20px 0px rgb(179 179 179 / 36%);
+    font-family: Cairo !important;
+    border-radius: 3px; 
+    font-size: 13px !important; 
+    font-weight: bold !important;
+  }
+  
+
+  :host ::ng-deep .disabled-row {
+    opacity: 0.5;
+    pointer-events: none;
+  }

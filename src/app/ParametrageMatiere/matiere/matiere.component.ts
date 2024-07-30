@@ -145,6 +145,7 @@ export class MatiereComponent {
     this.selectedStatuMatiere = event.data.codeStatuMatiere; 
     this.selectedTaxe = event.data.codeTaxe;
     this.prixAchat = event.data.prixAchat;
+ 
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {

@@ -164,9 +164,10 @@
                             <th pSortableColumn="mntNet" style="width: 115px;">
                                 Montant Net <p-sortIcon field="mntNet" />
                             </th>
-                            <th pSortableColumn="observation" style="width: 115px;">
-                                Observation <p-sortIcon field="observation" />
+                            <th pSortableColumn="ordreAchatDTO.codeSaisie" style="width: 115px;">
+                                Ordre d'Achat <p-sortIcon field="ordreAchatDTO.codeSaisie" />
                             </th>
+
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
@@ -189,7 +190,7 @@
                                 {{fl.mntNet}}
                             </td>
                             <td style="font-size: 15px !important;">
-                                {{fl.observation}}
+                                {{fl.ordreAchatDTO.codeSaisie}}
                             </td>
                         </tr>
                     </ng-template>
@@ -317,7 +318,7 @@
             <fieldset class="flex-4">
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Code  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-5">Code  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="control-input  flex-6">
                             <input disabled="" id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                                 class=" form-control-dev input-xs" required [(ngModel)]="codeSaisie"> 
@@ -327,7 +328,7 @@
                 </div>
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Ordre d'Achat <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-5">Ordre d'Achat <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listOARslt"
                                 [(ngModel)]="selectedOA" [filter]="true" [showClear]="true" [style]="{'width':'90%'}"
@@ -341,7 +342,7 @@
 
                 <div class="flex-row-start flex-12">
                     <section class="flex-row-start flex-6">
-                        <label class="control-label flex-4">Depot  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                        <label class="control-label flex-5">Depot  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                         <div class="dop control-input flex-6">
                             <p-dropdown [resetFilterOnHide]=true class="dropdown" [options]="listDepotRslt"
                                 [(ngModel)]="selectedDepot" [filter]="true" [showClear]="true"
@@ -530,13 +531,14 @@
                                     <tr>
                                         <th style="width: 30px !important;font-size: 13px">#</th>
                                         <th style="width: 80px !important;font-size: 13px">Code</th>
-                                        <th style="width: 140px !important;font-size: 13px">Designation Matiere</th>
-                                        <th style="width: 115px !important;font-size: 13px">Quantite Dispo.</th>
+                                        <th style="width: 140px !important;font-size: 13px">Matiere</th>
+                                        <th style="width: 115px !important;font-size: 13px">Laize</th>
 
                                         <th style="width: 100px !important;font-size: 13px">Unite</th>
                                         <th style="width: 100px !important;font-size: 13px">Coloris</th>
-                                        <th style="width: 140px !important;font-size: 13px">Quantite Demander</th>
-                                        <th style="width: 160px !important;font-size: 13px">Quantite Receptionner</th>
+                                        <th style="width: 85px !important;font-size: 13px">Quantite Demander</th>
+                                        <th style="width: 110px !important;font-size: 13px">Quantite </th>
+                                        <th style="width: 110px !important;font-size: 13px">Quantite Receptionner</th>
                                         <th *ngIf="visDetailsPrice" style="width: 100px !important;font-size: 13px">PU.
                                             HT</th>
                                         <th *ngIf="visDetailsPrice" style="width: 130px !important;font-size: 13px">PT.
@@ -550,9 +552,9 @@
 
                                     </tr>
                                 </ng-template>
-                                <ng-template pTemplate="body" let-inst let-editing="editing" let-ri="rowIndex">
-
-                                    <tr [pEditableRow]="inst">
+                                <ng-template pTemplate="body"   let-inst  let-editing="editing" let-ri="rowIndex">
+                                  
+                                    <tr [pEditableRow]="inst" [ngClass]="{'disabled-row': inst.qteLivrer >= inst.qteDemander}"  >
                                         <td style="width: 30px !important;font-size: 13px">{{ri+1}}</td>
                                         <td style="width: 80px !important;font-size: 13px">
                                             <p-cellEditor>
@@ -584,10 +586,13 @@
                                         </td>
                                         <td style="width: 115px !important ">
 
+                                            <input style="width: 115px !important" style="width: 115px;" class="InputQte"
+                                             
+                                             [(ngModel)]="inst.laize" type="number" name="number" step="0.1" />
 
-                                            <input disabled="" [(ngModel)]="inst.mntTotalTTC" style="width: 115px;"
+                                            <!-- <input  disabled="" [(ngModel)]="inst.mntTotalTTC" style="width: 115px;"
                                                 class="InputQte" type="number" id="name" name="name" required
-                                                minlength="4" maxlength="8" size="10" />
+                                                minlength="4" maxlength="8" size="10" /> -->
                                         </td>
 
 
@@ -608,26 +613,29 @@
                                                 </option>
                                             </select>
                                         </td>
-
-
-
-
-
-                                        <td style="width: 140px !important;font-size: 13px">
-                                            <input style="width: 140px !important" class="InputQte"
-                                                (change)="calculateTaxe()" (change)="ValueQteChanged()"  
+                                        <td style="width: 85px !important;font-size: 13px">
+                                            <input style="width: 85px !important" class="InputQte"
+                                               disabled=""  
                                                 [(ngModel)]="inst.qteDemander" type="number" name="number" step="1" />
                                         </td>
+                                        
 
-                                        <td style="width: 160px !important;font-size: 13px">
-                                            <input style="width: 160px !important" class="InputQte"
-                                                [(ngModel)]="inst.qteReceptionner"   type="number" name="number"
+                                        <td style="width: 110px !important;font-size: 13px">
+                                            <input style="width: 110px !important" class="InputQte"
+                                            (change)="calculateTaxe()" (change)="ValueQteChanged()"      [(ngModel)]="inst.qteReceptionner"   type="number" name="number"
                                                 step="1" />
                                         </td>
 
+                                        <td style="width: 110px !important;font-size: 13px">
+                                            <input style="width: 110px !important" class="InputQte"
+                                             disabled="" [(ngModel)]="inst.qteLivrer"   type="number" name="qteLivrer" 
+                                                step="1" />
+                                        </td>
+
+                                        
                                         <td *ngIf="visDetailsPrice" style="width: 100px !important;font-size: 13px">
                                             <!-- prix uni ht  -->
-                                            <input style="width: 100px;" class="InputQte" [(ngModel)]="inst.prixAchat"
+                                            <input style="width: 100px;" class="InputQte" (change)="calculateTaxe()" (change)="ValueQteChanged()" [(ngModel)]="inst.prixAchat"
                                                 type="number" name="prixAchat" step='0.000001' />
                                         </td>
                                         <td *ngIf="visDetailsPrice" style="width: 130px !important;font-size: 13px">
@@ -743,7 +751,7 @@
                                                 </tr>
                                                 <tr
                                                     style="border: 1px solid  #e2e2e2;         font-size: 15px !important; font-family: auto; border-radius: 6px;width: 100px;">
-                                                    <td colspan="3" class="text-right">Monatant Net</td>
+                                                    <td colspan="3" class="text-right">Montant Net</td>
                                                     <input step="0.001" [(ngModel)]="mntNet"
                                                         style="  border-radius: 6px;width: 145px;margin-left: 0px;height: 33px;"
                                                         class="InputQte" type="number" id="valeurTVA" name="valeurTVA"

@@ -876,16 +876,47 @@ nav .user
 .fixed-top {
     position: fixed;
     top: 0;
-    right: 0;
+    right: 20px;
     left: 0;
     z-index: 178; 
     height: 50px;
     margin: 0px;
+    background: #354052 !important;
 }
  
 
+.gradient-buttons .btn {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 49%, rgba(0, 0, 0, 0.15) 51%, rgba(0, 0, 0, 0.05));
+  background-repeat: repeat-x;
+}
  
+
+
+.btn-grad {
+  background-image: linear-gradient(to right, #003973 0%, #E5E5BE  51%, #003973  100%);
  
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 5px;
+  display: block;
+  border: 1px solid lightgrey;
+  height: 33px;
+  width: 100%;
+}
+a.dropdown-item {
+  padding: 0px;
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
  
 .navbar-sidenav-tooltip.show {
   display: none;
