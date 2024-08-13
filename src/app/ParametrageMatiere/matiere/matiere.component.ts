@@ -145,7 +145,7 @@ export class MatiereComponent {
     this.selectedStatuMatiere = event.data.codeStatuMatiere; 
     this.selectedTaxe = event.data.codeTaxe;
     this.prixAchat = event.data.prixAchat;
- 
+ this.selectedRequired = event.data.requiredNumPiece;
     console.log('vtData : ', event);
   }
   onRowUnselect(event: any) {
@@ -444,6 +444,8 @@ export class MatiereComponent {
         codeTaxe:this.selectedTaxe,
         prixAchat:this.prixAchat,
 
+        requiredNumPiece:this.selectedRequired,
+
       }
       if (this.code != null) {
         body['code'] = this.code;
@@ -575,6 +577,12 @@ export class MatiereComponent {
 
 
   /////////////////////////////////////////////////////////// new dev
+  RequiredOptions = [
+    { label: 'True', value: true },
+    { label: 'False', value: false }
+  ];
+
+  selectedRequired: boolean = false; 
 
 
   dataTypeMatiereDde = new Array<TypeCaisse>();
@@ -691,6 +699,14 @@ export class MatiereComponent {
     return "url('assets/assets/images/icons8-annuler-94.png')";
   }
 
+
+  
+  getPicReqNumPiece() {
+    return "url('assets/assets/images/required_true.png')";
+  }
+  getPicInReqNumPiece() {
+    return "url('assets/assets/images/required_false.png')";
+  }
 
 }
 

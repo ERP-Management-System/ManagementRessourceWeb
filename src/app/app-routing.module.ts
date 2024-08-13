@@ -31,6 +31,11 @@ import { AccessMenuComponent } from './Access/access-menu/access-menu.component'
 import { SignatureUserComponent } from './Access/signature-user/signature-user.component';
 import { BonReceptionComponent } from './Achat/bon-reception/bon-reception.component';
 import { LoginComponent } from './home/login/login.component';
+import { StockMenuComponent } from './Stock/stock-menu/stock-menu.component'; 
+import { EditionStockComponent } from './Stock/edition-stock/edition-stock.component'; 
+import { DdeTransfertMatiereComponent } from './Stock/dde-transfert-matiere/dde-transfert-matiere.component';
+import { ValidationTransfertMatiereComponent } from './Stock/validation-transfert-matiere/validation-transfert-matiere.component';
+import { TransfertMatiereComponent } from './Stock/transfert-matiere/transfert-matiere.component';
  
   
 
@@ -107,6 +112,16 @@ const routes: Routes = [
   // { path: 'menu_achat/demande_achat', component: DemandeAchatComponent },
   // { path: 'menu_achat/ordre_achat', component: OrdreAchatComponent },
   
+  { path: 'menu_stock', component: StockMenuComponent },
+  { path: 'menu_stock/edition', component: EditionStockComponent },
+  { path: 'menu_stock/demande_transfert', component: DdeTransfertMatiereComponent },
+  { path: 'menu_stock/transfert_matiere', component: TransfertMatiereComponent }, 
+  { path: 'menu_stock/validation_transfert_matiere', component: ValidationTransfertMatiereComponent },
+
+ 
+
+
+
 ];
 
 @NgModule({

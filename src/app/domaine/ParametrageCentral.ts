@@ -472,3 +472,10 @@ export interface Fournisser{
   actif: boolean,
   visible: boolean,
   }
+
+  export interface DetailsMatiere{
+    codeMatiere:string,
+    numPiece:string,
+    laize:string,
+    qteReceptionner:number
+  }

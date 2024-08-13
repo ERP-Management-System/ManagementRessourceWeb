@@ -1,0 +1,123 @@
+ 
+  <div class="container">
+    <div class="row text-center">
+      <h2>Main Menu Stock    </h2>
+      <div id="menu-box">
+        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_stock/demande_transfert']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa-solid fa-right-left"></i>
+            </div>
+            <div class="block2">
+              <span>Demande Transfert</span>
+              <p>Demande Transfert Mati...</p> 
+            </div>
+            <div class="block3" >
+              <i class="pi pi-bell" pBadge value="2" severity="danger"></i> 
+            </div>
+          </div>
+        </div>
+
+
+        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_stock/transfert_matiere']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            </div>
+            <div class="block2">
+              <span>Transfert</span>
+              <p>Transfert Matiere</p> 
+            </div> 
+          </div>
+        </div>
+
+        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_stock/validation_transfert_matiere']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <div class="block2">
+              <span>Validation Transfert</span>
+              <p>Valeur Stock ,Fiche Stock..</p> 
+            </div>
+            <div class="block3" >
+              <i class="pi pi-bell" pBadge value="166" severity="danger"></i>
+            </div>
+          </div>
+        </div>
+        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_stock/edition']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-envelope-open-text" aria-hidden="true"></i>
+            </div>
+            <div class="block2">
+              <span>Edition</span>
+              <p>Valeur Stock ,Fiche Stock..</p>
+  
+            </div>
+            <div class="block3" *ngIf="Display" >
+              <i  class="pi pi-bell" pBadge value="42" severity="danger"></i>
+            </div>
+          </div>
+        </div>
+
+
+          <!-- <div id="item" class="col-sm-6 col-md-4" [routerLink]="['/menu_depot_departement/departement']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-rectangle-list" aria-hidden="true"></i>
+            </div>
+            <div class="block2">
+              <span>Departement</span>
+              <p>DEP Achat ,DEP logistique</p>
+            </div>
+          </div>
+        </div>
+  
+        <div id="item" class="col-sm-6 col-md-4" [routerLink]="['/menu_depot_departement/categorie_depot']">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-tag" aria-hidden="true"></i>
+            </div>
+            <div class="block2">
+              <span>Categorie Depot</span>
+              <p>Matiere Premiere , SF, ... </p>
+            </div>
+          </div>
+        </div>
+      <div id="item" class="col-sm-6 col-md-3">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+            <div class="block2">
+              <span>  </span>
+              <p> </p>
+            </div>
+          </div>
+        </div>
+        <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/taille']">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-folder-tree" aria-hidden="true"></i>
+              </div>
+              <div class="block2">
+                <span>GED</span>
+                <p>Document PDF, JPG , JPEG, ...</p>
+              </div>
+            </div>
+          </div>
+          <div id="item" class="col-sm-6 col-md-3" [routerLink]="['/menu_parametrage_matiere/grille_taille']">
+              <div class="container-block">
+                <div class="block1">
+                  <i class="fa fa-tasks"></i>
+                </div>
+                <div class="block2">
+                  <span>Grille Taille</span> 
+                </div>
+              </div>    
+            </div> -->
+  
+      </div>
+    </div>
+  </div>

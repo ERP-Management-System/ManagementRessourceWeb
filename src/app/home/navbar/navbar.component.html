@@ -74,7 +74,7 @@
             <span class="tooltip">production</span>
         </li>
         <li routerLinkActive="active" (click)="onClick(9)"   [ngClass]="{'active': tab9==='tab9'}">
-            <a href="#">
+            <a [routerLink]="['/menu_stock']">
                 <i class="bx bx-cart-alt"></i>
                 <span class="links_name">stocks</span>
             </a>
@@ -110,7 +110,7 @@
             <span class="tooltip">Contrôle du transport</span>
         </li>
         <li routerLinkActive="active" (click)="onClick(14)"   [ngClass]="{'active': tab14==='tab14'}">
-            <a href="#">
+            <a [routerLink]="['/menu_mouvement']">
                 <i class="bx bx-cog"></i>
                 <span class="links_name">Mouvement</span>
             </a>

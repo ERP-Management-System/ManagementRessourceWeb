@@ -128,8 +128,9 @@
 
 
 <!-- modal primeNG ADD -->
-<p-dialog id="Modal" header="Header" [scrollLeft]="true" [closeOnEscape]="true" [(visible)]="visibleModal"
-    data-backdrop="false" [modal]="true" styleClass="ModalAdd"   >
+<p-dialog id="Modal" header="Header" id="Modal" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
+[scrollLeft]="true" [(visible)]="visibleModal" data-backdrop="false" [modal]="true"
+styleClass="ModalAdd" [draggable]="false" [resizable]="false" >
     
 
         
@@ -153,11 +154,11 @@
                     <fieldset class="flex-12">
                         <div class="flex-row-start flex-12">
                             <section class="flex-row-start flex-6"  >
-                                <label class="control-label flex-6">Code</label>
+                                <label class="control-label flex-6">Code  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                                 <div class="control-input  flex-6">
                                     <input id="codeSaisie" [disabled]="dis" maxlength="10" name="codeSaisie" type="text"
                                         class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                   
                                 </div>
                             </section>
                             <section class="flex-row-start flex-6">
@@ -170,28 +171,28 @@
                         </div>
                         <div class="flex-row-start flex-12">
                             <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Desgiantion Arabic </label>
+                                <label class="control-label flex-6">Desgiantion Arabic <i class="fa-lg fa-fw fa fa-times icon-required"></i> </label>
                                 <div class="control-input flex-6">
                                     <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                                         class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
                                         [required]="true">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                    
                                 </div>
                             </section>
                             <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Desgiantion Latine </label>
+                                <label class="control-label flex-6">Desgiantion Latine  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                                 <div class="control-input flex-6">
                                     <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                                         class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
                                         [required]="true">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                   
                                 </div>
                             </section>
     
                         </div>
                         <div class="flex-row-start flex-12">
                             <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Type Taxe</label>
+                                <label class="control-label flex-6">Type Taxe   <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                                 <div class="dop control-input flex-6">
                                     <p-dropdown name="ModeReglementDde"   class="dropdown"
                                         [options]="RsltTypeTaxe" [(ngModel)]="selectedTypeTaxe" 
@@ -199,17 +200,17 @@
                                           placeholder="&nbsp;" [required]="true" [lazy]="true"
                                         #ModeReglementDde="ngModel">
                                     </p-dropdown>
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                  
                                 </div>
             
                             </section>
                             <section class="flex-row-start flex-6">
-                                <label class="control-label flex-6">Valeur Taxe</label>
+                                <label class="control-label flex-6">Valeur Taxe  <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                                 <div class="control-input flex-6">
                                     <input type="number" id="valeur_taxe" maxlength="200" name="valeur_taxe"
                                         class="onlyForCentral form-control-dev input-xs" [(ngModel)]="ValeurTaxe"
                                         [required]="true">
-                                    <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                                   
                                 </div>
                             </section>
     

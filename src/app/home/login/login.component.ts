@@ -68,27 +68,16 @@ export class LoginComponent implements OnInit {
   //   })
 
   // }
-  maskResponse(data: any): any {
-    // Assuming 'data.sensitiveField' is the field you want to mask
-    data.sensitiveField = data.sensitiveField.replace(/./g, '*'); 
-    return data;
-  }
-
-  getData(): Promise<any> {
-    return this.param_achat_service.GetPasswordChangeApprouveAchat()
-      .toPromise()
-      .then((response:any) => {
-        const valueToStore = response.valeur; // The value you want to store
-        const encryptedValue = this.encryptionService.encrypt(valueToStore);
-        sessionStorage.setItem('PasswordAnnuleApprouve', encryptedValue);
-        return this.maskResponse(response); // Apply masking
-      });
-  }
-  data: any;
+  
   formValidation() {
     sessionStorage.setItem("username", this.userName)
-    this.getData();
-    
+    this.param_achat_service.GetPasswordChangeApprouveAchat().pipe().subscribe((res: any) => {
+
+      const valueToStore = res.valeur; // The value you want to store
+      const encryptedValue = this.encryptionService.encrypt(valueToStore);
+      sessionStorage.setItem('PasswordAnnuleApprouve', encryptedValue);
+
+    }); 
     this.reloadCurrentRoute();
 
   }

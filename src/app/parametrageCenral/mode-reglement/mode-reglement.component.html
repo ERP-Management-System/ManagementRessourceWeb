@@ -129,41 +129,41 @@
 
 
 <!-- modal primeNG ADD -->
-<p-dialog id="Modal" header="Header" [scrollLeft]="true"  [(visible)]="visibleModal"
-    data-backdrop="false"    [modal]="true" styleClass="ModalAdd" [draggable]="false" [resizable]="false">
+<p-dialog id="Modal" header="Header" id="Modal" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
+[scrollLeft]="true" [(visible)]="visibleModal" data-backdrop="false" [modal]="true"
+styleClass="ModalAdd" [draggable]="false" [resizable]="false">
    
 
-    <ng-template pTemplate="header">
-        <h2 class="text-default headerForm"> {{formHeader}}</h2>
-        <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
-            (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
-        </button>
-        <button class="btn btn-default save-add-ModalSmall" (click)="PostModeReglement()"> <i
-                class="fa-lg fa-fw fa fa-check icon-save"></i>
-            Save
-        </button>
-        <p-toast key="toast1"></p-toast>
-    </ng-template>
-
+<ng-template pTemplate="header">
+    <h2 class="text-default headerForm"> {{formHeader}}</h2>
+    <button class="btn btn-default cancel-add-ModalSmall" :closable="true" data-dismiss="modal"
+        (click)="clearForm()"> <i class="fa-lg fa-fw fa fa-times  icon-fermer "></i>Fermer
+    </button>
+    <button class="btn btn-default save-add-ModalSmall" (click)="PostModeReglement()"> <i
+            class="fa-lg fa-fw fa fa-check icon-save"></i>
+        Save
+    </button>
+    <p-toast key="toast1"></p-toast>
+</ng-template>
 
 
     <div class="modal-body">
         <!-- <form> -->
         <fieldset>
-            <div class="flex-row-space">
-                <section class="flex-row-space flex-3" disabled="">
+            <div class="flex-row-space flex-12">
+                <section class="flex-row-start flex-6"  >
 
-                    <label class="control-label flex-4">Code</label>
-                    <div class="control-input  flex-8">
+                    <label class="control-label flex-6">Code <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
+                    <div class="control-input  flex-6">
                         <input [defaultValue]="myDefaultValue" id="codeSaisie" maxlength="10" name="codeSaisie"
                             type="text" class="onlyForCentral form-control-dev input-xs" required
                             [(ngModel)]="codeSaisie">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        
                     </div>
 
                 </section>
 
-                <section class="flex-row-space flex-2">
+                <section class="flex-row-start flex-6">
                     <div class="chkActif">
                         <p-checkbox [binary]="true" name="actif" value="val3" label="Actif"
                             [(ngModel)]="actif"></p-checkbox>
@@ -179,28 +179,28 @@
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Arabic </label>
+                    <label class="control-label flex-6">Desgiantion Arabic   <i class="fa-lg fa-fw fa fa-times icon-required"></i> </label>
                     <div class="control-input flex-6">
                         <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                      
                     </div>
                 </section>
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Latine </label>
+                    <label class="control-label flex-6">Desgiantion Latine <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
                         <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        
                     </div>
                 </section>
 
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Type Caisse</label>
+                    <label class="control-label flex-6">Type Caisse     <i class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="dop control-input flex-6">
                         <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                             [options]="listTypeCaisseRslt" [(ngModel)]="selectedTypeCaisse" [filter]="true"
@@ -208,7 +208,7 @@
                             [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                             #ModeReglementDde="ngModel">
                         </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                    
                     </div>
 
                 </section>

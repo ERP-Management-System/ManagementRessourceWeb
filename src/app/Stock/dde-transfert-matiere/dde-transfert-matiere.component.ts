@@ -10,23 +10,18 @@ import { ParametrageCentralService } from 'src/app/parametrageCenral/Parametrage
 import { Card } from 'primeng/card';
 import { DatePipe } from '@angular/common';
 import { EncryptionService } from 'src/app/shared/EcrypteService/EncryptionService';
-
-
-
+ 
+import { WserviceAchat } from 'src/app/shared/WServices/StockService';
 declare const PDFObject: any;
-
 @Component({
-  selector: 'app-demande-achat',
-  templateUrl: './demande-achat.component.html',
-  styleUrl: './demande-achat.component.css', providers: [ConfirmationService, MessageService]
+  selector: 'app-dde-transfert-matiere',
+  templateUrl: './dde-transfert-matiere.component.html',
+  styleUrl: './dde-transfert-matiere.component.css'
 })
-export class DemandeAchatComponent {
+export class DdeTransfertMatiereComponent {
 
 
-
-
-
-  v2!: any[];
+ 
 
   openModal!: boolean;
   items!: MenuItem[];
@@ -46,21 +41,34 @@ export class DemandeAchatComponent {
       { label: 'Annuler Validation', icon: 'pi pi-fw pi-history', command: () => this.OpenPasswordModal('PasswordModal',this.selectedDemandeAchat) },
     ];
 
-    this.GelAllDemandeAchat();
+    // WserviceAchat.;
     this.VoidsNew();
     this.getValued();
     this.valDate();
-    this.v2 = [
-      { field: 'codeSaisie', header: 'Code Saisie' },
-      { field: 'designationAr', header: 'Designation', style: 'width: 100px !important;' },
-      { field: 'unite', header: 'Unite' },
-      { field: 'coloris', header: 'Coloris' },
-      { field: 'quantite', header: 'Quantite' },
-    ];
+    
 
 
   }
+  GelAllDemandeTransfert() {
+    this.param_achat_service.GetDemandeAchat().pipe(
+        catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
+            }
+            return throwError(errorMessage);
+        })
+
+    ).subscribe((data: any) => {
+
+
+
+        this.dataDemandeAchat = data;
+
+    })
+}
 
   getPicValider() {
     return "url('assets/assets/images/etat_RCTotal.png')";
@@ -1216,28 +1224,8 @@ export class DemandeAchatComponent {
     });
 
   }
-  dataDemandeAchat = new Array<DemandeAchat>();
+
   banque: any;
-  GelAllDemandeAchat() {
-    this.param_achat_service.GetDemandeAchat().pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) { } else {
-          alertifyjs.set('notifier', 'position', 'top-right');
-          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}` );
-
-        }
-        return throwError(errorMessage);
-      })
-
-    ).subscribe((data: any) => {
-
-
-
-      this.dataDemandeAchat = data;
-
-    })
-  }
 
 
   // dataModeReglement = new Array<ModeReglement>();
@@ -1614,7 +1602,7 @@ export class DemandeAchatComponent {
       { name: 'Valider', code: '2', url: 'assets/assets/images/etat_RCTotal.png' },
     ];
   }
-
+  dataDemandeAchat = new Array<DemandeAchat>();
   GetCodeEtatApprouver() {
     if (this.selectedEtatApprouve == undefined) {
 

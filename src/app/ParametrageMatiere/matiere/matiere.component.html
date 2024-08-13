@@ -15,8 +15,8 @@
             <div class="card">
                 <p-toast></p-toast>
                 <p-table #dt1 [value]="dataMatiere" [globalFilterFields]="['designationAr', 'designationLt']"
-                    selectionMode="single"   [(selection)]="selectedModeReglement"
-                    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="code"
+                    selectionMode="single" [(selection)]="selectedModeReglement" (onRowSelect)="onRowSelect($event)"
+                    (onRowUnselect)="onRowUnselect($event)" dataKey="code"
                     [tableStyle]="{'min-width': '50rem', 'width': '100%' , 'padding': '1px 1px 1px 1px'}">
 
                     <ng-template pTemplate="caption" class="col-md-12">
@@ -48,9 +48,9 @@
 
 
                         <div class="ActionBtn col-md-6">
-                            <button id="Btn_ajout_mat" data-backdrop="false" type="button" class="Bouton-add-new1 btn  btn-default "
-                                data-original-title="Add" data-toggle="modal" data-target="#Modal"
-                                (click)="onOpenModal('add')">
+                            <button id="Btn_ajout_mat" data-backdrop="false" type="button"
+                                class="Bouton-add-new1 btn  btn-default " data-original-title="Add" data-toggle="modal"
+                                data-target="#Modal" (click)="onOpenModal('add')">
                                 <div class="bouton_style-2">Ajouter</div>
                                 <mat-icon class="add-icon">add</mat-icon>
                             </button>
@@ -78,13 +78,14 @@
                     <ng-template pTemplate="header">
                         <tr style="font-size: 15px !important;">
                             <th style="width: 100px;">code Saisie</th>
-                            <th  >Designation Arabic</th>
-                            <th  >Designation Latin</th>
+                            <th>Designation Arabic</th>
+                            <th>Designation Latin</th>
 
                             <th style="width: 130px;">Type Matiere</th>
                             <th style="width: 95px;">Min. Stock</th>
                             <th style="width: 100px;">Max. Stock</th>
-                            <th style="width: 50px; text-align: center !important; ">Statu</th>
+                            <th style="width: 60px; text-align: center !important; ">Statu</th>
+                            <th style="width: 115px; text-align: center !important; ">Rq. Num. Piece</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-fl>
@@ -99,9 +100,14 @@
                             </td>
                             <td class="act-col">
                                 {{fl.qteMaxStock}}
-                            </td> 
-                            <td style="font-size: 15px !important; width: 50px; " class="warning"
+                            </td>
+                            <td style="font-size: 15px !important; width: 60px; " class="warning"
                                 [ngStyle]="{'background-image': fl.statuMatiereDTO.code==1 ? (getPicActive()) : (getPicInActive()) }"
+                                style="background-repeat: no-repeat;background-position: top !important;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
+                            </td>
+
+                            <td style="font-size: 15px !important; width: 115px; " class="warning"
+                                [ngStyle]="{'background-image': fl.requiredNumPiece==1 ? (getPicReqNumPiece()) : (getPicInReqNumPiece()) }"
                                 style="background-repeat: no-repeat;background-position: top !important;background-size:25px 25px;background-position-y: -2px;background-position-x: 7px;">
                             </td>
 
@@ -132,8 +138,8 @@
 
 <!-- modal primeNG ADD -->
 <p-dialog header="Header" id="Modal" data-bs-display="static" [contentStyle]="{'overflow':'visible'}"
-[scrollLeft]="true" [(visible)]="visibleModal" data-backdrop="false" [modal]="true"
-styleClass="ModalAdd" [draggable]="false" [resizable]="false">
+    [scrollLeft]="true" [(visible)]="visibleModal" data-backdrop="false" [modal]="true" styleClass="ModalAdd"
+    [draggable]="false" [resizable]="false">
 
 
 
@@ -155,24 +161,26 @@ styleClass="ModalAdd" [draggable]="false" [resizable]="false">
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12" disabled="">
 
-                    <label class="control-label flex-6">Code</label>
+                    <label class="control-label flex-6">Code <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input  flex-6">
                         <input id="codeSaisie" maxlength="10" name="codeSaisie" type="text"
                             class="onlyForCentral form-control-dev input-xs" required [(ngModel)]="codeSaisie">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
 
                 </section>
 
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Statu Matiere</label>
+                    <label class="control-label flex-6">Statu Matiere <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="dop control-input flex-6">
                         <p-dropdown name="ModeReglementDde" class="dropdown" [options]="listStatuMatiereRslt"
                             [(ngModel)]="selectedStatuMatiere" [showClear]="true" [style]="{'width':'100%'}"
                             [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                             #ModeReglementDde="ngModel">
                         </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
 
                 </section>
@@ -180,28 +188,31 @@ styleClass="ModalAdd" [draggable]="false" [resizable]="false">
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Arabic </label>
+                    <label class="control-label flex-6">Desgiantion Arabic <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i> </label>
                     <div class="control-input flex-6">
                         <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationAr"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
                 </section>
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Desgiantion Latine </label>
+                    <label class="control-label flex-6">Desgiantion Latine <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
                         <input type="text" id="designation_ar" maxlength="200" name="designation_ar"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="designationLt"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
                 </section>
 
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Type Matiere</label>
+                    <label class="control-label flex-6">Type Matiere <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="dop control-input flex-6">
                         <p-dropdown name="ModeReglementDde" [resetFilterOnHide]=true class="dropdown"
                             [options]="listTypeMatiereRslt" [(ngModel)]="selectedTypeMatiere" [filter]="true"
@@ -209,20 +220,21 @@ styleClass="ModalAdd" [draggable]="false" [resizable]="false">
                             [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                             #ModeReglementDde="ngModel">
                         </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
 
                 </section>
-                
+
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Taxe</label>
+                    <label class="control-label flex-6">Taxe <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="dop control-input flex-6">
                         <p-dropdown name="ModeReglementDde" class="dropdown" [options]="listTaxeRslt"
                             [(ngModel)]="selectedTaxe" [showClear]="true" [style]="{'width':'100%'}"
                             [autoDisplayFirst]="true" placeholder="&nbsp;" [required]="true" [lazy]="true"
                             #ModeReglementDde="ngModel">
                         </p-dropdown>
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
 
                 </section>
@@ -230,45 +242,52 @@ styleClass="ModalAdd" [draggable]="false" [resizable]="false">
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Quantite Min Stock </label>
+                    <label class="control-label flex-6">Quantite Min Stock <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
                         <input type="number" id="qteMinStock" maxlength="200" name="qteMinStock"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="qteMinStock"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
                 </section>
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Quantite Max Stock </label>
+                    <label class="control-label flex-6">Quantite Max Stock <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
                         <input type="number" id="qteMaxStock" maxlength="200" name="qteMaxStock"
                             class="onlyForCentral form-control-dev input-xs" [(ngModel)]="qteMaxStock"
                             [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+
                     </div>
                 </section>
 
             </div>
             <div class="flex-row-space">
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Derniere Prix Achat </label>
+                    <label class="control-label flex-6">Derniere Prix Achat <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
                         <input type="number" id="qteMinStock" maxlength="200" name="qteMinStock"
-                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="prixAchat"
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                            class="onlyForCentral form-control-dev input-xs" [(ngModel)]="prixAchat" [required]="true">
+
                     </div>
                 </section>
                 <section class="flex-row-space flex-12">
-                    <label class="control-label flex-6">Text</label>
+                    <label class="control-label flex-6">Required Num. Piece <i
+                            class="fa-lg fa-fw fa fa-times icon-required"></i></label>
                     <div class="control-input flex-6">
-                        <input type="number" id="qteMaxStock" maxlength="200" name="qteMaxStock"
-                            class="onlyForCentral form-control-dev input-xs"  
-                            [required]="true">
-                        <i class="fa-lg fa-fw fa fa-times icon-required"></i>
+                        <p-dropdown name="RequiredNumPiece" class="dropdown" appendTo="body" [options]="RequiredOptions"
+                            [(ngModel)]="selectedRequired" [filter]="true" [showClear]="true" [style]="{'width':'100%'}"
+                            #RequiredNumPiece="ngModel" [autoDisplayFirst]="false" placeholder="&nbsp;"
+                            [required]="true" [lazy]="true">
+                        </p-dropdown>
+
+
+
                     </div>
                 </section>
-                
+
 
             </div>
 

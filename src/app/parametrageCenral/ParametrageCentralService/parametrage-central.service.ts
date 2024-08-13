@@ -1,7 +1,7 @@
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
- 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,9 +17,9 @@ export class ParametrageCentralService {
 
 
 
-  GetcompteurCodeSaisie(compteur:string) {
+  GetcompteurCodeSaisie(compteur: string) {
 
-    return this.http.get(`${environment.API_BASE_URL}compteur/`+compteur);
+    return this.http.get(`${environment.API_BASE_URL}compteur/` + compteur);
   }
 
 
@@ -203,15 +203,15 @@ export class ParametrageCentralService {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_appel_offre/` + code);
   }
 
-  
+
   GetAppelOffreByCode(code: number) {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/` + code);
   }
 
-  GetAppelOffreByEtatApprouved(codeEtatApprouverOrdreAchat : number) {
+  GetAppelOffreByEtatApprouved(codeEtatApprouverOrdreAchat: number) {
 
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/EtatApprouverOrdreAchat/`+codeEtatApprouverOrdreAchat);
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}appel_offre/EtatApprouverOrdreAchat/` + codeEtatApprouverOrdreAchat);
   }
 
 
@@ -363,7 +363,7 @@ export class ParametrageCentralService {
     return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/update`, body);
   }
 
-  
+
   ApprouveDemandeAchat(body: any) {
 
     return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/approuver`, body);
@@ -372,8 +372,8 @@ export class ParametrageCentralService {
 
     return this.http.put(`${environment.API_BASE_URL_ACHAT}demande_achat/cancel_approuver`, body);
   }
-  
-  
+
+
 
   DeleteDemandeAchat(code: number) {
     return this.http.delete(`${environment.API_BASE_URL_ACHAT}demande_achat/delete/` + code);
@@ -385,16 +385,16 @@ export class ParametrageCentralService {
   }
 
 
-  GetDemandeAchatByEtatApprouved(codeEtatApprouver : number) {
+  GetDemandeAchatByEtatApprouved(codeEtatApprouver: number) {
 
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/EtatApprouver/`+codeEtatApprouver);
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}demande_achat/EtatApprouver/` + codeEtatApprouver);
   }
 
 
   ///// depotttt
 
 
-  
+
   GetDepot() {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}depot/all`);
@@ -435,44 +435,44 @@ export class ParametrageCentralService {
 
 
 
-////categorie depot 
+  ////categorie depot 
 
 
-GetCategorieDepot() {
+  GetCategorieDepot() {
 
-  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/all`);
-} 
-GetCategorieDepotByCode(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/all`);
+  }
+  GetCategorieDepotByCode(code: number) {
 
-  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/` + code);
-}
-
-
-getCategorieDepotEdition(code: number) {
-  return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/edition/` + code, { responseType: "blob" });
-}
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/` + code);
+  }
 
 
-UpdateCategorieDepot(body: any) {
-
-  return this.http.put(`${environment.API_BASE_URL_ACHAT}categorie_depot/update`, body);
-}
-
-
-DeleteCategorieDepot(code: number) {
-  return this.http.delete(`${environment.API_BASE_URL_ACHAT}categorie_depot/delete/` + code);
-}
+  getCategorieDepotEdition(code: number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}categorie_depot/edition/` + code, { responseType: "blob" });
+  }
 
 
-PostCategorieDepot(body: any) {
-  return this.http.post(`${environment.API_BASE_URL_ACHAT}categorie_depot`, body);
-}
+  UpdateCategorieDepot(body: any) {
+
+    return this.http.put(`${environment.API_BASE_URL_ACHAT}categorie_depot/update`, body);
+  }
+
+
+  DeleteCategorieDepot(code: number) {
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}categorie_depot/delete/` + code);
+  }
+
+
+  PostCategorieDepot(body: any) {
+    return this.http.post(`${environment.API_BASE_URL_ACHAT}categorie_depot`, body);
+  }
 
 
 
   //departement 
 
-  
+
   GetDepartement() {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}departement/all`);
@@ -510,10 +510,10 @@ PostCategorieDepot(body: any) {
   ///// ordre Achat
 
 
-  GetOrdreAchat() {  
-    const headers= new HttpHeaders()
-  .set('content-type', 'application/json')
-  .set('Accept-Language', 'ar');
+  GetOrdreAchat() {
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Accept-Language', 'ar');
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/all`, { 'headers': headers });
   }
@@ -528,7 +528,7 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat_not_full_recived/` + code);
   }
 
-  
+
 
 
   GetOrdreAchatByCodeIn(code: number) {
@@ -553,10 +553,10 @@ PostCategorieDepot(body: any) {
 
 
   DeleteOrdreAchat(code: number) {
-    const headers= new HttpHeaders()
-    .set('content-type', 'application/json')
-    .set('Accept-Language', 'ar');
-    return this.http.delete(`${environment.API_BASE_URL_ACHAT}ordre_achat/delete/` + code , {'headers':headers});
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Accept-Language', 'ar');
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}ordre_achat/delete/` + code, { 'headers': headers });
   }
 
 
@@ -568,11 +568,11 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL_ACHAT}details_ordre_achat/edition/` + code, { responseType: "blob" });
   }
 
-  GetOrdreAchatByEtatRecepetion(codeEtatReception : number) {
+  GetOrdreAchatByEtatRecepetion(codeEtatReception: number) {
 
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception/`+codeEtatReception);
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception/` + codeEtatReception);
   }
-  GetOrdreAchatNonReceptionnerTotalement( ) {
+  GetOrdreAchatNonReceptionnerTotalement() {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}ordre_achat/etat_reception_in/5,2`);
   }
@@ -621,12 +621,12 @@ PostCategorieDepot(body: any) {
   }
 
 
-  GetMntTimbre() { 
-    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=MntTimbre`); 
+  GetMntTimbre() {
+    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=MntTimbre`);
   }
 
-  GetPasswordChangeApprouveAchat() { 
-    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`); 
+  GetPasswordChangeApprouveAchat() {
+    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=CodeChangeApprouveOA`);
   }
   // maskResponse(data: any): any {
   //   // Assuming 'data.sensitiveField' is the field you want to mask
@@ -640,11 +640,11 @@ PostCategorieDepot(body: any) {
   //       return this.maskResponse(response.valeur.replace(/\d/g, '*')); // Apply masking
   //     });
   // }
- 
+
 
 
   // userr 
-    
+
   GetUser() {
 
     return this.http.get(`${environment.API_BASE_URL_ACCESS}accessUser/all`);
@@ -654,7 +654,7 @@ PostCategorieDepot(body: any) {
     return this.http.get(`${environment.API_BASE_URL_ACCESS}accessUser/allWithPass`);
   }
 
-  
+
   // GetAllUser() {
 
   //   return this.http.get(`${environment.API_BASE_URL_ACHAT}accessUser/all`);
@@ -685,14 +685,14 @@ PostCategorieDepot(body: any) {
   }
 
 
-//param 
+  //param 
 
-GetVisibleWithPrice() { 
-  return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePrice`); 
-}
-GetVisibleWithPriceBR() { 
-  return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePriceBR`); 
-}
+  GetVisibleWithPrice() {
+    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePrice`);
+  }
+  GetVisibleWithPriceBR() {
+    return this.http.get(`${environment.API_BASE_URL}param/codeParam?codeParam=VisiblePriceBR`);
+  }
 
 
 
@@ -701,7 +701,7 @@ GetVisibleWithPriceBR() {
   ///// Bon Reception
 
 
-  GetBonReception() {   
+  GetBonReception() {
 
     return this.http.get(`${environment.API_BASE_URL_ACHAT}bon_reception/all`);
   }
@@ -724,12 +724,12 @@ GetVisibleWithPriceBR() {
 
 
 
-  
+
   DeleteBonReception(code: number) {
-    const headers= new HttpHeaders()
-    .set('content-type', 'application/json')
-    .set('Accept-Language', 'ar');
-    return this.http.delete(`${environment.API_BASE_URL_ACHAT}bon_reception/delete/` + code , {'headers':headers});
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Accept-Language', 'ar');
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}bon_reception/delete/` + code, { 'headers': headers });
   }
 
 
@@ -737,13 +737,29 @@ GetVisibleWithPriceBR() {
     return this.http.post(`${environment.API_BASE_URL_ACHAT}bon_reception`, body);
   }
 
- 
-  GetBonReceptionByEtatRecepetion(codeEtatReception : number) {
 
-    return this.http.get(`${environment.API_BASE_URL_ACHAT}bon_reception/etat_reception/`+codeEtatReception);
+  GetBonReceptionByEtatRecepetion(codeEtatReception: number) {
+
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}bon_reception/etat_reception/` + codeEtatReception);
   }
 
 
+
+  PostDetailsREceptionTemp(body: any) {
+    return this.http.post(`${environment.API_BASE_URL_ACHAT}details_reception_temp`, body);
+
+  }
+
+  DeleteDetailsREceptionTemp(codeOrdreAchat: number , codematiere:number) {
+    return this.http.delete(`${environment.API_BASE_URL_ACHAT}details_reception_temp/delete?codeOrdreAchat=`+codeOrdreAchat+ `&codematiere=`+codematiere);
+
+  }
+
+
+  GetDetailsREceptionTemp(codeOrdreAchat: number , codematiere:number) {
+    return this.http.get(`${environment.API_BASE_URL_ACHAT}details_reception_temp/By?codeOrdreAchat=`+codeOrdreAchat+ `&codematiere=`+codematiere);
+
+  }
   /// fournisseur
 
   GetAllFournisseur() {

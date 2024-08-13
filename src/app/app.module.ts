@@ -153,7 +153,13 @@ import { BonReceptionComponent } from './Achat/bon-reception/bon-reception.compo
 import { LoginComponent } from './home/login/login.component'; 
 import { ApppComponent } from './ApppComponent';
 import { BarTimeComponent } from './home/bar-time/bar-time.component';
+import { StockMenuComponent } from './Stock/stock-menu/stock-menu.component'; 
+import { EditionStockComponent } from './Stock/edition-stock/edition-stock.component'; 
+import { DdeTransfertMatiereComponent } from './Stock/dde-transfert-matiere/dde-transfert-matiere.component';
+import { TransfertMatiereComponent } from './Stock/transfert-matiere/transfert-matiere.component';
+import { ValidationTransfertMatiereComponent } from './Stock/validation-transfert-matiere/validation-transfert-matiere.component';
  
+
  
 
  
@@ -162,7 +168,7 @@ import { BarTimeComponent } from './home/bar-time/bar-time.component';
 @NgModule({
   declarations: [
     AppComponent,HomeComponent, NavbarComponent, ParametrageCentralComponent, ModeReglementComponent, DeviseComponent, BanqueComponent, SaisonComponent, TypeCaisseComponent, RegionComponent, TypeMatiereComponent, ColorisComponent, MatiereComponent, TailleComponent, UniteComponent, GrilleTailleComponent, MenuParametrageMatiereComponent
-  ,ArrayOfComponents, AchatMenuComponent,LoginComponent, DemandeAchatComponent, LoginComponent, AppelOffreComponent,BreadcrumbComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent, BonReceptionComponent, BarTimeComponent
+  ,ArrayOfComponents, AchatMenuComponent,LoginComponent, DemandeAchatComponent, LoginComponent, AppelOffreComponent,BreadcrumbComponent, OrdreAchatComponent, QcStrandardsComponent, TaxeComponent, DepartementComponent, MenuDepotDepartementComponent, DepotComponent, CategorieDepotComponent, AccessMenuComponent, SignatureUserComponent, BonReceptionComponent, BarTimeComponent, StockMenuComponent, EditionStockComponent, DdeTransfertMatiereComponent, TransfertMatiereComponent, ValidationTransfertMatiereComponent
   ],
   imports: [
     BrowserModule,BrowserAnimationsModule,

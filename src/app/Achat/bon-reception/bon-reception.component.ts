@@ -1,22 +1,24 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ConfirmationService, MessageService, SelectItem, SortEvent } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig, SelectItem, SortEvent } from 'primeng/api';
 import { catchError, findIndex, Subject, throwError } from 'rxjs';
 import { Table, TableModule } from 'primeng/table';
 
 import * as alertifyjs from 'alertifyjs'
-import { AO, AODetails, AppelOffre, BonReception, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
+import { AO, AODetails, AppelOffre, BonReception, Coloris, Compteur, DemandeAchat, Depot, DetailsAppelOffre, DetailsMatiere, Matiere, ModeReglement, OrdreAchat, Param, TypeCaisse, Unite } from 'src/app/domaine/ParametrageCentral';
 import { ParametrageCentralService } from 'src/app/parametrageCenral/ParametrageCentralService/parametrage-central.service';
 import { DatePipe } from '@angular/common';
 import { EDITOR_VALUE_ACCESSOR } from 'primeng/editor';
 
 declare const PDFObject: any;
+
 @Component({
   selector: 'app-bon-reception',
   templateUrl: './bon-reception.component.html',
   styleUrl: './bon-reception.component.css', providers: [ConfirmationService, MessageService]
 })
+
 export class BonReceptionComponent {
 
 
@@ -26,7 +28,7 @@ export class BonReceptionComponent {
   openModal!: boolean;
   pdfURL!: Blob;
 
-  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe,
+  constructor(private primengConfig: PrimeNGConfig, private confirmationService: ConfirmationService, private datePipe: DatePipe,
     private param_achat_service: ParametrageCentralService, private messageService: MessageService, private http: HttpClient, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
 
   }
@@ -58,16 +60,16 @@ export class BonReceptionComponent {
   selectedMatiere: any;
 
   pdfData!: Blob;
-  isLoading = false; 
+  isLoading = false;
   ngOnInit(): void {
-    
 
- 
+
+
 
 
     localStorage.setItem("langue", "ar")
     this.GelParamVisibleWithPrice();
-    this.GelAllOrdreAchat();
+    this.GelAllBonReception();
     this.VoidsNew();
     this.getValued();
     this.v2 = [
@@ -113,7 +115,7 @@ export class BonReceptionComponent {
         const binaryString = reader.readAsDataURL(blob);
         reader.onload = (event: any) => {
           this.pdfData = event.target.result;
-          this.isLoading = false;
+
           // if (this.pdfData) {
           //   this.handleRenderPdf(this.pdfData);
           // }
@@ -178,14 +180,24 @@ export class BonReceptionComponent {
     this.clearSelected();
     this.selectedBonReception = null;
     this.pdfData = new Blob;
+  }
+
+  closeModalDetailsMatiere() {
+    this.visibleModalPrint = false;
+    this.visibleModalDetails = false;
+    this.visibleNewModal = true;
+    this.details = new Array<any>();
 
   }
+
   check_actif = false;
   check_inactif = false;
 
   formHeader = ".....";
+  formHeaderDetails = ".....";
   searchTerm = '';
   visibleNewModal: boolean = false;
+  visibleModalDetails: boolean = false;
   visibleModalPrint: boolean = false;
   visibleModalDdeDirect: boolean = false;
   visDelete: boolean = false;
@@ -201,7 +213,7 @@ export class BonReceptionComponent {
   visible!: boolean;
 
 
-  disColQte:boolean = false;
+  disColQte: boolean = false;
   mntTotalTTC: any;
 
   selectedAppelOffre!: any;
@@ -233,7 +245,8 @@ export class BonReceptionComponent {
     this.totaltaxeMnt = event.data.mntTotalTaxe - -event.data.mntTimbre;
     this.mntNet = event.data.mntNet;
     this.dateLivraison = event.data.dateLivraison;
-    this.codeFactureFournisseur = event.data.codeFactureFournisseur
+    this.codeFactureFournisseur = event.data.codeFactureFournisseur;
+    this.selectedOA = event.data.codeFactureFournisseur
 
     console.log('vtData : ', event, 'selected AO code : ', this.selectedBonReception);
     // 
@@ -377,7 +390,7 @@ export class BonReceptionComponent {
           this.visibleModalPrint = false;
           // this.CalculeTaxeTimbre();
           // this.calculateTaxe();
-          // this.GetDemandeAchat();
+          this.GetOrdreAchat();
           this.GelAllDA();
         }
 
@@ -416,11 +429,13 @@ export class BonReceptionComponent {
 
 
 
+
+
   userCreate = "soufien";
 
   GetDataFromTableEditor: any;
   NewGetDataFromTableEditor: any;
-  final = new Array<any>(); 
+  final = new Array<any>();
   final2 = new Array<any>();
   codeColoris: any;
   qteReceptionner: any = 1;
@@ -431,7 +446,7 @@ export class BonReceptionComponent {
   MntFactureFournisseur: any;
   dateFactureFournisseur: any;
 
- 
+
   ControlDetailsReceptionner() {
     for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
@@ -444,46 +459,53 @@ export class BonReceptionComponent {
       }
     }
   }
-
-
+  totalQteReceptionner: any
+  calculateTotalQteReceptionner() {
+    this.totalQteReceptionner = this.listDataBRWithDetails.reduce((sum, product) => sum + product.qteReceptionner, 0);
+  }
+  getPicReqNumPiece() {
+    return "url('assets/assets/images/required_true.png')";
+  }
+  getPicInReqNumPiece() {
+    return "url('assets/assets/images/required_false.png')";
+  }
+  ValeurOkDetails: any;
   PostBonReception() {
 
-    if (!this.codeSaisie || this.listDataBRWithDetails.length == 0) {
+
+
+    this.calculateTotalQteReceptionner();
+    if (this.totalQteReceptionner == 0) {
       alertifyjs.set('notifier', 'position', 'top-right');
-      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Remplier any Qte");
+
 
     } else {
 
-      this.ControlDetailsReceptionner();
-   
-      for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
-        /// control set only totalment livred =0 
+      if (!this.codeSaisie || this.listDataBRWithDetails.length == 0 || !this.dateFactureFournisseur || !this.codeFactureFournisseur) {
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Field Required");
 
-        // if(this.listDataBRWithDetails[y].totalementLivred = 0 ){
+      } else {
 
-          // if(this.listDataBRWithDetails[y].qteReceptionner + +this.listDataBRWithDetails[y].qteLivrer >=  this.listDataBRWithDetails[y].qteDemander ){
-          //   console.log(" qteReceptionner >=qteDemander  "  )
-          //   this.GetDataFromTableEditor = { 
-          //     laize: this.listDataBRWithDetails[y].laize,
-          //     codeFournisseur: this.selectedFournisseur,
-          //     codeDepot: this.selectedDepot,
-          //     codeMatieres: this.listDataBRWithDetails[y].codeMatieres,
-          //     matiereDTO: { code: this.listDataBRWithDetails[y].codeMatieres },
-          //     codeUnites: this.listDataBRWithDetails[y].codeUnites,
-          //     codeColoriss: this.listDataBRWithDetails[y].codeColoriss,
-          //     valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
-          //     qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
-          //     qteDemander: this.listDataBRWithDetails[y].qteDemander,
-          //     userCreate: this.userCreate,
-          //     prixAchat: this.listDataBRWithDetails[y].prixAchat,
-          //     mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
-          //     mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
-          //     totalementLivred: 1,
-          //     mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe / 100),
-          //   }
-          // }else{
-          //   console.log(" qteReceptionner <qteDemander  "  )
-            this.GetDataFromTableEditor = { 
+
+        this.ControlDetRemplirePiece();
+
+
+        this.ValeurOkDetails = localStorage.getItem("OKDETAILS");
+
+
+        if (this.ValeurOkDetails != "OKDETAILS") {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + " Items Need Num Piece");
+          localStorage.removeItem("OKDETAILS");
+
+        } else {
+
+          this.ControlDetailsReceptionner();
+
+          for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
+            this.GetDataFromTableEditor = {
               laize: this.listDataBRWithDetails[y].laize,
               codeFournisseur: this.selectedFournisseur,
               codeDepot: this.selectedDepot,
@@ -498,137 +520,138 @@ export class BonReceptionComponent {
               prixAchat: this.listDataBRWithDetails[y].prixAchat,
               mntTotalTTC: this.listDataBRWithDetails[y].mntTotalTTC,
               mntTotalHT: this.listDataBRWithDetails[y].mntTotalHT,
-            
-        codeOrdreAchat: this.selectedOA,
+  
+              codeOrdreAchat: this.selectedOA,
               mntTotalTaxe: this.listDataBRWithDetails[y].prixAchat * this.listDataBRWithDetails[y].qteDemander * (this.listDataBRWithDetails[y].valeurTaxe / 100),
-            // }
-          }
-
-      
-        //   break;
-        // }
-        // // else totalment livred =1  dont update qte recived
-        // else{
-
-        // }
-        //update col totalment_livred 
-        
-
-        
-        this.final.push(this.GetDataFromTableEditor);
-      }
-
-
-
-      let body = {
-        codeSaisie: this.codeSaisie,
-        designationAr: this.designationAr,
-        designationLt: this.designationLt,
-        codeModeReglement: this.selectedModeReglement,
-        userCreate: this.userCreate,
-        // detailsOrdreAchatDTOs: this.final2,
-        code: this.code,
-        actif: this.actif,
-        visible: this.visible,
-        detailsBonReceptionDTOs: this.final,
-        observation: "test obserrtvation from code",
-        codeEtatReception: "2",
-        codeDemandeAchat: this.selectedDemandeAchat,
-        codeAppelOffre: this.selectedAppelOffre,
-        codeOrdreAchat: this.selectedOA,
-        mntTotalTTC: this.prixTotalTTC,
-        mntTotalHT: this.TotalHTValue,
-        mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
-        mntRemise: this.remiseEnPourcent,
-        mntTimbre: this.mntTimbre,
-        dateFactureFournisseur: this.dateFactureFournisseur,
-        mntFactureFournisseur: this.MntFactureFournisseur,
-        codeFactureFournisseur: this.codeFactureFournisseur,
-        codeFournisseur: this.selectedFournisseur,
-        codeDepot: this.selectedDepot,
-        codeTypeCircuitAchat: 2,
-        mntNet: this.mntNet,
-      }
-
-
-
-      if (this.code != null) {
-        body['code'] = this.code;
-        console.log("Body to Update", body)
-        this.param_achat_service.UpdateBonReception(body).pipe(
-          catchError((error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) {
-            } else {
-              alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-
+              // }
             }
-            return throwError(errorMessage);
-          })
-
-        ).subscribe(
-
-          (res: any) => {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
-
-            this.clearForm();
-            this.ngOnInit();
-            this.check_actif = true;
-            this.check_inactif = false;
-            this.onRowUnselect(event);
-            this.clearSelected();
-            this.visibleNewModal = false;
-            this.visDelete = false;
-            this.codeDemandeAchat = this.selectedBonReception.code
-            this.visibleModalPrint = false;
+  
+            this.final.push(this.GetDataFromTableEditor);
           }
-        );
-      }
-      else {
-        console.log("Body to Post", body)
-
-        this.param_achat_service.PostBonReceptionWithDetails(body).pipe(
-          catchError((error: HttpErrorResponse) => {
-            let errorMessage = '';
-            if (error.error instanceof ErrorEvent) { } else {
-              this.final = new Array<any>();
-              this.mntNet = 0;
-              alertifyjs.set('notifier', 'position', 'top-right');
-              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-            }
-            return throwError(errorMessage);
-          })
-        ).subscribe(
-          (res: any) => {
-            alertifyjs.set('notifier', 'position', 'top-right');
-            alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
-            this.visibleNewModal = false;
-            this.visDelete = false;
-            this.visibleModalPrint = true;
-            this.clearForm();
-            this.ngOnInit();
-            this.code;
-            this.final;
-            this.check_actif = true;
-            this.check_inactif = false;
-            this.onRowUnselect(event);
-            this.clearSelected();
-            body: { };
-            this.visibleModalPrint = true;
-            console.log("res", res);
-            this.codeDemandeAchat = res.code;
-            this.RemplirePrint(this.codeDemandeAchat);
-
-
+  
+  
+  
+          let body = {
+            codeSaisie: this.codeSaisie,
+            designationAr: this.designationAr,
+            designationLt: this.designationLt,
+            codeModeReglement: this.selectedModeReglement,
+            userCreate: this.userCreate,
+            // detailsOrdreAchatDTOs: this.final2,
+            code: this.code,
+            actif: this.actif,
+            visible: this.visible,
+            detailsBonReceptionDTOs: this.final,
+            observation: "test obserrtvation from code",
+            codeEtatReception: "2",
+            codeDemandeAchat: this.selectedDemandeAchat,
+            codeAppelOffre: this.selectedAppelOffre,
+            codeOrdreAchat: this.selectedOA,
+            mntTotalTTC: this.prixTotalTTC,
+            mntTotalHT: this.TotalHTValue,
+            mntTotalTaxe: this.TotalTaxeTimbre - -this.mntTimbre,
+            mntRemise: this.remiseEnPourcent,
+            mntTimbre: this.mntTimbre,
+            dateFactureFournisseur: this.dateFactureFournisseur,
+            mntFactureFournisseur: this.MntFactureFournisseur,
+            codeFactureFournisseur: this.codeFactureFournisseur,
+            codeFournisseur: this.selectedFournisseur,
+            codeDepot: this.selectedDepot,
+            codeTypeCircuitAchat: 2,
+            mntNet: this.mntNet,
           }
-        )
+  
+  
+  
+          if (this.code != null) {
+            body['code'] = this.code;
+            console.log("Body to Update", body)
+            this.param_achat_service.UpdateBonReception(body).pipe(
+              catchError((error: HttpErrorResponse) => {
+                let errorMessage = '';
+                if (error.error instanceof ErrorEvent) {
+                } else {
+                  alertifyjs.set('notifier', 'position', 'top-right');
+                  alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+                  localStorage.removeItem("OKDETAILS");
+                }
+                return throwError(errorMessage);
+              })
+  
+            ).subscribe(
+  
+              (res: any) => {
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Updated");
+                localStorage.removeItem("OKDETAILS");
+                this.clearForm();
+                this.ngOnInit();
+                this.check_actif = true;
+                this.check_inactif = false;
+                this.onRowUnselect(event);
+                this.clearSelected();
+                this.visibleNewModal = false;
+                this.visDelete = false;
+                this.codeDemandeAchat = this.selectedBonReception.code
+                this.visibleModalPrint = false;
+              }
+            );
+          }
+          else {
+            console.log("Body to Post", body)
+            this.param_achat_service.PostBonReceptionWithDetails(body).pipe(
+              catchError((error: HttpErrorResponse) => {
+                let errorMessage = '';
+                if (error.error instanceof ErrorEvent) { } else {
+                  this.final = new Array<any>();
+                  this.mntNet = 0;
+                  alertifyjs.set('notifier', 'position', 'top-right');
+                  alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+                  localStorage.removeItem("OKDETAILS");
+                }
+                return throwError(errorMessage);
+              })
+            ).subscribe(
+              (res: any) => {
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.success('<i class="success fa fa-chevron-down" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + "Success Saved");
+                localStorage.removeItem("OKDETAILS");
+                this.visibleNewModal = false;
+                this.visDelete = false;
+                this.visibleModalPrint = false;
+                this.clearForm();
+                this.ngOnInit();
+                this.code;
+                this.final;
+                this.check_actif = true;
+                this.check_inactif = false;
+                this.onRowUnselect(event);
+                this.clearSelected();
+                // this.visibleModalPrint = true;
+                // console.log("res", res);
+                // this.codeDemandeAchat = res.code;
+                // this.RemplirePrint(this.codeDemandeAchat);
+  
+  
+              }
+            )
+  
+  
+  
+          }
 
+        }
 
 
       }
+
+
     }
+
+
+
+
+
 
 
 
@@ -644,22 +667,25 @@ export class BonReceptionComponent {
   public remove(index: number): void {
     this.listDataBRWithDetails.splice(index, 1);
     this.calculateTaxe();
-    this. ValueQteChanged(); 
+    this.ValueQteChanged();
     console.log("index", index);
   }
 
-  VerifQteDde(index: number){
+  public removeLigneDetails(index: number): void {
+    this.details.splice(index, 1);
+  }
+  VerifQteDde(index: number) {
 
-    for (let y = 0; y < this.listDataBRWithDetails.length; y++) { 
-      if(this.listDataBRWithDetails[y].qteLivrer.index> this.listDataBRWithDetails[y].qteDemander.index ){
-       index.toPrecision()
-       this.disColQte  = true;
-      }else{
-       this.disColQte = false;
+    for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
+      if (this.listDataBRWithDetails[y].qteLivrer.index > this.listDataBRWithDetails[y].qteDemander.index) {
+        index.toPrecision()
+        this.disColQte = true;
+      } else {
+        this.disColQte = false;
       }
-      
-   }
-    
+
+    }
+
   }
 
 
@@ -717,12 +743,14 @@ export class BonReceptionComponent {
   // codeModeReglementDde: {}[] = [];
   DataBonReception = new Array<BonReception>();
   banque: any;
-  GelAllOrdreAchat() {
+  GelAllBonReception() {
+    this.isLoading = true;
     // this.headers.append('foo', 'bar');
     this.param_achat_service.GetBonReception().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
+          this.isLoading = false;
           alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
 
@@ -732,6 +760,7 @@ export class BonReceptionComponent {
 
     ).subscribe((data: any) => {
       this.DataBonReception = data;
+      this.isLoading = false;
     })
   }
 
@@ -768,7 +797,7 @@ export class BonReceptionComponent {
   listMatierePushed = new Array<any>();
   listMatiereRslt = new Array<any>();
   GelMatiereActifVisible() {
-    this.param_achat_service.GetMatiere().pipe(
+    this.param_achat_service.GetMatiereActive().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -802,6 +831,7 @@ export class BonReceptionComponent {
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
         }
         return throwError(errorMessage);
       })
@@ -826,6 +856,7 @@ export class BonReceptionComponent {
         if (error.error instanceof ErrorEvent) { } else {
           alertifyjs.set('notifier', 'position', 'top-right');
           alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
         }
         return throwError(errorMessage);
       })
@@ -860,6 +891,7 @@ export class BonReceptionComponent {
   selectedMatiereToAdd: any;
   ListMatiere!: Matiere[];
   listDataBRWithDetails = new Array<any>();
+  DetailsMatiere = new Array<any>();
   Newcompteur: number = 0;
   codeMatieres: any;
   disp: boolean = false;
@@ -908,7 +940,7 @@ export class BonReceptionComponent {
   MakeEnabled() {
     this.disp = false;
   }
- 
+
   getIconCirDirect() {
     return "url('assets/assets/images/cir_direct.png')";
   }
@@ -1082,46 +1114,46 @@ export class BonReceptionComponent {
 
 
   ValueQteChanged() {
-     
+
     for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
- 
 
-      if(this.listDataBRWithDetails[y].qteReceptionner > 0 ){
+
+      if (this.listDataBRWithDetails[y].qteReceptionner > 0) {
         this.GetDataFromTableEditor = {
           qteReceptionner: this.listDataBRWithDetails[y].qteReceptionner,
           prixAchat: this.listDataBRWithDetails[y].prixAchat,
           valeurTaxe: this.listDataBRWithDetails[y].valeurTaxe,
           qteDemander: this.listDataBRWithDetails[y].qteDemander
-  
+
         }
         this.listDataBRWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
         this.listDataBRWithDetails[y].qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
         this.listDataBRWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
         this.listDataBRWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
         this.listDataBRWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
-  
+
         let qteReceptionner = this.GetDataFromTableEditor.qteReceptionner;
         let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
         let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
-  
+
         let pxtotal = qteReceptionner * prixUniAchat1;
         let valeurTaxe1 = valeurtaxe * pxtotal;
         let valeurTotalTTC = pxtotal + +valeurTaxe1
         this.listDataBRWithDetails[y].mntTotalTTC = valeurTotalTTC;
         let value = this.listDataBRWithDetails[y].mntTotalTTC;
         this.listDataBRWithDetails[y].mntTotalTTC = value.toFixed(6);
-  
-  
+
+
         this.listDataBRWithDetails[y].mntTotalHT = pxtotal;
         let value2 = this.listDataBRWithDetails[y].mntTotalHT;
         this.listDataBRWithDetails[y].mntTotalHT = value2.toFixed(6);
-  
-      }else{
+
+      } else {
 
       }
 
-     
+
     }
     // this.calculateThisYearTotal();
     this.calculateTaxe();
@@ -1197,25 +1229,23 @@ export class BonReceptionComponent {
         this.listDataBRWithDetails = new Array<any>();
         this.listDataBRWithDetails = data;
         //  get first row in data
-        let x = this.listDataBRWithDetails;  
+        let x = this.listDataBRWithDetails;
         this.mntNet = 0;
         for (let y = 0; y < this.listDataBRWithDetails.length; y++) {
 
-          if(this.listDataBRWithDetails[y].qteLivrer >= this.listDataBRWithDetails[y].qteDemander )
-            {
-              this.listDataBRWithDetails[y].qteReceptionner= this.listDataBRWithDetails[y].qteLivrer ;
-            }else{
-              this.listDataBRWithDetails[y].qteReceptionner =0  ;
-               
-            }
-            if(this.listDataBRWithDetails[y].qteLivrer == 0  )
-              {
-                this.listDataBRWithDetails[y].qteLivrer = 0 ;
-              }else{
-                this.listDataBRWithDetails[y].qteLivrer =this.listDataBRWithDetails[y].qteLivrer   ;
-                 
-              }
+          if (this.listDataBRWithDetails[y].qteLivrer >= this.listDataBRWithDetails[y].qteDemander) {
+            this.listDataBRWithDetails[y].qteReceptionner = this.listDataBRWithDetails[y].qteLivrer;
+          } else {
+            this.listDataBRWithDetails[y].qteReceptionner = 0;
+
           }
+          if (this.listDataBRWithDetails[y].qteLivrer == 0) {
+            this.listDataBRWithDetails[y].qteLivrer = 0;
+          } else {
+            this.listDataBRWithDetails[y].qteLivrer = this.listDataBRWithDetails[y].qteLivrer;
+
+          }
+        }
 
 
 
@@ -1223,11 +1253,11 @@ export class BonReceptionComponent {
     }
 
 
-   
+
 
   }
 
-  codeDemandeAchats: any; 
+  codeDemandeAchats: any;
   GetCodeEtatReception() {
     if (this.selectedEtatReception == undefined) {
 
@@ -1345,9 +1375,183 @@ export class BonReceptionComponent {
 
     }
   }
+  // GetCodeMatiere(index: number){
+  //   // codeMatiere
+  //   this.codeMatiere = this.listDataBRWithDetails.push(index, 1);
+  // }
+  CodeMatiereSelected: any;
+  QteReceptionnerTotal: any;
+  getCodemartiereAtIndex(index: number): string {
+    const item = this.listDataBRWithDetails[index]; // Get the item at the given index
+    if (item) {
+      console.log("codematiere", item.codeMatieres);
+      this.CodeMatiereSelected = item.codeMatieres;
+      return item.codeMatieres;
+    } else {
+      return ''; // Handle cases where the index is invalid
+    }
+  }
+  getQteReceptionnerAtIndex(index: number): string {
+    const item = this.listDataBRWithDetails[index]; // Get the item at the given index
+    if (item) {
+      this.QteReceptionnerTotal = item.qteReceptionner;
+      return item.qteReceptionner;
+    } else {
+      return ''; // Handle cases where the index is invalid
+    }
+  }
+
+  codeMatiere: any;
+  OpenModalDetails(mode: string) {
+    this.isLoading = false;
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'DetailsMatiere') {
+      button.setAttribute('data-target', '#ModalDetails');
+      this.formHeaderDetails = "Details Matiere";
+      this.details = new Array<any>();
+
+      this.visibleModalDetails = true;
+      this.param_achat_service.GetDetailsREceptionTemp(this.selectedOA, this.CodeMatiereSelected).pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = '';
+          if (error.error instanceof ErrorEvent) { } else {
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
+          }
+          return throwError(errorMessage);
+        })
+
+      ).subscribe((data: any) => {
+        this.details = data;
+        console.log("LoadOK");
+      })
+
+    }
+
+  }
+
+  details: DetailsMatiere[] = [
+
+  ]
+  // details = new Array<DetailsMatiere>();
+  // details : any;
+  newDetails: DetailsMatiere = { codeMatiere: '', numPiece: '', laize: '', qteReceptionner: 0 };
+
+  addRow() {
+    // Add the newProduct to the products array
+    this.details.push({ ...this.newDetails });
+
+    // Clear the newProduct object
+    this.newDetails = { codeMatiere: '', numPiece: '', laize: '', qteReceptionner: 0 };
+  }
+
+  DetailsReceptTemp = new Array<any>();
+  totalQte: any;
+  calculateTotalQte() {
+    this.totalQte = this.details.reduce((sum, product) => sum + product.qteReceptionner, 0);
+  }
 
 
-  
+  PostDetailsBonReception() {
+    this.calculateTotalQte();
+    if (this.details.length == 0) {
+      alertifyjs.set('notifier', 'position', 'top-right');
+      alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` Remplire Details Matiere`);
+
+    } else {
+
+      if (this.totalQte > this.QteReceptionnerTotal) {
+
+        alertifyjs.set('notifier', 'position', 'top-right');
+        alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` Qte Receptionner non egales`);
+
+
+
+      } else {
+
+        this.param_achat_service.DeleteDetailsREceptionTemp(this.selectedOA, this.CodeMatiereSelected).pipe(
+          catchError((error: HttpErrorResponse) => {
+            let errorMessage = '';
+            if (error.error instanceof ErrorEvent) { } else {
+              alertifyjs.set('notifier', 'position', 'top-right');
+              alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
+            }
+            return throwError(errorMessage);
+          })
+
+        ).subscribe((data: any) => {
+          console.log("DEleted Ok");
+        })
+        for (let i = 0; i < this.details.length; i++) {
+
+          if (this.CodeMatiereSelected == '' || this.details[i].laize == '' || this.details[i].numPiece == '') {
+            // this.removeLigneDetails(i)
+            alertifyjs.set('notifier', 'position', 'top-right');
+            alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` Delete Row Empty`);
+            this.visibleModalDetails = true;
+          } else {
+            this.details[i].codeMatiere = this.CodeMatiereSelected;
+            this.visibleModalDetails = false;
+
+            this.GetDataFromTableEditor = {
+              codeOrdreAchat: this.selectedOA,
+              laize: this.details[i].laize,
+              numPiece: this.details[i].numPiece,
+              codematiere: this.details[i].codeMatiere,
+              qteReceptionner: this.details[i].qteReceptionner,
+            }
+            this.DetailsReceptTemp.push(this.GetDataFromTableEditor);
+            this.param_achat_service.PostDetailsREceptionTemp(this.GetDataFromTableEditor).pipe(
+              catchError((error: HttpErrorResponse) => {
+                let errorMessage = '';
+                if (error.error instanceof ErrorEvent) { } else {
+                  alertifyjs.set('notifier', 'position', 'top-right');
+                  alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+
+                }
+                return throwError(errorMessage);
+              })
+
+            ).subscribe((data: any) => {
+              console.log("PostDetailsOK");
+            })
+          }
+
+
+        }
+      }
+      // console.log("this.details", this.details)
+    }
+
+  }
+  ControlDetRemplirePiece() {
+    for (let i = 0; i < this.listDataBRWithDetails.length; i++) {
+
+
+      for (let x = 0; x < this.details.length; x++) {
+
+        if (this.listDataBRWithDetails[i].requiredNumPiece = 1 && this.details[x].numPiece == '') {
+          alertifyjs.set('notifier', 'position', 'top-right');
+          alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + 'Matiere Need Num Piece');
+          break;
+
+        } else {
+          console.log("ok details tous remplire");
+          localStorage.setItem("OKDETAILS", "OKDETAILS");
+        }
+      }
+
+
+    }
+  }
+
+
 
 }
 

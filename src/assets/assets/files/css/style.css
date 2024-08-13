@@ -130,6 +130,15 @@ tr.mat-footer-row {
 }
 
 
+:host ::ng-deep .recherche-value-tab {
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #afafaf;
+  font-family: auto;
+  font-size: 15px; 
+}
+
 
 
 
@@ -630,9 +639,9 @@ fieldset[disabled] .form-control-dev {
 
 :host ::ng-deep .p-dialog .p-dialog-content:last-of-type {
  
-  overflow: scroll !important;
+  overflow: scroll !important;  
   height: 100%;
-  overflow-x: hidden !important;
+    overflow-x: hidden !important;
 }
 
 
@@ -791,7 +800,8 @@ button.btn.btn-danger.cancel-voir {
 }
 
 .cancel-add-ModalLarge {
-  position: relative;
+  position: fixed;
+  left: 1045px;
   float: inline-end;
   font-size: 13px;
   direction: ltr;
@@ -805,7 +815,8 @@ button.btn.btn-danger.cancel-voir {
 
 
 .save-add-ModalLarge {
-  position: relative;
+  position: fixed;
+  left: 1140px;
   float: inline-end;
   font-size: 13px;
   direction: ltr;
@@ -817,9 +828,9 @@ button.btn.btn-danger.cancel-voir {
 }
 
 .cancel-add-ModalSmall {
-  position: relative;
+  position: fixed;
   height: 35px;
-  left: 290px;
+  left: 605px;
   font-size: 13px;
   direction: ltr;
   font-weight: 500;
@@ -838,8 +849,8 @@ button.btn.btn-danger.cancel-voir {
 
 
 .save-add-ModalSmall {
-  position: relative;
-  left: 145px;
+  position: fixed;
+  left: 710px;
   font-size: 13px;
   direction: ltr;
   height: 35px;
@@ -1214,7 +1225,20 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   left: 0% !important;
 }
 
+ 
+:host ::ng-deep .ModalDetails {
+  border-radius: 6px;
+  width: 800px;
+  font-family: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* width: 90% !important; */
+  height: 300px !important;
+  top: 0% !important;
+  left: 0% !important;
+}
 
+ 
 
 :host ::ng-deep .ModalPassword {
   border-radius: 6px;
@@ -1249,7 +1273,10 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   position: relative;
   z-index: 5000;
 }
-
+:host ::ng-deep .p-datatable-scrollable .p-datatable-wrapper {
+  position: static;
+  overflow: auto;
+}
 .drop-control {
   display: block !important;
   position: relative !important;
@@ -1469,6 +1496,31 @@ label:hover input[type=checkbox].checkbox:checked+span:before {
   height: 15px;
 }
 
+
+:host ::ng-deep .Details-Modal {
+  color:#007610 !important;
+  background: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  position: relative !important;
+  right: 0px !important;
+  text-align: center !important;
+  height: 15px !important;
+}
+.modal-container {
+  position: relative; 
+  zoom: 1; /* Disable zooming within the modal container */
+}
+
+
+:host ::ng-deep .Add-row {
+  color:#007610 !important;
+  background: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  position: relative !important;
+  right: 0px !important;
+  text-align: center !important;
+  height: 15px !important;
+}
 
 :host ::ng-deep .p-datatable .p-datatable-tbody>tr.p-highlight {
   background: #d5dbe2;
@@ -1701,4 +1753,121 @@ legend {
 label.header_name {
   font-size: 15px;
   font-family: auto;
+}
+
+
+.Bouton-Select{
+  margin-right: 5px;
+  display: flex;
+  height: 30px;
+  width: 105px;
+  padding: 3px 7px 0px 5px;
+  margin-bottom: 3px;
+  border: 1px solid #adadad;
+}
+
+.spinner {
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  right: 50%;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; 
+}
+
+.disabled {
+  opacity: 0.5; /* Make it semi-transparent */
+  cursor: not-allowed; 
+  pointer-events: none; /* Prevent click events */
+}
+/*******************\ Loading Roller \*******************/
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+ }
+  100% {
+    transform: rotate(360deg);
+ }
+}
+.lds-roller {
+  position: relative;
+  display: inline-block;
+  height: 64px;
+  width: 64px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 32px 32px;
+}
+.lds-roller div:after {
+  position: absolute;
+  display: block;
+  background: #00539f;
+  border-radius: 50%;
+  content: " ";
+  margin: -3px 0 0 -3px;
+  height: 6px;
+  width: 6px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 50px;
+  left: 50px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 54px;
+  left: 45px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 57px;
+  left: 39px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 58px;
+  left: 32px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 57px;
+  left: 25px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 54px;
+  left: 19px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 50px;
+  left: 14px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 45px;
+  left: 10px;
 }

@@ -156,6 +156,7 @@ export class OrdreAchatComponent {
   clear(table: Table) {
     table.clear();
     this.searchTerm = '';
+    this.searchTermMatiere='';
   }
 
   clearForm() {
@@ -167,7 +168,7 @@ export class OrdreAchatComponent {
     this.codeSaisie = '';
     this.selectedModeReglement = '';
     this.selectedMatiereToAdd = '';
-    this.onRowUnselect(event);
+
     this.listDataOAWithDetails = new Array<any>();
     this.final = new Array<any>();
     this.prixTotalTTC = 0.000000;
@@ -178,6 +179,8 @@ export class OrdreAchatComponent {
     this.tott7 = 0;
     this.TotalTaxeTmb = 0;
     this.mntTimbre = 0;
+    this.selectedOrdreAchat == null;
+    this.onRowUnselect(event);
 
 
   }
@@ -195,9 +198,11 @@ export class OrdreAchatComponent {
 
   formHeader = ".....";
   searchTerm = '';
+  searchTermMatiere = '';
   visibleNewModal: boolean = false;
   visibleModalPrint: boolean = false;
   visibleModalDdeDirect: boolean = false;
+  visibleModalSelect: boolean = false;
   visDelete: boolean = false;
   code!: any | null;
   codeSaisie: any;
@@ -214,6 +219,7 @@ export class OrdreAchatComponent {
 
   selectedAppelOffre!: any;
   selectedOrdreAchat!: any;
+  selectedMatieres!:any
   selectedDemandeAchat!: any;
   selectedDepot: any;
 
@@ -238,7 +244,7 @@ export class OrdreAchatComponent {
     this.totaltaxeMnt = event.data.mntTotalTaxe - -event.data.mntTimbre;
     this.mntNet = event.data.mntNet;
     this.dateLivraison = event.data.dateLivraison;
-
+    this.selectedFournisseur = event.data.codeFournisseur;
     console.log('vtData : ', event, 'selected AO code : ', this.selectedOrdreAchat);
     // 
 
@@ -250,7 +256,6 @@ export class OrdreAchatComponent {
     this.selectedModeReglement = null;
     this.selectedMatiereToAdd = null;
     this.observation = null;
-    this.selectedOrdreAchat = '';
     this.selectedDemandeAchat = '';
     this.selectedAppelOffre = '';
     // console.log(" selectedDemandeAchat", this.selectedOrdreAchat)
@@ -327,7 +332,6 @@ export class OrdreAchatComponent {
 
     } else
       if (mode === 'edit') {
-
         if (this.code == undefined) {
 
           this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
@@ -340,26 +344,52 @@ export class OrdreAchatComponent {
 
         } else {
 
-          button.setAttribute('data-target', '#NewModal');
-          this.formHeader = "Edit Ordre Achat"
+          this.param_achat_service.GetOrdreAchatByCodeIn(this.selectedOrdreAchat.code).pipe(
+            catchError((error: HttpErrorResponse) => {
+              let errorMessage = '';
+              if (error.error instanceof ErrorEvent) {
+              } else {
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
+              }
+              return throwError(errorMessage);
+            })
 
-          this.GelMatiereActifVisible();
+          ).subscribe(
+            (res: any) => {
+              if (res.codeEtatReception != 2) {
+                alertifyjs.set('notifier', 'position', 'top-right');
+                alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + 'Order Achat Receptionner');
+                this.visDelete = false; this.visibleNewModal = false; this.visibleModalPrint = false;
+                this.selectedOrdreAchat = '';
+              } else {
+                button.setAttribute('data-target', '#NewModal');
+                this.formHeader = "Edit Ordre Achat"
+
+                this.GelMatiereActifVisible();
 
 
 
-          this.onRowSelect;
-          // this.GetDemandeAchatWhereCodeIn();
-          this.GelAllModeReglement();
-          this.GelAllAppelOffre();
-          this.GetColorisActifVisible();
-          this.GelUniteActifVisible();
-          this.GetOrdreAchatByCode(this.selectedOrdreAchat);
-          this.visibleNewModal = true;
-          this.visDelete = false;
-          this.visibleModalPrint = false;
-          this.GelAllDA();
-          this.GetFournisseur();
+                this.onRowSelect;
+                // this.GetDemandeAchatWhereCodeIn();
+                this.GelAllModeReglement();
+                this.GelAllAppelOffre();
+                this.GetColorisActifVisible();
+                this.GelUniteActifVisible();
+                this.GetOrdreAchatByCode(this.selectedOrdreAchat);
+                this.visibleNewModal = true;
+                this.visDelete = false;
+                this.visibleModalPrint = false;
+                this.GelAllDA();
+                this.GetFournisseur();
+
+              }
+            }
+          )
+
+
         }
+
 
       } else
 
@@ -424,6 +454,39 @@ export class OrdreAchatComponent {
     }
 
   }
+
+  
+  public onOpenModalOrderDirectSelect(mode: string) {
+
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'NewaddOrdreDirectSelect') {
+      button.setAttribute('data-target', '#NewModalDdeDirectSelect');
+      this.formHeader = "Nouveau Ordre Achat Direct";
+
+      this.listDataOAWithDetails = new Array<any>();
+      this.onRowUnselect(event);
+      this.clearSelected();
+      this.actif = false;
+      this.visibleModalDdeDirect = false;
+      this.visibleModalSelect = true;
+      
+      this.visDelete = false;
+      this.visibleNewModal = false;
+      this.visibleModalPrint = false;
+      this.code == undefined;
+      this.GelMatiereActifVisible();
+      this.GelAllModeReglement();
+      this.GelUniteActifVisible();
+      this.GetColorisActifVisible();
+
+    }
+
+  }
+
 
   userCreate = "soufien";
 
@@ -588,7 +651,7 @@ export class OrdreAchatComponent {
 
   public remove(index: number): void {
     this.listDataOAWithDetails.splice(index, 1);
-    this.calculateTaxe() ; 
+    this.calculateTaxe();
     this.ValueQteChanged();
     console.log("index", index);
   }
@@ -731,7 +794,7 @@ export class OrdreAchatComponent {
   listMatierePushed = new Array<any>();
   listMatiereRslt = new Array<any>();
   GelMatiereActifVisible() {
-    this.param_achat_service.GetMatiere().pipe(
+    this.param_achat_service.GetMatiereActive().pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) { } else {
@@ -1251,7 +1314,7 @@ export class OrdreAchatComponent {
 
   GetDemandeAchatByCode(code: number) {
 
-    
+
 
 
   }
@@ -1294,9 +1357,9 @@ export class OrdreAchatComponent {
           })
 
         ).subscribe((data2: any) => {
-          this.dataDemandeAchat = data2; 
-          this.listDemandeAchatPushed = []; 
-          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })  
+          this.dataDemandeAchat = data2;
+          this.listDemandeAchatPushed = [];
+          this.listDemandeAchatPushed.push({ label: data2.codeSaisie, value: data2.code })
           this.listDemandeAchatRslt = this.listDemandeAchatPushed;
 
 
@@ -1311,22 +1374,22 @@ export class OrdreAchatComponent {
             this.tott7 = 0.000000;
             this.TotalTaxeTmb = 0.000000;
             this.mntTimbre = 0.000000;
-      
+
             this.dateLivraison = null
             this.Instructions = '';
             this.lieuOA = '';
           } else {
-      
-      
-      
-      
+
+
+
+
             this.param_achat_service.GetDetailsDemandeAchatByCode(this.selectedDemandeAchat).pipe(
               catchError((error: HttpErrorResponse) => {
                 let errorMessage = '';
                 if (error.error instanceof ErrorEvent) { } else {
                   alertifyjs.set('notifier', 'position', 'top-right');
                   alertifyjs.error('<i class="error fa fa-exclamation-circle" aria-hidden="true" style="margin: 5px 5px 5px;"></i>' + ` ${error.error.description}`);
-      
+
                 }
                 return throwError(errorMessage);
               })
@@ -1341,52 +1404,52 @@ export class OrdreAchatComponent {
               // this.dateLivraison = this.datePipe.transform(x[0].dateLivraison, "yy-mm-dd")
               console.log("GetDemandeAchatByCode listDataOAWithDetails is ", this.listDataOAWithDetails);
               for (let y = 0; y < this.listDataOAWithDetails.length; y++) {
-      
+
                 this.GetDataFromTableEditor = {
                   qteDemander: this.listDataOAWithDetails[y].qteDemander,
                   prixAchat: this.listDataOAWithDetails[y].prixAchat,
                   valeurTaxe: this.listDataOAWithDetails[y].valeurTaxe
-      
+
                 }
                 this.listDataOAWithDetails[y].qteDemander = this.GetDataFromTableEditor.qteDemander;
                 this.listDataOAWithDetails[y].prixAchat = this.GetDataFromTableEditor.prixAchat;
                 this.listDataOAWithDetails[y].valeurTaxe = this.GetDataFromTableEditor.valeurTaxe;
                 this.listDataOAWithDetails[y].mntTotalHT = this.GetDataFromTableEditor.mntTotalHT;
-      
+
                 let qteDemander1 = this.GetDataFromTableEditor.qteDemander;
                 let prixUniAchat1 = this.GetDataFromTableEditor.prixAchat;
-      
+
                 this.listDataOAWithDetails[y].prixAchat = prixUniAchat1;
                 let value3 = this.listDataOAWithDetails[y].prixAchat;
                 this.listDataOAWithDetails[y].prixAchat = value3.toFixed(6);
-      
-      
+
+
                 let valeurtaxe = this.GetDataFromTableEditor.valeurTaxe / 100;
-      
+
                 let pxtotal = qteDemander1 * prixUniAchat1;
                 let valeurTaxe1 = valeurtaxe * pxtotal;
                 let valeurTotalTTC = pxtotal + +valeurTaxe1;
-      
+
                 this.listDataOAWithDetails[y].mntTotalTTC = valeurTotalTTC;
                 let value = this.listDataOAWithDetails[y].mntTotalTTC;
                 this.listDataOAWithDetails[y].mntTotalTTC = value.toFixed(6);
-      
-      
+
+
                 this.listDataOAWithDetails[y].mntTotalHT = pxtotal;
                 let value2 = this.listDataOAWithDetails[y].mntTotalHT;
                 this.listDataOAWithDetails[y].mntTotalHT = value2.toFixed(6);
-      
+
                 console.log("GetDemandeAchatByCode valeurTotalTTC is ", valeurTotalTTC);
-      
-      
-      
+
+
+
               }
-      
+
               // this.calculateThisYearTotal();
               this.calculateTaxe();
               console.log("GetDemandeAchatByCode listDataAOWithDetails is ", this.listDataOAWithDetails);
-      
-      
+
+
             })
           }
         }
@@ -1395,7 +1458,7 @@ export class OrdreAchatComponent {
 
       })
 
-      
+
 
     }
 
@@ -1510,7 +1573,23 @@ export class OrdreAchatComponent {
     })
   }
 
+  VisTableMatiere:boolean = false;
+  VisTableMat(){
+    this.VisTableMatiere = true;
+    this.GelMatiereActifVisible();
+  }
+  DesignationMatiere:any;
+  onRowSelectInOption(event: any) {
+    this.code = event.data.code;
+    this.DesignationMatiere = event.data.designationAr; 
+    this.selectedMatieres = event.data.code;
+    console.log('vtselectedMatieres : ', event, 'selected selectedMatieres : ', this.selectedMatieres);
+    this.visibleModalSelect = false;
+    this.VisTableMatiere = false;
+    // 
 
+  }
+  
 }
 
 
